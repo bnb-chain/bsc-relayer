@@ -1,0 +1,33 @@
+package executor
+
+import (
+	relayercommon "github.com/binance-chain/bsc-relayer/common"
+	"github.com/ethereum/go-ethereum/common"
+)
+
+const (
+	prefixLength          = 1
+	sourceChainIDLength   = 2
+	destChainIDLength     = 2
+	channelIDLength       = 1
+	sequenceLength        = 8
+	totalPackageKeyLength = prefixLength + sourceChainIDLength + destChainIDLength + channelIDLength + sequenceLength
+
+	storeName   = "ibc"
+	maxTryTimes = 10
+
+	separator                           = "::"
+	CrossChainPackageEventType          = "IBCPackage"
+	CorssChainPackageInfoAttributeKey   = "IBCPackageInfo"
+	CorssChainPackageInfoAttributeValue = "%s" + separator + "%d" + separator + "%d" + separator + "%d" //destChainName destChainID channelID sequence
+)
+
+var (
+	prefixForCrossChainPackageKey = []byte{0x00}
+	prefixForSequenceKey          = []byte{0x01}
+
+	PureHeaderSyncChannelID relayercommon.CrossChainChannelID = -1
+
+	tendermintLightClientContractAddr = common.HexToAddress("0x0000000000000000000000000000000000001003")
+	relayerHubContractAddr            = common.HexToAddress("0x0000000000000000000000000000000000001006")
+)
