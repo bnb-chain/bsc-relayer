@@ -13,7 +13,7 @@ func TestBBCExecutor_GetSequence(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
 
-	rpc  := rpcclient.NewHTTP(BBCRpc, "/websocket")
+	rpc := rpcclient.NewHTTP(BBCRpc, "/websocket")
 	require.NoError(t, err)
 	abciInfo, err := rpc.ABCIInfo()
 	require.NoError(t, err)
@@ -24,13 +24,13 @@ func TestBBCExecutor_GetSequence(t *testing.T) {
 	require.NoError(t, err)
 	t.Log(fmt.Sprintf("channel %d, sequence %d", BindChannelID, nextBindSequence))
 
-	nextTransferSequence, err := bbcExecutor.GetNextSequence(TransferChannelID, height)
+	nextTransferSequence, err := bbcExecutor.GetNextSequence(TransferInChannelID, height)
 	require.NoError(t, err)
-	t.Log(fmt.Sprintf("channel %d, sequence %d", TransferChannelID, nextTransferSequence))
+	t.Log(fmt.Sprintf("channel %d, sequence %d", TransferInChannelID, nextTransferSequence))
 
-	nextRefundSequence, err := bbcExecutor.GetNextSequence(RefundChannelID, height)
+	nextRefundSequence, err := bbcExecutor.GetNextSequence(TransferOutChannelID, height)
 	require.NoError(t, err)
-	t.Log(fmt.Sprintf("channel %d, sequence %d", RefundChannelID, nextRefundSequence))
+	t.Log(fmt.Sprintf("channel %d, sequence %d", TransferOutChannelID, nextRefundSequence))
 
 	nextStakingSequence, err := bbcExecutor.GetNextSequence(StakingChannelID, height)
 	require.NoError(t, err)

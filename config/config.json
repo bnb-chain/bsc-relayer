@@ -2,8 +2,7 @@
   "cross_chain_config": {
     "source_chain_id": 1,
     "dest_chain_id": 2,
-    "dest_chain_name": "rialto",
-    "protocol_config_type": "remote"
+    "monitor_channel_list": [1, 2, 3, 8, 9]
   },
   "bbc_config": {
     "rpc_addr": "http://data-seed-prealpha-1-s1.binance.org:80",

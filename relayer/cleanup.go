@@ -7,18 +7,17 @@ import (
 
 func CleanPreviousPackages(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor, height uint64) error {
 	blockSynced := false
-	for _, channel := range crossChainProtocol.Channels {
-		nextSequence, err := bbcExecutor.GetNextSequence(common.CrossChainChannelID(channel.ChannelID), int64(height))
+	for _, channelId := range bbcExecutor.Config.CrossChainConfig.MonitorChannelList {
+		nextSequence, err := bbcExecutor.GetNextSequence(common.CrossChainChannelID(channelId), int64(height))
 		if err != nil {
 			return err
 		}
-		nextDeliverSequence, err := bscExecutor.GetNextSequence(common.CrossChainChannelID(channel.ChannelID),
-			channel.ContractAddr, crossChainProtocol.ABIs[channel.ABIName], channel.SequenceMethod)
+		nextDeliverSequence, err := bscExecutor.GetNextSequence(common.CrossChainChannelID(channelId))
 		if err != nil {
 			return err
 		}
 		common.Logger.Infof("channelID: %d, next deliver sequence %d on BSC, next sequence %d on BC",
-			channel.ChannelID, nextDeliverSequence, nextSequence)
+			channelId, nextDeliverSequence, nextSequence)
 		if nextSequence > nextDeliverSequence {
 			if !blockSynced {
 
@@ -29,8 +28,7 @@ func CleanPreviousPackages(bbcExecutor *executor.BBCExecutor, bscExecutor *execu
 				blockSynced = true
 				common.Logger.Infof("Sync header %d, txHash %s", height+1, tx.String())
 			}
-			_, err = bscExecutor.BatchRelayCrossChainPackages(common.CrossChainChannelID(channel.ChannelID),
-				channel.ContractAddr, crossChainProtocol.ABIs[channel.ABIName], channel.Method, nextDeliverSequence, nextSequence, height)
+			_, err = bscExecutor.BatchRelayCrossChainPackages(common.CrossChainChannelID(channelId), nextDeliverSequence, nextSequence, height)
 			if err != nil {
 				return err
 			}

@@ -13,21 +13,23 @@ const (
 	sequenceLength        = 8
 	totalPackageKeyLength = prefixLength + sourceChainIDLength + destChainIDLength + channelIDLength + sequenceLength
 
-	storeName   = "ibc"
-	maxTryTimes = 10
+	packageStoreName  = "ibc"
+	sequenceStoreName = "sc"
+	maxTryTimes       = 10
 
 	separator                           = "::"
 	CrossChainPackageEventType          = "IBCPackage"
 	CorssChainPackageInfoAttributeKey   = "IBCPackageInfo"
-	CorssChainPackageInfoAttributeValue = "%s" + separator + "%d" + separator + "%d" + separator + "%d" //destChainName destChainID channelID sequence
+	CorssChainPackageInfoAttributeValue = "%d" + separator + "%d" + separator + "%d" // destChainID channelID sequence
 )
 
 var (
 	prefixForCrossChainPackageKey = []byte{0x00}
-	prefixForSequenceKey          = []byte{0x01}
+	prefixForSequenceKey          = []byte{0xf0}
 
 	PureHeaderSyncChannelID relayercommon.CrossChainChannelID = -1
 
 	tendermintLightClientContractAddr = common.HexToAddress("0x0000000000000000000000000000000000001003")
 	relayerHubContractAddr            = common.HexToAddress("0x0000000000000000000000000000000000001006")
+	crossChainContractAddr            = common.HexToAddress("0x0000000000000000000000000000000000002000")
 )
