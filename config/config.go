@@ -51,7 +51,6 @@ type BBCConfig struct {
 	Mnemonic                                   string `json:"mnemonic"`
 	SleepMillisecondForWaitBlock               int64  `json:"sleep_millisecond_for_wait_block"`
 	BlockIntervalForCleanUpUndeliveredPackages uint64 `json:"block_interval_for_clean_up_undelivered_packages"`
-	BlockIntervalForSyncProtocol               uint64 `json:"block_interval_for_sync_protocol"`
 }
 
 func (cfg *BBCConfig) Validate() {
@@ -75,9 +74,6 @@ func (cfg *BBCConfig) Validate() {
 	}
 	if cfg.BlockIntervalForCleanUpUndeliveredPackages == 0 {
 		panic("block interval for cleanup undelivered packages must not be zero")
-	}
-	if cfg.BlockIntervalForSyncProtocol == 0 {
-		panic("block interval for syncing protocol must not be zero")
 	}
 }
 
