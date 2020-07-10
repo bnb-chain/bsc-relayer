@@ -137,7 +137,7 @@ func main() {
 	common.Logger.Info("Starting relayer")
 	relayerInstance.Start(uint64(startHeight), curValidatorsHash)
 
-	adm := admin.NewAdmin(cfg)
+	adm := admin.NewAdmin(db, cfg)
 	go adm.Serve()
 
 	select {}
