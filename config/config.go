@@ -22,6 +22,8 @@ type Config struct {
 	BSCConfig        *BSCConfig        `json:"bsc_config"`
 	LogConfig        *LogConfig        `json:"log_config"`
 	AdminConfig      *AdminConfig      `json:"admin_config"`
+	AlertConfig 	 *AlertConfig 	   `json:"alert_config"`
+	DBConfig         *DBConfig    	   `json:"db_config"`
 }
 
 type CrossChainConfig struct {
@@ -137,12 +139,48 @@ func (cfg *LogConfig) Validate() {
 	}
 }
 
+type AlertConfig struct {
+	Moniker string `json:"moniker"`
+
+	TelegramBotId  string `json:"telegram_bot_id"`
+	TelegramChatId string `json:"telegram_chat_id"`
+
+	BlockUpdateTimeOut         int64 `json:"block_update_time_out"`
+	PackageDelayAlertThreshold int64 `json:"package_delay_alert_threshold"`
+}
+
+func (cfg *AlertConfig) Validate() {
+	if cfg.Moniker == "" {
+		panic("moniker should not be empty")
+	}
+
+	if cfg.BlockUpdateTimeOut <= 0 {
+		panic(fmt.Sprintf("block_update_time_out should be larger than 0"))
+	}
+
+	if cfg.PackageDelayAlertThreshold <= 0 {
+		panic(fmt.Sprintf("package_delay_alert_threshold should be larger than 0"))
+	}
+}
+
+type DBConfig struct {
+	Dialect string `json:"dialect"`
+	DBPath  string `json:"db_path"`
+}
+
+func (cfg *DBConfig) Validate() {
+	if cfg.Dialect != DBDialectMysql && cfg.Dialect != DBDialectSqlite3 {
+		panic(fmt.Sprintf("only %s and %s supported", DBDialectMysql, DBDialectSqlite3))
+	}
+}
+
 func (cfg *Config) Validate() {
 	cfg.CrossChainConfig.Validate()
 	cfg.AdminConfig.Validate()
 	cfg.LogConfig.Validate()
 	cfg.BBCConfig.Validate()
 	cfg.BSCConfig.Validate()
+	cfg.DBConfig.Validate()
 }
 
 func ParseConfigFromJson(content string) *Config {

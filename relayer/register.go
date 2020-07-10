@@ -4,11 +4,10 @@ import (
 	"time"
 
 	"github.com/binance-chain/bsc-relayer/common"
-	"github.com/binance-chain/bsc-relayer/executor"
 )
 
-func RegisterRelayerHub(bscExecutor *executor.BSCExecutor) {
-	isRelayer, err := bscExecutor.IsRelayer()
+func (r *Relayer)registerRelayerHub() {
+	isRelayer, err := r.bscExecutor.IsRelayer()
 	if err != nil {
 		panic(err)
 	}
@@ -18,14 +17,14 @@ func RegisterRelayerHub(bscExecutor *executor.BSCExecutor) {
 	}
 
 	common.Logger.Info("Register this relayer to RelayerHub")
-	_, err = bscExecutor.RegisterRelayer()
+	_, err = r.bscExecutor.RegisterRelayer()
 	if err != nil {
 		panic(err)
 	}
 	common.Logger.Info("Waiting for register tx finalization")
 	time.Sleep(20 * time.Second)
 
-	isRelayer, err = bscExecutor.IsRelayer()
+	isRelayer, err = r.bscExecutor.IsRelayer()
 	if err != nil {
 		panic(err)
 	}

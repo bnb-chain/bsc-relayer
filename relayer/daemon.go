@@ -5,18 +5,24 @@ import (
 
 	"github.com/binance-chain/bsc-relayer/common"
 	"github.com/binance-chain/bsc-relayer/executor"
+	"github.com/binance-chain/bsc-relayer/model"
+	ethcmm "github.com/ethereum/go-ethereum/common"
 	cmn "github.com/tendermint/tendermint/libs/common"
 )
 
-func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor, startHeight uint64, curValidatorsHash cmn.HexBytes) {
+const (
+	WaitSecondForTrackTx  = 10
+)
+
+func (r *Relayer) relayerDaemon(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	var tashSet *common.TaskSet
 	var err error
 	height := startHeight
 	common.Logger.Info("Start relayer daemon")
 	for {
-		tashSet, curValidatorsHash, err = bbcExecutor.MonitorCrossChainPackage(int64(height), curValidatorsHash)
+		tashSet, curValidatorsHash, err = r.bbcExecutor.MonitorCrossChainPackage(int64(height), curValidatorsHash)
 		if err != nil {
-			sleepTime := time.Duration(bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))
+			sleepTime := time.Duration(r.bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))
 			time.Sleep(sleepTime)
 			continue
 		}
@@ -24,7 +30,7 @@ func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCE
 		// Found validator set change
 		if len(tashSet.TaskList) > 0 {
 			if tashSet.TaskList[0].ChannelID == executor.PureHeaderSyncChannelID {
-				txHash, err := bscExecutor.SyncTendermintLightClientHeader(tashSet.Height)
+				txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(tashSet.Height)
 				if err != nil {
 					common.Logger.Error(err.Error())
 				}
@@ -32,8 +38,8 @@ func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCE
 			}
 		}
 
-		if height%bbcExecutor.Config.BBCConfig.BlockIntervalForCleanUpUndeliveredPackages == 0 {
-			err := CleanPreviousPackages(bbcExecutor, bscExecutor, height)
+		if height%r.bbcExecutor.Config.BBCConfig.BlockIntervalForCleanUpUndeliveredPackages == 0 {
+			err := r.cleanPreviousPackages(height)
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
@@ -46,7 +52,7 @@ func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCE
 			continue // skip this height
 		}
 
-		txHash, err := bscExecutor.SyncTendermintLightClientHeader(tashSet.Height + 1)
+		txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(tashSet.Height + 1)
 		if err != nil {
 			common.Logger.Error(err.Error())
 			continue // try again for this height
@@ -54,12 +60,49 @@ func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCE
 		common.Logger.Infof("Syncing header: %d, txHash: %s", tashSet.Height+1, txHash.String())
 
 		for _, task := range tashSet.TaskList {
-			_, err := bscExecutor.RelayCrossChainPackage(task.ChannelID, task.Sequence, tashSet.Height)
+			_, err := r.bscExecutor.RelayCrossChainPackage(task.ChannelID, task.Sequence, tashSet.Height)
 			if err != nil {
 				common.Logger.Error(err.Error())
 				continue
 			}
 		}
 		height++
+	}
+}
+
+func (r *Relayer) txTracker() {
+	if r.db == nil {
+		return
+	}
+	relayTxs := make([]model.RelayTransaction, 0)
+	for {
+		r.db.Where("create_time >= ? and tx_status != ?", time.Now().Unix()-1800, model.Created).Find(&relayTxs).Limit(1000)
+		common.Logger.Infof("get %d unconfirmed transactions", len(relayTxs))
+		for _, tx := range relayTxs {
+			txRecipient, err := r.bscExecutor.GetTxRecipient(ethcmm.HexToHash(tx.TxHash))
+			if err != nil {
+				continue
+			}
+			var txStatus string
+			if txRecipient.Status == 0x01 {
+				txStatus = model.Success
+			} else {
+				txStatus = model.Failure
+			}
+
+			err = r.db.Model(model.RelayTransaction{}).Where("id = ?", tx.Id).Updates(
+				map[string]interface{}{
+					"tx_status":   txStatus,
+					"tx_height":   txRecipient.BlockNumber.Int64(),
+					"tx_used_gas": txRecipient.GasUsed,
+					"tx_fee":      txRecipient.GasUsed * tx.TxGasPrice,
+					"update_time": time.Now().Unix(),
+				}).Error
+			if err != nil {
+				common.Logger.Infof("update relayer transaction error: %s", err.Error())
+			}
+		}
+		relayTxs = relayTxs[:0]
+		time.Sleep(WaitSecondForTrackTx * time.Second)
 	}
 }
