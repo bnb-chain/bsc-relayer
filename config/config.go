@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -22,8 +23,8 @@ type Config struct {
 	BSCConfig        *BSCConfig        `json:"bsc_config"`
 	LogConfig        *LogConfig        `json:"log_config"`
 	AdminConfig      *AdminConfig      `json:"admin_config"`
-	AlertConfig 	 *AlertConfig 	   `json:"alert_config"`
-	DBConfig         *DBConfig    	   `json:"db_config"`
+	AlertConfig      *AlertConfig      `json:"alert_config"`
+	DBConfig         *DBConfig         `json:"db_config"`
 }
 
 type CrossChainConfig struct {
@@ -140,26 +141,25 @@ func (cfg *LogConfig) Validate() {
 }
 
 type AlertConfig struct {
-	Moniker string `json:"moniker"`
+	EnableAlert bool `json:"enable_alert"`
 
 	TelegramBotId  string `json:"telegram_bot_id"`
 	TelegramChatId string `json:"telegram_chat_id"`
 
-	BlockUpdateTimeOut         int64 `json:"block_update_time_out"`
-	PackageDelayAlertThreshold int64 `json:"package_delay_alert_threshold"`
+	BalanceThreshold string `json:"balance_threshold"`
 }
 
 func (cfg *AlertConfig) Validate() {
-	if cfg.Moniker == "" {
-		panic("moniker should not be empty")
+	if !cfg.EnableAlert {
+		return
+	}
+	balanceThreshold, ok := big.NewInt(1).SetString(cfg.BalanceThreshold, 10)
+	if !ok {
+		panic(fmt.Sprintf("unrecognized balance_threshold"))
 	}
 
-	if cfg.BlockUpdateTimeOut <= 0 {
-		panic(fmt.Sprintf("block_update_time_out should be larger than 0"))
-	}
-
-	if cfg.PackageDelayAlertThreshold <= 0 {
-		panic(fmt.Sprintf("package_delay_alert_threshold should be larger than 0"))
+	if balanceThreshold.Cmp(big.NewInt(0)) <= 0 {
+		panic(fmt.Sprintf("balance_threshold should be positive"))
 	}
 }
 

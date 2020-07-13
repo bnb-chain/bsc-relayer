@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
-	"github.com/binance-chain/bsc-relayer/model"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	"github.com/shopspring/decimal"
+
+	"github.com/binance-chain/bsc-relayer/common"
+	config "github.com/binance-chain/bsc-relayer/config"
+	"github.com/binance-chain/bsc-relayer/model"
 )
 
 type Admin struct {

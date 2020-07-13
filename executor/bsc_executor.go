@@ -8,20 +8,19 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-
-	"github.com/binance-chain/bsc-relayer/model"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/jinzhu/gorm"
 
 	relayercommon "github.com/binance-chain/bsc-relayer/common"
 	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/bsc-relayer/executor/crosschain"
 	"github.com/binance-chain/bsc-relayer/executor/relayerhub"
 	"github.com/binance-chain/bsc-relayer/executor/tendermintlightclient"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/jinzhu/gorm"
+	"github.com/binance-chain/bsc-relayer/model"
 )
 
 type BSCExecutor struct {
@@ -333,6 +332,10 @@ func (executor *BSCExecutor) GetNextSequence(channelID relayercommon.CrossChainC
 
 func (executor *BSCExecutor) GetTxRecipient(txHash common.Hash) (*types.Receipt, error) {
 	return executor.bscClient.TransactionReceipt(context.Background(), txHash)
+}
+
+func (executor *BSCExecutor) GetRelayerBalance() (*big.Int, error) {
+	return executor.bscClient.BalanceAt(context.Background(), executor.txSender, nil)
 }
 
 func (executor *BSCExecutor) saveRelayTx(relayTxModel *model.RelayTransaction) error {

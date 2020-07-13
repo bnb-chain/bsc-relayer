@@ -38,4 +38,5 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	if len(r.cfg.BSCConfig.MonitorDataSeedList) >= 2 {
 		go r.doubleSignMonitorDaemon()
 	}
+	go r.alert()
 }

@@ -4,7 +4,10 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/binance-chain/go-sdk/common/types"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
@@ -14,9 +17,6 @@ import (
 	"github.com/binance-chain/bsc-relayer/executor"
 	"github.com/binance-chain/bsc-relayer/model"
 	"github.com/binance-chain/bsc-relayer/relayer"
-	"github.com/binance-chain/go-sdk/common/types"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 const (

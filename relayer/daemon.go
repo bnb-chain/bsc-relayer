@@ -3,11 +3,12 @@ package relayer
 import (
 	"time"
 
+	ethcmm "github.com/ethereum/go-ethereum/common"
+	cmn "github.com/tendermint/tendermint/libs/common"
+
 	"github.com/binance-chain/bsc-relayer/common"
 	"github.com/binance-chain/bsc-relayer/executor"
 	"github.com/binance-chain/bsc-relayer/model"
-	ethcmm "github.com/ethereum/go-ethereum/common"
-	cmn "github.com/tendermint/tendermint/libs/common"
 )
 
 const (

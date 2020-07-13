@@ -40,9 +40,9 @@
     "listen_addr": "0.0.0.0:8080"
   },
   "alert_config": {
-    "moniker": "moniker",
+    "enable_alert": false,
     "telegram_bot_id": "your_bot_id",
     "telegram_chat_id": "your_chat_id",
-    "block_update_time_out": 60
+    "balance_threshold": "1000000000000000000"
   }
 }
