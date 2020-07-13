@@ -114,11 +114,6 @@ func main() {
 
 	common.Logger.Info("Start relayer")
 
-	err = relayer.SyncProtocol(cfg, types.Network)
-	if err != nil {
-		panic(err)
-	}
-
 	relayer.RegisterRelayerHub(bscExecutor)
 
 	err = relayer.CleanPreviousPackages(bbcExecutor, bscExecutor, startHeight)

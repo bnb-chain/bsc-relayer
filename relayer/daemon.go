@@ -3,8 +3,6 @@ package relayer
 import (
 	"time"
 
-	"github.com/binance-chain/go-sdk/common/types"
-
 	"github.com/binance-chain/bsc-relayer/common"
 	"github.com/binance-chain/bsc-relayer/executor"
 	cmn "github.com/tendermint/tendermint/libs/common"
@@ -22,13 +20,6 @@ func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCE
 			sleepTime := time.Duration(bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))
 			time.Sleep(sleepTime)
 			continue
-		}
-
-		if height%bbcExecutor.Config.BBCConfig.BlockIntervalForSyncProtocol == 0 {
-			err := SyncProtocol(bbcExecutor.Config, types.Network)
-			if err != nil {
-				common.Logger.Error(err.Error())
-			}
 		}
 
 		// Found validator set change
@@ -51,7 +42,7 @@ func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCE
 			continue // packages have been delivered on cleanup
 		}
 
-		if len(tashSet.TaskList) == 0 || (len(tashSet.TaskList) == 1 && tashSet.TaskList[0].ChannelID == executor.PureHeaderSyncChannelID){
+		if len(tashSet.TaskList) == 0 || (len(tashSet.TaskList) == 1 && tashSet.TaskList[0].ChannelID == executor.PureHeaderSyncChannelID) {
 			height++
 			continue // skip this height
 		}
@@ -64,17 +55,7 @@ func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCE
 		common.Logger.Infof("Syncing header: %d, txHash: %s", tashSet.Height+1, txHash.String())
 
 		for _, task := range tashSet.TaskList {
-			channelConfig, ok := crossChainProtocol.Channels[task.ChannelID]
-			if !ok {
-				common.Logger.Errorf("unsupported channelID %d", task.ChannelID)
-				continue
-			}
-			abi, ok := crossChainProtocol.ABIs[channelConfig.ABIName]
-			if !ok {
-				common.Logger.Errorf("missing abi %s", channelConfig.ABIName)
-				continue
-			}
-			_, err := bscExecutor.RelayCrossChainPackage(task.ChannelID, channelConfig.ContractAddr, abi, channelConfig.Method, task.Sequence, tashSet.Height)
+			_, err := bscExecutor.RelayCrossChainPackage(task.ChannelID, task.Sequence, tashSet.Height)
 			if err != nil {
 				common.Logger.Error(err.Error())
 				continue

@@ -8,12 +8,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-type CrossChainProtocolConfig struct {
-	Channels        []ChannelConfig `json:"channels"`
-	ABIFileNameList []string        `json:"abi_file_name_list"`
-	ABIList         []string        `json:"abi_list"`
-}
-
 type ChannelConfig struct {
 	ChannelID      int8           `json:"channel_id"`
 	Method         string         `json:"method"`
@@ -31,20 +25,12 @@ type Config struct {
 }
 
 type CrossChainConfig struct {
-	SourceChainID      uint16                   `json:"source_chain_id"`
-	DestChainID        uint16                   `json:"dest_chain_id"`
-	DestChainName      string                   `json:"dest_chain_name"`
-	ProtocolConfigType string                   `json:"protocol_config_type"`
-	ProtocolConfig     CrossChainProtocolConfig `json:"protocol_config"`
+	SourceChainID      uint16  `json:"source_chain_id"`
+	DestChainID        uint16  `json:"dest_chain_id"`
+	MonitorChannelList []uint8 `json:"monitor_channel_list"`
 }
 
 func (cfg *CrossChainConfig) Validate() {
-	if cfg.ProtocolConfigType != LocalProtocolConfig && cfg.ProtocolConfigType != RemoteProtocolConfig {
-		panic("unsupported protocol config type, valid value: local or remote")
-	}
-	if cfg.ProtocolConfigType == LocalProtocolConfig && len(cfg.ProtocolConfig.ABIList) != len(cfg.ProtocolConfig.ABIFileNameList) {
-		panic("The length of ABIList and ABIFileNameList should be equal")
-	}
 }
 
 type AdminConfig struct {
@@ -65,7 +51,6 @@ type BBCConfig struct {
 	Mnemonic                                   string `json:"mnemonic"`
 	SleepMillisecondForWaitBlock               int64  `json:"sleep_millisecond_for_wait_block"`
 	BlockIntervalForCleanUpUndeliveredPackages uint64 `json:"block_interval_for_clean_up_undelivered_packages"`
-	BlockIntervalForSyncProtocol               uint64 `json:"block_interval_for_sync_protocol"`
 }
 
 func (cfg *BBCConfig) Validate() {
@@ -89,9 +74,6 @@ func (cfg *BBCConfig) Validate() {
 	}
 	if cfg.BlockIntervalForCleanUpUndeliveredPackages == 0 {
 		panic("block interval for cleanup undelivered packages must not be zero")
-	}
-	if cfg.BlockIntervalForSyncProtocol == 0 {
-		panic("block interval for syncing protocol must not be zero")
 	}
 }
 

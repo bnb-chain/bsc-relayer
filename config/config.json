@@ -2,8 +2,7 @@
   "cross_chain_config": {
     "source_chain_id": 1,
     "dest_chain_id": 2,
-    "dest_chain_name": "rialto",
-    "protocol_config_type": "remote"
+    "monitor_channel_list": [1, 2, 3, 8, 9]
   },
   "bbc_config": {
     "rpc_addr": "http://data-seed-prealpha-1-s1.binance.org:80",
@@ -12,8 +11,7 @@
     "aws_secret_name": "",
     "mnemonic": "",
     "sleep_millisecond_for_wait_block": 500,
-    "block_interval_for_clean_up_undelivered_packages": 5500,
-    "block_interval_for_sync_protocol": 200000
+    "block_interval_for_clean_up_undelivered_packages": 5500
   },
   "bsc_config": {
     "key_type": "local_private_key",

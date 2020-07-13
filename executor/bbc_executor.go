@@ -127,15 +127,11 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 					continue
 				}
 				items := strings.Split(string(tag.Value), separator)
-				if len(items) != 4 {
-					continue
-				}
-				destChainName := items[0]
-				if destChainName != executor.Config.CrossChainConfig.DestChainName {
+				if len(items) != 3 {
 					continue
 				}
 
-				destChainID, err := strconv.Atoi(items[1])
+				destChainID, err := strconv.Atoi(items[0])
 				if err != nil {
 					continue
 				}
@@ -143,7 +139,7 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 					continue
 				}
 
-				channelID, err := strconv.Atoi(items[2])
+				channelID, err := strconv.Atoi(items[1])
 				if err != nil {
 					continue
 				}
@@ -151,7 +147,7 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 					continue
 				}
 
-				sequence, err := strconv.Atoi(items[3])
+				sequence, err := strconv.Atoi(items[2])
 				if err != nil {
 					continue
 				}
@@ -229,13 +225,13 @@ func (executor *BBCExecutor) QueryTendermintHeader(height int64) (*common.Header
 	return header, nil
 }
 
-func (executor *BBCExecutor) QueryKeyWithProof(key []byte, storeName string, height int64) (int64, []byte, []byte, []byte, error) {
+func (executor *BBCExecutor) QueryKeyWithProof(key []byte, height int64) (int64, []byte, []byte, []byte, error) {
 	opts := rpcclient.ABCIQueryOptions{
 		Height: height,
 		Prove:  true,
 	}
 
-	path := fmt.Sprintf("/store/%s/%s", storeName, "key")
+	path := fmt.Sprintf("/store/%s/%s", packageStoreName, "key")
 	result, err := executor.RpcClient.ABCIQueryWithOptions(path, key, opts)
 	if err != nil {
 		return 0, nil, nil, nil, err
@@ -254,7 +250,7 @@ func (executor *BBCExecutor) GetNextSequence(channelID common.CrossChainChannelI
 		Prove:  false,
 	}
 
-	path := fmt.Sprintf("/store/%s/%s", storeName, "key")
+	path := fmt.Sprintf("/store/%s/%s", sequenceStoreName, "key")
 	key := buildChannelSequenceKey(executor.destChainID, channelID)
 
 	response, err := executor.RpcClient.ABCIQueryWithOptions(path, key, opts)

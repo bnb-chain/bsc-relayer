@@ -5,15 +5,14 @@ import (
 	"crypto/ecdsa"
 	"encoding/json"
 	"fmt"
+	"github.com/binance-chain/bsc-relayer/executor/crosschain"
 	"math/big"
-	"strings"
 	"time"
 
 	relayercommon "github.com/binance-chain/bsc-relayer/common"
 	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/bsc-relayer/executor/relayerhub"
 	"github.com/binance-chain/bsc-relayer/executor/tendermintlightclient"
-	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -145,19 +144,18 @@ tryAgain:
 	return tx.Hash(), nil
 }
 
-func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.CrossChainChannelID, contractAddr common.Address, contractABI string, method string, height, sequence uint64, msgBytes, proofBytes []byte) (common.Hash, error) {
+func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.CrossChainChannelID, height, sequence uint64, msgBytes, proofBytes []byte) (common.Hash, error) {
 	txOpts, err := executor.getTransactor()
 	if err != nil {
 		return common.Hash{}, err
 	}
 
-	parsed, err := abi.JSON(strings.NewReader(contractABI))
+	crossChainInstance, err := crosschain.NewCrosschain(crossChainContractAddr, executor.bscClient)
 	if err != nil {
 		return common.Hash{}, err
 	}
 
-	contractInstance := bind.NewBoundContract(contractAddr, parsed, executor.bscClient, executor.bscClient, executor.bscClient)
-	tx, err := contractInstance.Transact(txOpts, method, msgBytes, proofBytes, height+1, sequence)
+	tx, err := crossChainInstance.HandlePackage(txOpts, msgBytes, proofBytes, height+1, sequence, uint8(channelID))
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -171,7 +169,7 @@ func (executor *BSCExecutor) GetPackage(channelID relayercommon.CrossChainChanne
 	var proofBytes []byte
 	var err error
 	for i := 0; i < maxTryTimes; i++ {
-		_, _, value, proofBytes, err = executor.bbcExecutor.QueryKeyWithProof(key, storeName, int64(height))
+		_, _, value, proofBytes, err = executor.bbcExecutor.QueryKeyWithProof(key, int64(height))
 		if err != nil {
 			return nil, nil, err
 		}
@@ -189,13 +187,13 @@ func (executor *BSCExecutor) GetPackage(channelID relayercommon.CrossChainChanne
 	return value, proofBytes, nil
 }
 
-func (executor *BSCExecutor) RelayCrossChainPackage(channelID relayercommon.CrossChainChannelID, contractAddr common.Address, contractABI string, method string, sequence, height uint64) (common.Hash, error) {
+func (executor *BSCExecutor) RelayCrossChainPackage(channelID relayercommon.CrossChainChannelID, sequence, height uint64) (common.Hash, error) {
 	msgBytes, proofBytes, err := executor.GetPackage(channelID, sequence, height)
 	if err != nil {
 		return common.Hash{}, err
 	}
 
-	tx, err := executor.CallBuildInSystemContract(channelID, contractAddr, contractABI, method, height, sequence, msgBytes, proofBytes)
+	tx, err := executor.CallBuildInSystemContract(channelID, height, sequence, msgBytes, proofBytes)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -204,7 +202,7 @@ func (executor *BSCExecutor) RelayCrossChainPackage(channelID relayercommon.Cros
 	return tx, nil
 }
 
-func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommon.CrossChainChannelID, contractAddr common.Address, contractABI string, method string, startSequence, endSequence uint64, height uint64) ([]common.Hash, error) {
+func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommon.CrossChainChannelID, startSequence, endSequence uint64, height uint64) ([]common.Hash, error) {
 	var txList []common.Hash
 	for seq := startSequence; seq < endSequence; seq++ {
 		msgBytes, proofBytes, err := executor.GetPackage(channelID, seq, height)
@@ -212,11 +210,11 @@ func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommo
 			return nil, err
 		}
 
-		if len(msgBytes) == 0{
+		if len(msgBytes) == 0 {
 			return nil, fmt.Errorf("failed to query cross chain package on BC")
 		}
 
-		tx, err := executor.CallBuildInSystemContract(channelID, contractAddr, contractABI, method, height, seq, msgBytes, proofBytes)
+		tx, err := executor.CallBuildInSystemContract(channelID, height, seq, msgBytes, proofBytes)
 		if err != nil {
 			return nil, err
 		}
@@ -265,9 +263,10 @@ func (executor *BSCExecutor) RegisterRelayer() (common.Hash, error) {
 	return tx.Hash(), nil
 }
 
-func (executor *BSCExecutor) GetNextSequence(channelID relayercommon.CrossChainChannelID, contractAddr common.Address, contractABI string, method string) (uint64, error) {
-	if contractABI == "" {
-		return 0, fmt.Errorf("empty contract abi for channel %d", channelID)
+func (executor *BSCExecutor) GetNextSequence(channelID relayercommon.CrossChainChannelID) (uint64, error) {
+	crossChainInstance, err := crosschain.NewCrosschain(crossChainContractAddr, executor.bscClient)
+	if err != nil {
+		return 0, err
 	}
 
 	callOpts, err := executor.getCallOpts()
@@ -275,20 +274,5 @@ func (executor *BSCExecutor) GetNextSequence(channelID relayercommon.CrossChainC
 		return 0, err
 	}
 
-	parsed, err := abi.JSON(strings.NewReader(contractABI))
-	if err != nil {
-		return 0, err
-	}
-
-	contractInstance := bind.NewBoundContract(contractAddr, parsed, executor.bscClient, executor.bscClient, executor.bscClient)
-
-	var (
-		ret0 = new(uint64)
-	)
-	sequence := ret0
-	err = contractInstance.Call(callOpts, sequence, method)
-	if err != nil {
-		return 0, err
-	}
-	return *sequence, nil
+	return crossChainInstance.ChannelReceiveSequenceMap(callOpts, uint8(channelID))
 }
