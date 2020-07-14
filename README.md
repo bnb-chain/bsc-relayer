@@ -33,6 +33,26 @@ We advise you to be careful and experiment on the network at your own risk. Stay
     }
     ```
    Besides, you also need to provide proper Binance Chain `mnemonic`.
+   
+4. The supported db platforms include `mysql` and `sqlite3`. This is an example db config:
+    ```json
+    {
+       "dialect": "mysql",
+       "db_path": "relayer:12345678@(localhost:3306)/bsc_relayer?charset=utf8&parseTime=True&loc=Local"
+    }
+    ```
+   If you don't want to specify a db for your bsc-relayer, just leave `db_path` to empty.
+   
+5. Send alert telegram message when the balance of relayer account is too low. This is an example alert config:
+    ```json
+    {
+        "enable_alert": true,
+        "telegram_bot_id": "1377262449:AAH70B43ES75uiKyyiyUh3fRCy6JrvK4O6c",
+        "telegram_chat_id": "@bsc_relayer",
+        "balance_threshold": "1000000000000000000"
+    }
+    ```
+   Please refer to [telegram_bot](https://www.home-assistant.io/integrations/telegram_bot) to setup your telegram bot. If you don't want this feature, just set `enable_alert` to false.
 
 ### Build
 
@@ -76,6 +96,28 @@ docker run -e BBC_NETWORK=1 -e CONFIG_TYPE="local" -d -it bsc-relayer
     ```
     ERROR main missing local mnemonic
     ```
+
+### Monitor Relayer Status
+
+To enable this function, you must specify proper db config for your relayer. Suppose `8080` is the admin port: 
+```shell script
+curl localhost:8080/status
+```
+
+Example response:
+```json
+{
+    "total_tx": 82,
+    "success_tx": 36,
+    "failed_tx": 46,
+    "sync_header_tx": 41,
+    "deliver_package_tx": 41,
+    "accumulated_total_tx_fee": "0.14336928:BNB",
+    "accumulated_success_tx_fee": "0.1030536:BNB",
+    "accumulated_failed_tx_fee": "0.04031568:BNB",
+    "update_time": "2020-07-14 06:59:39 PM"
+}
+```
 
 ## License
 
