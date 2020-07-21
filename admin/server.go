@@ -11,8 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const numPerPage = 100
-
 type Admin struct {
 	Config *config.Config
 }
@@ -38,7 +36,10 @@ func (admin *Admin) Endpoints(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(jsonBytes)
+	_, err = w.Write(jsonBytes)
+	if err != nil {
+		common.Logger.Error(err)
+	}
 }
 
 func (admin *Admin) Serve() {

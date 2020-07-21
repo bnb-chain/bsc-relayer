@@ -151,7 +151,7 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 				if err != nil {
 					continue
 				}
-				if sequence > math.MaxInt64 || sequence < 0 {
+				if sequence < 0 {
 					continue
 				}
 
