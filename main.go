@@ -110,18 +110,24 @@ func main() {
 		common.Logger.Error(err.Error())
 		return
 	}
-	startHeight := uint64(abciInfo.Response.LastBlockHeight) - 1
+	startHeight := abciInfo.Response.LastBlockHeight - 1
+	block, err := bbcExecutor.RpcClient.Block(&(startHeight))
+	if err != nil {
+		common.Logger.Error(err.Error())
+		return
+	}
+	curValidatorsHash := block.BlockMeta.Header.ValidatorsHash
 
 	common.Logger.Info("Start relayer")
 
 	relayer.RegisterRelayerHub(bscExecutor)
 
-	err = relayer.CleanPreviousPackages(bbcExecutor, bscExecutor, startHeight)
+	err = relayer.CleanPreviousPackages(bbcExecutor, bscExecutor, uint64(startHeight))
 	if err != nil {
 		panic(err)
 	}
 
-	go relayer.RelayerDaemon(bbcExecutor, bscExecutor, startHeight)
+	go relayer.RelayerDaemon(bbcExecutor, bscExecutor, uint64(startHeight), curValidatorsHash)
 
 	if len(cfg.BSCConfig.MonitorDataSeedList) >= 2 {
 		go relayer.DoubleSignMonitorDaemon(bbcExecutor, cfg.BSCConfig.MonitorDataSeedList)

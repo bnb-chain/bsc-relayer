@@ -117,6 +117,8 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 				ChannelID: PureHeaderSyncChannelID,
 			})
 			curValidatorsHash = block.Block.Header.ValidatorsHash
+		} else {
+			curValidatorsHash = preValidatorsHash
 		}
 	}
 
