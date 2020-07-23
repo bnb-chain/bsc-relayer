@@ -46,7 +46,7 @@ func isDoubleSignHeaders(headers [2]*bsc.Header) bool {
 	if err != nil {
 		return false
 	}
-	if bytes.Compare(signature1, signature2) == 0 {
+	if bytes.Equal(signature1, signature2) {
 		return false
 	}
 
@@ -58,7 +58,7 @@ func isDoubleSignHeaders(headers [2]*bsc.Header) bool {
 	if err != nil {
 		return false
 	}
-	if bytes.Compare(signer1.Bytes(), signer2.Bytes()) != 0 {
+	if !bytes.Equal(signer1.Bytes(), signer2.Bytes()) {
 		return false
 	}
 

@@ -202,7 +202,7 @@ func (executor *BSCExecutor) RelayCrossChainPackage(channelID relayercommon.Cros
 	return tx, nil
 }
 
-func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommon.CrossChainChannelID, startSequence, endSequence uint64, height uint64) ([]common.Hash, error) {
+func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommon.CrossChainChannelID, startSequence, endSequence, height uint64) ([]common.Hash, error) {
 	var txList []common.Hash
 	for seq := startSequence; seq < endSequence; seq++ {
 		msgBytes, proofBytes, err := executor.GetPackage(channelID, seq, height)

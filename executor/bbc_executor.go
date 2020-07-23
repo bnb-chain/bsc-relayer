@@ -57,8 +57,7 @@ func getMnemonic(cfg *config.BBCConfig) (string, error) {
 }
 
 func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCExecutor, error) {
-	var rpcClient *rpc.HTTP
-	rpcClient = rpc.NewRPCClient(cfg.BBCConfig.RpcAddr, networkType)
+	rpcClient := rpc.NewRPCClient(cfg.BBCConfig.RpcAddr, networkType)
 
 	var keyManager keys.KeyManager
 	if len(cfg.BSCConfig.MonitorDataSeedList) >= 2 {
@@ -85,14 +84,6 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 
 func (executor *BBCExecutor) SubmitEvidence(headers []*bsc.Header) (*coretypes.ResultBroadcastTx, error) {
 	return client.BSCSubmitEvidence(executor.RpcClient, executor.keyManager.GetAddr(), headers, rpc.Sync)
-}
-
-func (executor *BBCExecutor) IsHeaderExisting(height int64) bool {
-	_, err := executor.RpcClient.Block(&height)
-	if err != nil {
-		return false
-	}
-	return true
 }
 
 func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidatorsHash cmn.HexBytes) (*common.TaskSet, cmn.HexBytes, error) {
@@ -151,7 +142,7 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 				if err != nil {
 					continue
 				}
-				if sequence > math.MaxInt64 || sequence < 0 {
+				if sequence < 0 {
 					continue
 				}
 
