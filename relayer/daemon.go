@@ -8,8 +8,7 @@ import (
 	cmn "github.com/tendermint/tendermint/libs/common"
 )
 
-func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor, startHeight uint64) {
-	var curValidatorsHash cmn.HexBytes
+func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor, startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	var tashSet *common.TaskSet
 	var err error
 	height := startHeight
@@ -29,7 +28,7 @@ func RelayerDaemon(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCE
 				if err != nil {
 					common.Logger.Error(err.Error())
 				}
-				common.Logger.Infof("Syncing header for validatorset update on Binance Chain, txHash: %s", txHash.String())
+				common.Logger.Infof("Syncing header for validatorset update on Binance Chain, height:%d, txHash: %s", tashSet.Height, txHash.String())
 			}
 		}
 
