@@ -221,7 +221,7 @@ func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommo
 		relayercommon.Logger.Infof("channelID: %d, sequence: %d, txHash: %s", channelID, seq, tx.String())
 		txList = append(txList, tx)
 
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(10 * time.Millisecond)
 	}
 	return txList, nil
 }
