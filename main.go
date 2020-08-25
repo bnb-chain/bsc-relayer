@@ -96,7 +96,7 @@ func main() {
 		return
 	}
 
-	common.InitLogger(*cfg.LogConfig)
+	common.InitLogger(&cfg.LogConfig)
 
 	var db *gorm.DB
 	if cfg.DBConfig.DBPath != "" {

@@ -18,13 +18,13 @@ type ChannelConfig struct {
 }
 
 type Config struct {
-	CrossChainConfig *CrossChainConfig `json:"cross_chain_config"`
-	BBCConfig        *BBCConfig        `json:"bbc_config"`
-	BSCConfig        *BSCConfig        `json:"bsc_config"`
-	LogConfig        *LogConfig        `json:"log_config"`
-	AdminConfig      *AdminConfig      `json:"admin_config"`
-	AlertConfig      *AlertConfig      `json:"alert_config"`
-	DBConfig         *DBConfig         `json:"db_config"`
+	CrossChainConfig CrossChainConfig `json:"cross_chain_config"`
+	BBCConfig        BBCConfig        `json:"bbc_config"`
+	BSCConfig        BSCConfig        `json:"bsc_config"`
+	LogConfig        LogConfig        `json:"log_config"`
+	AdminConfig      AdminConfig      `json:"admin_config"`
+	AlertConfig      AlertConfig      `json:"alert_config"`
+	DBConfig         DBConfig         `json:"db_config"`
 }
 
 type CrossChainConfig struct {
@@ -180,6 +180,7 @@ func (cfg *Config) Validate() {
 	cfg.LogConfig.Validate()
 	cfg.BBCConfig.Validate()
 	cfg.BSCConfig.Validate()
+	cfg.AlertConfig.Validate()
 	cfg.DBConfig.Validate()
 }
 

@@ -61,7 +61,7 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 
 	var keyManager keys.KeyManager
 	if len(cfg.BSCConfig.MonitorDataSeedList) >= 2 {
-		mnemonic, err := getMnemonic(cfg.BBCConfig)
+		mnemonic, err := getMnemonic(&cfg.BBCConfig)
 		if err != nil {
 			return nil, err
 		}

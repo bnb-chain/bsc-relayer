@@ -66,7 +66,7 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 	if err != nil {
 		return nil, err
 	}
-	privKey, err := getPrivateKey(cfg.BSCConfig)
+	privKey, err := getPrivateKey(&cfg.BSCConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 		txSender:      txSender,
 		sourceChainID: relayercommon.CrossChainID(cfg.CrossChainConfig.SourceChainID),
 		destChainID:   relayercommon.CrossChainID(cfg.CrossChainConfig.DestChainID),
-		bscConfig:     cfg.BSCConfig,
+		bscConfig:     &cfg.BSCConfig,
 	}, nil
 }
 
