@@ -62,6 +62,8 @@ func InitTables(db *gorm.DB) {
 		db.CreateTable(&RelayTransaction{})
 		db.Model(&RelayTransaction{}).AddIndex("idx_tx_height", "tx_height")
 		db.Model(&RelayTransaction{}).AddIndex("idx_tx_status", "tx_status")
+		db.Model(&RelayTransaction{}).AddIndex("idx_tx_channel_id", "channel_id")
+		db.Model(&RelayTransaction{}).AddIndex("idx_tx_sequence", "sequence")
 		db.Model(&RelayTransaction{}).AddIndex("idx_tx_create_time", "create_time")
 	}
 

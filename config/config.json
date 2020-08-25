@@ -11,7 +11,8 @@
     "aws_secret_name": "",
     "mnemonic": "",
     "sleep_millisecond_for_wait_block": 500,
-    "block_interval_for_clean_up_undelivered_packages": 5500
+    "block_interval_for_clean_up_undelivered_packages": 5500,
+    "behind_block_threshold": 100
   },
   "bsc_config": {
     "key_type": "local_private_key",

@@ -17,12 +17,31 @@ const (
 	WaitSecondForTrackTx = 10
 )
 
+func (r *Relayer) getLatestHeight() uint64 {
+	abciInfo, err := r.bbcExecutor.RpcClient.ABCIInfo()
+	if err != nil {
+		common.Logger.Errorf("Query latest height error: %s", err.Error())
+		return 0
+	}
+	return uint64(abciInfo.Response.LastBlockHeight)
+}
+
 func (r *Relayer) relayerDaemon(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	var tashSet *common.TaskSet
 	var err error
 	height := startHeight
 	common.Logger.Info("Start relayer daemon")
 	for {
+		latestHeight := r.getLatestHeight() - 1
+		if latestHeight > height+r.bbcExecutor.Config.BBCConfig.BehindBlockThreshold {
+			err := r.cleanPreviousPackages(latestHeight)
+			if err != nil {
+				common.Logger.Error(err.Error())
+			}
+			height = latestHeight + 1
+			continue // packages have been delivered on cleanup
+		}
+
 		tashSet, curValidatorsHash, err = r.bbcExecutor.MonitorCrossChainPackage(int64(height), curValidatorsHash)
 		if err != nil {
 			sleepTime := time.Duration(r.bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))

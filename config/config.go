@@ -54,6 +54,7 @@ type BBCConfig struct {
 	Mnemonic                                   string `json:"mnemonic"`
 	SleepMillisecondForWaitBlock               int64  `json:"sleep_millisecond_for_wait_block"`
 	BlockIntervalForCleanUpUndeliveredPackages uint64 `json:"block_interval_for_clean_up_undelivered_packages"`
+	BehindBlockThreshold                       uint64 `json:"behind_block_threshold"`
 }
 
 func (cfg *BBCConfig) Validate() {
@@ -77,6 +78,9 @@ func (cfg *BBCConfig) Validate() {
 	}
 	if cfg.BlockIntervalForCleanUpUndeliveredPackages == 0 {
 		panic("block interval for cleanup undelivered packages must not be zero")
+	}
+	if cfg.BehindBlockThreshold == 0 {
+		panic("behind block threshold should be be positive")
 	}
 }
 
