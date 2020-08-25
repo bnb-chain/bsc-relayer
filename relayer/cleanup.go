@@ -7,6 +7,7 @@ import (
 
 func CleanPreviousPackages(bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor, height uint64) error {
 	blockSynced := false
+	common.Logger.Info("enter CleanPreviousPackages mode")
 	for _, channelId := range bbcExecutor.Config.CrossChainConfig.MonitorChannelList {
 		nextSequence, err := bbcExecutor.GetNextSequence(common.CrossChainChannelID(channelId), int64(height))
 		if err != nil {
