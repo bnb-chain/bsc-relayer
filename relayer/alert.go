@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	AlertInterval = 60 * time.Second
+	RetryInterval = 5 * time.Second
 )
 
 func (r *Relayer) alert() {
@@ -25,12 +25,14 @@ func (r *Relayer) alert() {
 	for {
 		balance, err := r.bscExecutor.GetRelayerBalance()
 		if err != nil {
-			util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, fmt.Sprintf("got relayer balance failure: %s", err.Error()))
+			time.Sleep(RetryInterval)
+			continue
 		} else {
 			balance, err := decimal.NewFromString(balance.String())
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
+			util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, fmt.Sprintf("relayer balance: %s", balance.String()))
 			if balance.Cmp(balanceThreshold) <= 0 {
 				msg := fmt.Sprintf("bsc-relayer balance (%s:BNB) on Binance Smart Chain is less than threshold (%s:BNB)",
 					balance.Div(decimal.NewFromInt(1e18)).String(), balanceThreshold.Div(decimal.NewFromInt(1e18)).String())
@@ -38,6 +40,6 @@ func (r *Relayer) alert() {
 			}
 		}
 
-		time.Sleep(AlertInterval)
+		time.Sleep(time.Duration(r.cfg.AlertConfig.Interval) * time.Second)
 	}
 }

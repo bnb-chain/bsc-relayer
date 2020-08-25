@@ -6,7 +6,7 @@ import (
 	"github.com/binance-chain/bsc-relayer/common"
 )
 
-func (r *Relayer)registerRelayerHub() {
+func (r *Relayer) registerRelayerHub() {
 	isRelayer, err := r.bscExecutor.IsRelayer()
 	if err != nil {
 		panic(err)

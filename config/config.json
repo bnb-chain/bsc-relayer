@@ -41,6 +41,7 @@
   },
   "alert_config": {
     "enable_alert": false,
+    "interval": 300,
     "telegram_bot_id": "your_bot_id",
     "telegram_chat_id": "your_chat_id",
     "balance_threshold": "1000000000000000000"

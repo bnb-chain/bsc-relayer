@@ -141,7 +141,8 @@ func (cfg *LogConfig) Validate() {
 }
 
 type AlertConfig struct {
-	EnableAlert bool `json:"enable_alert"`
+	EnableAlert bool  `json:"enable_alert"`
+	Interval    int64 `json:"interval"`
 
 	TelegramBotId  string `json:"telegram_bot_id"`
 	TelegramChatId string `json:"telegram_chat_id"`
@@ -152,6 +153,9 @@ type AlertConfig struct {
 func (cfg *AlertConfig) Validate() {
 	if !cfg.EnableAlert {
 		return
+	}
+	if cfg.Interval <= 0 {
+		panic("alert interval should be positive")
 	}
 	balanceThreshold, ok := big.NewInt(1).SetString(cfg.BalanceThreshold, 10)
 	if !ok {

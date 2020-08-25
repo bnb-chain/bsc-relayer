@@ -4,7 +4,7 @@ import (
 	"github.com/binance-chain/bsc-relayer/common"
 )
 
-func (r *Relayer)cleanPreviousPackages(height uint64) error {
+func (r *Relayer) cleanPreviousPackages(height uint64) error {
 	blockSynced := false
 	common.Logger.Info("enter CleanPreviousPackages mode")
 	for _, channelId := range r.bbcExecutor.Config.CrossChainConfig.MonitorChannelList {
