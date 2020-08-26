@@ -48,7 +48,7 @@ var (
 func TestBSCExecutor_SyncTendermintLightClientHeader(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	txHash, err := executor.SyncTendermintLightClientHeader(100)
@@ -59,7 +59,7 @@ func TestBSCExecutor_SyncTendermintLightClientHeader(t *testing.T) {
 func TestBSCExecutor_RelayBindPackage(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	rpc := rpcclient.NewHTTP(BBCRpc, "/websocket")
@@ -82,7 +82,7 @@ func TestBSCExecutor_RelayBindPackage(t *testing.T) {
 func TestBSCExecutor_RelayTransferPackage(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	rpc := rpcclient.NewHTTP(BBCRpc, "/websocket")
@@ -106,7 +106,7 @@ func TestBSCExecutor_RelayTransferPackage(t *testing.T) {
 func TestBSCExecutor_RelayTransferOutAckPackage(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	rpc := rpcclient.NewHTTP(BBCRpc, "/websocket")
@@ -130,7 +130,7 @@ func TestBSCExecutor_RelayTransferOutAckPackage(t *testing.T) {
 func TestBSCExecutor_QueryStakingDeliveredSequence(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	sequence, err := executor.GetNextSequence(BindChannelID)
@@ -161,7 +161,7 @@ func TestBSCExecutor_QueryStakingDeliveredSequence(t *testing.T) {
 func TestBSCExecutor_RelayStakingPackage(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	rpc := rpcclient.NewHTTP(BBCRpc, "/websocket")
@@ -185,7 +185,7 @@ func TestBSCExecutor_RelayStakingPackage(t *testing.T) {
 func TestBSCExecutor_RegisterRelayer(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	txHash, err := executor.RegisterRelayer()
@@ -196,7 +196,7 @@ func TestBSCExecutor_RegisterRelayer(t *testing.T) {
 func TestBSCExecutor_CheckRelayer(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	callOpts, err := executor.getCallOpts()
@@ -217,7 +217,7 @@ func TestBSCExecutor_CheckRelayer(t *testing.T) {
 func TestBSCExecutor_QueryPackage(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
-	executor, err := NewBSCExecutor(bbcExecutor, cfg)
+	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
 	require.NoError(t, err)
 
 	rpc := rpcclient.NewHTTP(BBCRpc, "/websocket")

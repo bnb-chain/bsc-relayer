@@ -4,6 +4,10 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/binance-chain/go-sdk/common/types"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
@@ -11,8 +15,8 @@ import (
 	"github.com/binance-chain/bsc-relayer/common"
 	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/bsc-relayer/executor"
+	"github.com/binance-chain/bsc-relayer/model"
 	"github.com/binance-chain/bsc-relayer/relayer"
-	"github.com/binance-chain/go-sdk/common/types"
 )
 
 const (
@@ -92,7 +96,18 @@ func main() {
 		return
 	}
 
-	common.InitLogger(*cfg.LogConfig)
+	common.InitLogger(&cfg.LogConfig)
+
+	var db *gorm.DB
+	if cfg.DBConfig.DBPath != "" {
+		var err error
+		db, err = gorm.Open(cfg.DBConfig.Dialect, cfg.DBConfig.DBPath)
+		if err != nil {
+			panic(fmt.Sprintf("open db error, err=%s", err.Error()))
+		}
+		defer db.Close()
+		model.InitTables(db)
+	}
 
 	bbcExecutor, err := executor.NewBBCExecutor(cfg, types.ChainNetwork(bbcNetworkType))
 	if err != nil {
@@ -100,7 +115,7 @@ func main() {
 		return
 	}
 
-	bscExecutor, err := executor.NewBSCExecutor(bbcExecutor, cfg)
+	bscExecutor, err := executor.NewBSCExecutor(db, bbcExecutor, cfg)
 	if err != nil {
 		common.Logger.Error(err.Error())
 		return
@@ -118,22 +133,11 @@ func main() {
 	}
 	curValidatorsHash := block.BlockMeta.Header.ValidatorsHash
 
-	common.Logger.Info("Start relayer")
+	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor)
+	common.Logger.Info("Starting relayer")
+	relayerInstance.Start(uint64(startHeight), curValidatorsHash)
 
-	relayer.RegisterRelayerHub(bscExecutor)
-
-	err = relayer.CleanPreviousPackages(bbcExecutor, bscExecutor, uint64(startHeight))
-	if err != nil {
-		panic(err)
-	}
-
-	go relayer.RelayerDaemon(bbcExecutor, bscExecutor, uint64(startHeight), curValidatorsHash)
-
-	if len(cfg.BSCConfig.MonitorDataSeedList) >= 2 {
-		go relayer.DoubleSignMonitorDaemon(bbcExecutor, cfg.BSCConfig.MonitorDataSeedList)
-	}
-
-	adm := admin.NewAdmin(cfg)
+	adm := admin.NewAdmin(db, cfg)
 	go adm.Serve()
 
 	select {}

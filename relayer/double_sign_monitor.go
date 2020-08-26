@@ -116,11 +116,12 @@ func (monitor *DoubleSignMonitor) doubleSignChecker(channelNumber int, header *e
 	monitor.ethereumHeaders[channelNumber][header.Number.Int64()] = header
 }
 
-func DoubleSignMonitorDaemon(bbcExecutor *executor.BBCExecutor, bscProviderList []string) {
+func (r *Relayer)doubleSignMonitorDaemon() {
+	var bscProviderList = r.cfg.BSCConfig.MonitorDataSeedList
 	doubleSignMonitor := DoubleSignMonitor{
 		ethereumHeaders:       make([]map[int64]*ethereumtype.Header, len(bscProviderList)),
 		ethereumHeaderNumbers: make([]*clist.CList, len(bscProviderList)),
-		bbcExecutor:           bbcExecutor,
+		bbcExecutor:           r.bbcExecutor,
 	}
 
 	var headerChannelList []chan *ethereumtype.Header

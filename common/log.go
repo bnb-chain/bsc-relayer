@@ -26,7 +26,7 @@ var (
 )
 
 // InitLogger initialises the logger.
-func InitLogger(config config.LogConfig) {
+func InitLogger(config *config.LogConfig) {
 	backends := make([]logging.Backend, 0)
 
 	if config.UseConsoleLogger {

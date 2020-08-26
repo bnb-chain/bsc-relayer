@@ -5,21 +5,26 @@ import (
 	"crypto/ecdsa"
 	"encoding/json"
 	"fmt"
-	"github.com/binance-chain/bsc-relayer/executor/crosschain"
 	"math/big"
 	"time"
 
-	relayercommon "github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
-	"github.com/binance-chain/bsc-relayer/executor/relayerhub"
-	"github.com/binance-chain/bsc-relayer/executor/tendermintlightclient"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/jinzhu/gorm"
+
+	relayercommon "github.com/binance-chain/bsc-relayer/common"
+	config "github.com/binance-chain/bsc-relayer/config"
+	"github.com/binance-chain/bsc-relayer/executor/crosschain"
+	"github.com/binance-chain/bsc-relayer/executor/relayerhub"
+	"github.com/binance-chain/bsc-relayer/executor/tendermintlightclient"
+	"github.com/binance-chain/bsc-relayer/model"
 )
 
 type BSCExecutor struct {
+	db            *gorm.DB
 	bbcExecutor   *BBCExecutor
 	bscClient     *ethclient.Client
 	sourceChainID relayercommon.CrossChainID
@@ -56,12 +61,12 @@ func getPrivateKey(cfg *config.BSCConfig) (*ecdsa.PrivateKey, error) {
 	return privKey, nil
 }
 
-func NewBSCExecutor(bbcExecutor *BBCExecutor, cfg *config.Config) (*BSCExecutor, error) {
+func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (*BSCExecutor, error) {
 	bscClient, err := ethclient.Dial(cfg.BSCConfig.Provider)
 	if err != nil {
 		return nil, err
 	}
-	privKey, err := getPrivateKey(cfg.BSCConfig)
+	privKey, err := getPrivateKey(&cfg.BSCConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -73,13 +78,14 @@ func NewBSCExecutor(bbcExecutor *BBCExecutor, cfg *config.Config) (*BSCExecutor,
 	txSender := crypto.PubkeyToAddress(*publicKeyECDSA)
 
 	return &BSCExecutor{
+		db:            db,
 		bbcExecutor:   bbcExecutor,
 		bscClient:     bscClient,
 		privateKey:    privKey,
 		txSender:      txSender,
 		sourceChainID: relayercommon.CrossChainID(cfg.CrossChainConfig.SourceChainID),
 		destChainID:   relayercommon.CrossChainID(cfg.CrossChainConfig.DestChainID),
-		bscConfig:     cfg.BSCConfig,
+		bscConfig:     &cfg.BSCConfig,
 	}, nil
 }
 
@@ -141,6 +147,31 @@ tryAgain:
 	if err != nil {
 		return common.Hash{}, err
 	}
+
+	relayTx := &model.RelayTransaction{
+		TxHash: tx.Hash().String(),
+		Type:   model.SyncBlockHeader,
+
+		ChannelId: 0,
+		Sequence:  0,
+		BCHeight:  height,
+
+		TxStatus:   model.Created,
+		TxGasPrice: txOpts.GasPrice.Uint64(),
+		TxGasLimit: txOpts.GasLimit,
+		TxUsedGas:  0,
+		TxFee:      0,
+		TxHeight:   0,
+
+		CreateTime: time.Now().Unix(),
+		UpdateTime: 0,
+	}
+
+	err = executor.saveRelayTx(relayTx)
+	if err != nil {
+		return common.Hash{}, err
+	}
+
 	return tx.Hash(), nil
 }
 
@@ -156,6 +187,30 @@ func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.C
 	}
 
 	tx, err := crossChainInstance.HandlePackage(txOpts, msgBytes, proofBytes, height+1, sequence, uint8(channelID))
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	relayTx := &model.RelayTransaction{
+		TxHash: tx.Hash().String(),
+		Type:   model.DeliverPackage,
+
+		ChannelId: uint8(channelID),
+		Sequence:  sequence,
+		BCHeight:  height,
+
+		TxStatus:   model.Created,
+		TxGasPrice: txOpts.GasPrice.Uint64(),
+		TxGasLimit: txOpts.GasLimit,
+		TxUsedGas:  0,
+		TxFee:      0,
+		TxHeight:   0,
+
+		CreateTime: time.Now().Unix(),
+		UpdateTime: 0,
+	}
+
+	err = executor.saveRelayTx(relayTx)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -273,4 +328,29 @@ func (executor *BSCExecutor) GetNextSequence(channelID relayercommon.CrossChainC
 	}
 
 	return crossChainInstance.ChannelReceiveSequenceMap(callOpts, uint8(channelID))
+}
+
+func (executor *BSCExecutor) GetTxRecipient(txHash common.Hash) (*types.Receipt, error) {
+	return executor.bscClient.TransactionReceipt(context.Background(), txHash)
+}
+
+func (executor *BSCExecutor) GetRelayerBalance() (*big.Int, error) {
+	return executor.bscClient.BalanceAt(context.Background(), executor.txSender, nil)
+}
+
+func (executor *BSCExecutor) saveRelayTx(relayTxModel *model.RelayTransaction) error {
+	if executor.db == nil {
+		return nil
+	}
+	tx := executor.db.Begin()
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	if err := tx.Create(relayTxModel).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }

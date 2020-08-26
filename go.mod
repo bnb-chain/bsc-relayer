@@ -25,6 +25,7 @@ require (
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/pborman/uuid v1.2.0 // indirect
 	github.com/rjeczalik/notify v0.9.2 // indirect
+	github.com/shopspring/decimal v1.2.0
 	github.com/spf13/pflag v1.0.3
 	github.com/spf13/viper v1.6.3
 	github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969 // indirect

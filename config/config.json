@@ -2,7 +2,8 @@
   "cross_chain_config": {
     "source_chain_id": 1,
     "dest_chain_id": 2,
-    "monitor_channel_list": [1, 2, 3, 8, 9]
+    "monitor_channel_list": [1, 2, 3, 8, 9],
+    "competition_mode": true
   },
   "bbc_config": {
     "rpc_addr": "http://data-seed-prealpha-1-s1.binance.org:80",
@@ -11,7 +12,9 @@
     "aws_secret_name": "",
     "mnemonic": "",
     "sleep_millisecond_for_wait_block": 500,
-    "block_interval_for_clean_up_undelivered_packages": 5500
+    "clean_up_block_interval": 20,
+    "block_interval_for_clean_up_undelivered_packages": 1000,
+    "behind_block_threshold": 100
   },
   "bsc_config": {
     "key_type": "local_private_key",
@@ -32,7 +35,20 @@
     "use_file_logger": false,
     "compress": false
   },
+  "db_config": {
+    "dialect": "mysql",
+    "db_path": "user:password@(host:port)/db_name?charset=utf8&parseTime=True&loc=Local"
+  },
   "admin_config": {
     "listen_addr": "0.0.0.0:8080"
+  },
+  "alert_config": {
+    "enable_alert": true,
+    "enable_heart_beat": false,
+    "interval": 300,
+    "telegram_bot_id": "your_bot_id",
+    "telegram_chat_id": "your_chat_id",
+    "balance_threshold": "1000000000000000000",
+    "sequence_gap_threshold": 10
   }
 }

@@ -11,6 +11,8 @@ import (
 
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
+	"github.com/binance-chain/bsc-relayer/common"
+	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/go-sdk/client/rpc"
 	ctypes "github.com/binance-chain/go-sdk/common/types"
 	"github.com/binance-chain/go-sdk/keys"
@@ -18,9 +20,6 @@ import (
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	coretypes "github.com/tendermint/tendermint/rpc/core/types"
 	tmtypes "github.com/tendermint/tendermint/types"
-
-	"github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
 )
 
 type BBCExecutor struct {
@@ -61,7 +60,7 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 
 	var keyManager keys.KeyManager
 	if len(cfg.BSCConfig.MonitorDataSeedList) >= 2 {
-		mnemonic, err := getMnemonic(cfg.BBCConfig)
+		mnemonic, err := getMnemonic(&cfg.BBCConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -157,6 +156,28 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 	}
 
 	return &taskSet, curValidatorsHash, nil
+}
+
+func (executor *BBCExecutor) MonitorValidatorSetChange(height int64, preValidatorsHash cmn.HexBytes) (bool, cmn.HexBytes, error) {
+	validatorSetChanged := false
+
+	block, err := executor.RpcClient.Block(&height)
+	if err != nil {
+		return validatorSetChanged, nil, err
+	}
+
+	var curValidatorsHash cmn.HexBytes
+	if preValidatorsHash != nil {
+		if !bytes.Equal(block.Block.Header.ValidatorsHash, preValidatorsHash) ||
+			!bytes.Equal(block.Block.Header.ValidatorsHash, block.Block.Header.NextValidatorsHash) {
+			validatorSetChanged = true
+			curValidatorsHash = block.Block.Header.ValidatorsHash
+		} else {
+			curValidatorsHash = preValidatorsHash
+		}
+	}
+
+	return validatorSetChanged, curValidatorsHash, nil
 }
 
 func (executor *BBCExecutor) GetInitConsensusState(height int64) (*common.ConsensusState, error) {

@@ -3,6 +3,8 @@ package util
 import (
 	"encoding/base64"
 	"fmt"
+	"net/http"
+	"net/url"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -42,5 +44,23 @@ func GetSecret(secretName, region string) (string, error) {
 		}
 		decodedBinarySecret = string(decodedBinarySecretBytes[:length])
 		return decodedBinarySecret, nil
+	}
+}
+
+func SendTelegramMessage(botId string, chatId string, msg string) {
+	if botId == "" || chatId == "" || msg == "" {
+		return
+	}
+
+	endPoint := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", botId)
+	formData := url.Values{
+		"chat_id":    {chatId},
+		"parse_mode": {"html"},
+		"text":       {msg},
+	}
+	_, err := http.PostForm(endPoint, formData)
+	if err != nil {
+		fmt.Println(fmt.Sprintf("send telegram message error, bot_id=%s, chat_id=%s, msg=%s, err=%s", botId, chatId, msg, err.Error()))
+		return
 	}
 }
