@@ -5,8 +5,14 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"math"
+	"strconv"
+	"strings"
+
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
+	"github.com/binance-chain/bsc-relayer/common"
+	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/go-sdk/client/rpc"
 	ctypes "github.com/binance-chain/go-sdk/common/types"
 	"github.com/binance-chain/go-sdk/keys"
@@ -14,9 +20,6 @@ import (
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	coretypes "github.com/tendermint/tendermint/rpc/core/types"
 	tmtypes "github.com/tendermint/tendermint/types"
-
-	"github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
 )
 
 type BBCExecutor struct {
@@ -80,6 +83,79 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 
 func (executor *BBCExecutor) SubmitEvidence(headers []*bsc.Header) (*coretypes.ResultBroadcastTx, error) {
 	return client.BSCSubmitEvidence(executor.RpcClient, executor.keyManager.GetAddr(), headers, rpc.Sync)
+}
+
+func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidatorsHash cmn.HexBytes) (*common.TaskSet, cmn.HexBytes, error) {
+	block, err := executor.RpcClient.Block(&height)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	blockResults, err := executor.RpcClient.BlockResults(&height)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var taskSet common.TaskSet
+	taskSet.Height = uint64(height)
+
+	var curValidatorsHash cmn.HexBytes
+	if preValidatorsHash != nil {
+		if !bytes.Equal(block.Block.Header.ValidatorsHash, preValidatorsHash) ||
+			!bytes.Equal(block.Block.Header.ValidatorsHash, block.Block.Header.NextValidatorsHash) {
+			taskSet.TaskList = append(taskSet.TaskList, common.Task{
+				ChannelID: PureHeaderSyncChannelID,
+			})
+			curValidatorsHash = block.Block.Header.ValidatorsHash
+		} else {
+			curValidatorsHash = preValidatorsHash
+		}
+	}
+
+	for _, event := range blockResults.Results.EndBlock.Events {
+		if event.Type == CrossChainPackageEventType {
+			for _, tag := range event.Attributes {
+				if string(tag.Key) != CorssChainPackageInfoAttributeKey {
+					continue
+				}
+				items := strings.Split(string(tag.Value), separator)
+				if len(items) != 3 {
+					continue
+				}
+
+				destChainID, err := strconv.Atoi(items[0])
+				if err != nil {
+					continue
+				}
+				if uint16(destChainID) != executor.Config.CrossChainConfig.DestChainID {
+					continue
+				}
+
+				channelID, err := strconv.Atoi(items[1])
+				if err != nil {
+					continue
+				}
+				if channelID > math.MaxInt8 || channelID < 0 {
+					continue
+				}
+
+				sequence, err := strconv.Atoi(items[2])
+				if err != nil {
+					continue
+				}
+				if sequence < 0 {
+					continue
+				}
+
+				taskSet.TaskList = append(taskSet.TaskList, common.Task{
+					ChannelID: common.CrossChainChannelID(channelID),
+					Sequence:  uint64(sequence),
+				})
+			}
+		}
+	}
+
+	return &taskSet, curValidatorsHash, nil
 }
 
 func (executor *BBCExecutor) MonitorValidatorSetChange(height int64, preValidatorsHash cmn.HexBytes) (bool, cmn.HexBytes, error) {

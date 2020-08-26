@@ -1,6 +1,7 @@
 package relayer
 
 import (
+	"github.com/binance-chain/bsc-relayer/executor"
 	"github.com/shopspring/decimal"
 	"time"
 
@@ -26,11 +27,77 @@ func (r *Relayer) getLatestHeight() uint64 {
 	return uint64(abciInfo.Response.LastBlockHeight)
 }
 
+func (r *Relayer) relayerCompetitionDaemon(startHeight uint64, curValidatorsHash cmn.HexBytes) {
+	var tashSet *common.TaskSet
+	var err error
+	height := startHeight
+	common.Logger.Info("Start relayer daemon in competition mode")
+	for {
+		latestHeight := r.getLatestHeight() - 1
+		if latestHeight > height+r.bbcExecutor.Config.BBCConfig.BehindBlockThreshold {
+			err := r.cleanPreviousPackages(latestHeight)
+			if err != nil {
+				common.Logger.Error(err.Error())
+			}
+			height = latestHeight + 1
+			continue // packages have been delivered on cleanup
+		}
+
+		tashSet, curValidatorsHash, err = r.bbcExecutor.MonitorCrossChainPackage(int64(height), curValidatorsHash)
+		if err != nil {
+			sleepTime := time.Duration(r.bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))
+			time.Sleep(sleepTime)
+			continue
+		}
+
+		// Found validator set change
+		if len(tashSet.TaskList) > 0 {
+			if tashSet.TaskList[0].ChannelID == executor.PureHeaderSyncChannelID {
+				txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(tashSet.Height)
+				if err != nil {
+					common.Logger.Error(err.Error())
+				}
+				common.Logger.Infof("Syncing header for validatorset update on Binance Chain, height:%d, txHash: %s", tashSet.Height, txHash.String())
+			}
+		}
+
+		if height%r.bbcExecutor.Config.BBCConfig.BlockIntervalForCleanUpUndeliveredPackages == 0 {
+			err := r.cleanPreviousPackages(height)
+			if err != nil {
+				common.Logger.Error(err.Error())
+			}
+			height++
+			continue // packages have been delivered on cleanup
+		}
+
+		if len(tashSet.TaskList) == 0 || (len(tashSet.TaskList) == 1 && tashSet.TaskList[0].ChannelID == executor.PureHeaderSyncChannelID) {
+			height++
+			continue // skip this height
+		}
+
+		txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(tashSet.Height + 1)
+		if err != nil {
+			common.Logger.Error(err.Error())
+			continue // try again for this height
+		}
+		common.Logger.Infof("Syncing header: %d, txHash: %s", tashSet.Height+1, txHash.String())
+
+		for _, task := range tashSet.TaskList {
+			_, err := r.bscExecutor.RelayCrossChainPackage(task.ChannelID, task.Sequence, tashSet.Height)
+			if err != nil {
+				common.Logger.Error(err.Error())
+				continue
+			}
+		}
+		height++
+	}
+}
+
 func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 	var err error
 	validatorSetChanged := false
 	height := r.getLatestHeight()
-	common.Logger.Info("Start relayer daemon")
+	common.Logger.Info("Start relayer daemon in normal model")
 	for {
 		validatorSetChanged, curValidatorsHash, err = r.bbcExecutor.MonitorValidatorSetChange(int64(height), curValidatorsHash)
 		if err != nil {

@@ -32,7 +32,7 @@ func (r *Relayer) alert() {
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
-			if !r.cfg.AlertConfig.EnableHeartBeat {
+			if r.cfg.AlertConfig.EnableHeartBeat {
 				util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, fmt.Sprintf("Heartbeat message: relayer balance: %s", balance.String()))
 			}
 			if balance.Cmp(balanceThreshold) <= 0 {

@@ -97,3 +97,13 @@ func (h *Header) EncodeHeader() ([]byte, error) {
 	}
 	return bz, nil
 }
+
+type Task struct {
+	ChannelID CrossChainChannelID
+	Sequence  uint64
+}
+
+type TaskSet struct {
+	Height   uint64
+	TaskList []Task
+}

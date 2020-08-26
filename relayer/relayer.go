@@ -31,8 +31,12 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	if err != nil {
 		panic(err)
 	}
+	if r.cfg.CrossChainConfig.CompetitionMode {
+		go r.relayerCompetitionDaemon(startHeight, curValidatorsHash)
+	} else {
+		go r.relayerDaemon(curValidatorsHash)
+	}
 
-	go r.relayerDaemon(curValidatorsHash)
 	go r.txTracker()
 
 	if len(r.cfg.BSCConfig.MonitorDataSeedList) >= 2 {

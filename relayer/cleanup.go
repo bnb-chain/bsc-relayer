@@ -1,7 +1,10 @@
 package relayer
 
 import (
+	"fmt"
+
 	"github.com/binance-chain/bsc-relayer/common"
+	util "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/bsc-relayer/model"
 )
 
@@ -24,8 +27,11 @@ func (r *Relayer) cleanPreviousPackages(height uint64) error {
 		common.Logger.Infof("channelID: %d, next deliver sequence %d on BSC, next sequence %d on BC",
 			channelId, nextDeliverSequence, nextSequence)
 		if nextSequence > nextDeliverSequence {
+			if nextSequence-nextDeliverSequence >= r.cfg.AlertConfig.SequenceGapThreshold {
+				util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId,
+					fmt.Sprintf("Alert: channel %d, undelivered package quantity %d", channelId, nextSequence-nextDeliverSequence))
+			}
 			if !blockSynced {
-
 				tx, err := r.bscExecutor.SyncTendermintLightClientHeader(height + 1)
 				if err != nil {
 					return err
