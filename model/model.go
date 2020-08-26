@@ -41,16 +41,16 @@ func (RelayTransaction) TableName() string {
 type Statistic struct {
 	Id int64
 
-	TotalTx          uint64
-	SuccessTx        uint64
-	FailedTx         uint64
-	SyncHeaderTx     uint64
-	DeliverPackageTx uint64
+	TotalTx          int64
+	SuccessTx        int64
+	FailedTx         int64
+	SyncHeaderTx     int64
+	DeliverPackageTx int64
 
-	AccumulatedTotalTxFee   uint64
-	AccumulatedSuccessTxFee uint64
-	AccumulatedFailedTxFee  uint64
-	UpdateTime              uint64
+	AccumulatedTotalTxFee   string
+	AccumulatedSuccessTxFee string
+	AccumulatedFailedTxFee  string
+	UpdateTime              int64
 }
 
 func (Statistic) TableName() string {
@@ -62,6 +62,8 @@ func InitTables(db *gorm.DB) {
 		db.CreateTable(&RelayTransaction{})
 		db.Model(&RelayTransaction{}).AddIndex("idx_tx_height", "tx_height")
 		db.Model(&RelayTransaction{}).AddIndex("idx_tx_status", "tx_status")
+		db.Model(&RelayTransaction{}).AddIndex("idx_tx_channel_id", "channel_id")
+		db.Model(&RelayTransaction{}).AddIndex("idx_tx_sequence", "sequence")
 		db.Model(&RelayTransaction{}).AddIndex("idx_tx_create_time", "create_time")
 	}
 

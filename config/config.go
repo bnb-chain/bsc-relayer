@@ -31,6 +31,7 @@ type CrossChainConfig struct {
 	SourceChainID      uint16  `json:"source_chain_id"`
 	DestChainID        uint16  `json:"dest_chain_id"`
 	MonitorChannelList []uint8 `json:"monitor_channel_list"`
+	CompetitionMode    bool    `json:"competition_mode"`
 }
 
 func (cfg *CrossChainConfig) Validate() {
@@ -53,7 +54,9 @@ type BBCConfig struct {
 	AWSSecretName                              string `json:"aws_secret_name"`
 	Mnemonic                                   string `json:"mnemonic"`
 	SleepMillisecondForWaitBlock               int64  `json:"sleep_millisecond_for_wait_block"`
+	CleanUpBlockInterval                       uint64 `json:"clean_up_block_interval"`
 	BlockIntervalForCleanUpUndeliveredPackages uint64 `json:"block_interval_for_clean_up_undelivered_packages"`
+	BehindBlockThreshold                       uint64 `json:"behind_block_threshold"`
 }
 
 func (cfg *BBCConfig) Validate() {
@@ -75,7 +78,7 @@ func (cfg *BBCConfig) Validate() {
 	if cfg.SleepMillisecondForWaitBlock < 0 {
 		panic("SleepMillisecondForWaitBlock must not be negative")
 	}
-	if cfg.BlockIntervalForCleanUpUndeliveredPackages == 0 {
+	if cfg.CleanUpBlockInterval == 0 {
 		panic("block interval for cleanup undelivered packages must not be zero")
 	}
 }
@@ -141,13 +144,15 @@ func (cfg *LogConfig) Validate() {
 }
 
 type AlertConfig struct {
-	EnableAlert bool  `json:"enable_alert"`
-	Interval    int64 `json:"interval"`
+	EnableAlert     bool  `json:"enable_alert"`
+	EnableHeartBeat bool  `json:"enable_heart_beat"`
+	Interval        int64 `json:"interval"`
 
 	TelegramBotId  string `json:"telegram_bot_id"`
 	TelegramChatId string `json:"telegram_chat_id"`
 
-	BalanceThreshold string `json:"balance_threshold"`
+	BalanceThreshold     string `json:"balance_threshold"`
+	SequenceGapThreshold uint64 `json:"sequence_gap_threshold"`
 }
 
 func (cfg *AlertConfig) Validate() {
@@ -164,6 +169,10 @@ func (cfg *AlertConfig) Validate() {
 
 	if balanceThreshold.Cmp(big.NewInt(0)) <= 0 {
 		panic(fmt.Sprintf("balance_threshold should be positive"))
+	}
+
+	if cfg.SequenceGapThreshold <= 0 {
+		panic(fmt.Sprintf("sequence_gap_threshold should be positive"))
 	}
 }
 

@@ -1,13 +1,14 @@
 package relayer
 
 import (
+	"github.com/binance-chain/bsc-relayer/executor"
+	"github.com/shopspring/decimal"
 	"time"
 
 	ethcmm "github.com/ethereum/go-ethereum/common"
 	cmn "github.com/tendermint/tendermint/libs/common"
 
 	"github.com/binance-chain/bsc-relayer/common"
-	"github.com/binance-chain/bsc-relayer/executor"
 	"github.com/binance-chain/bsc-relayer/model"
 )
 
@@ -17,12 +18,31 @@ const (
 	WaitSecondForTrackTx = 10
 )
 
-func (r *Relayer) relayerDaemon(startHeight uint64, curValidatorsHash cmn.HexBytes) {
+func (r *Relayer) getLatestHeight() uint64 {
+	abciInfo, err := r.bbcExecutor.RpcClient.ABCIInfo()
+	if err != nil {
+		common.Logger.Errorf("Query latest height error: %s", err.Error())
+		return 0
+	}
+	return uint64(abciInfo.Response.LastBlockHeight)
+}
+
+func (r *Relayer) relayerCompetitionDaemon(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	var tashSet *common.TaskSet
 	var err error
 	height := startHeight
-	common.Logger.Info("Start relayer daemon")
+	common.Logger.Info("Start relayer daemon in competition mode")
 	for {
+		latestHeight := r.getLatestHeight() - 1
+		if latestHeight > height+r.bbcExecutor.Config.BBCConfig.BehindBlockThreshold {
+			err := r.cleanPreviousPackages(latestHeight)
+			if err != nil {
+				common.Logger.Error(err.Error())
+			}
+			height = latestHeight + 1
+			continue // packages have been delivered on cleanup
+		}
+
 		tashSet, curValidatorsHash, err = r.bbcExecutor.MonitorCrossChainPackage(int64(height), curValidatorsHash)
 		if err != nil {
 			sleepTime := time.Duration(r.bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))
@@ -73,6 +93,36 @@ func (r *Relayer) relayerDaemon(startHeight uint64, curValidatorsHash cmn.HexByt
 	}
 }
 
+func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
+	var err error
+	validatorSetChanged := false
+	height := r.getLatestHeight()
+	common.Logger.Info("Start relayer daemon in normal model")
+	for {
+		validatorSetChanged, curValidatorsHash, err = r.bbcExecutor.MonitorValidatorSetChange(int64(height), curValidatorsHash)
+		if err != nil {
+			sleepTime := time.Duration(r.bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))
+			time.Sleep(sleepTime)
+			continue
+		}
+		// Found validator set change
+		if validatorSetChanged {
+			txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(height)
+			if err != nil {
+				common.Logger.Error(err.Error())
+			}
+			common.Logger.Infof("Syncing header for validatorset update on Binance Chain, height:%d, txHash: %s", height, txHash.String())
+		}
+		if height % r.bbcExecutor.Config.BBCConfig.CleanUpBlockInterval == 0 {
+			err := r.cleanPreviousPackages(height)
+			if err != nil {
+				common.Logger.Error(err.Error())
+			}
+		}
+		height++
+	}
+}
+
 func (r *Relayer) txTracker() {
 	if r.db == nil {
 		return
@@ -104,14 +154,17 @@ func (r *Relayer) txTracker() {
 			var txStatus string
 			if txRecipient.Status == 0x01 {
 				txStatus = model.Success
-				statistic.AccumulatedSuccessTxFee += txFee
+				accumulatedSuccessTxFee, _ := decimal.NewFromString(statistic.AccumulatedSuccessTxFee)
+				statistic.AccumulatedSuccessTxFee = accumulatedSuccessTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 				statistic.SuccessTx++
 			} else {
 				txStatus = model.Failure
-				statistic.AccumulatedFailedTxFee += txFee
+				accumulatedFailedTxFee , _ := decimal.NewFromString(statistic.AccumulatedFailedTxFee)
+				statistic.AccumulatedFailedTxFee = accumulatedFailedTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 				statistic.FailedTx++
 			}
-			statistic.AccumulatedTotalTxFee += txFee
+			accumulatedTotalTxFee , _ := decimal.NewFromString(statistic.AccumulatedTotalTxFee)
+			statistic.AccumulatedTotalTxFee = accumulatedTotalTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 			err = r.db.Model(model.RelayTransaction{}).Where("id = ?", tx.Id).Updates(
 				map[string]interface{}{
 					"tx_status":   txStatus,
