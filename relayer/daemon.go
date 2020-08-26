@@ -1,13 +1,13 @@
 package relayer
 
 import (
+	"github.com/shopspring/decimal"
 	"time"
 
 	ethcmm "github.com/ethereum/go-ethereum/common"
 	cmn "github.com/tendermint/tendermint/libs/common"
 
 	"github.com/binance-chain/bsc-relayer/common"
-	"github.com/binance-chain/bsc-relayer/executor"
 	"github.com/binance-chain/bsc-relayer/model"
 )
 
@@ -26,66 +26,30 @@ func (r *Relayer) getLatestHeight() uint64 {
 	return uint64(abciInfo.Response.LastBlockHeight)
 }
 
-func (r *Relayer) relayerDaemon(startHeight uint64, curValidatorsHash cmn.HexBytes) {
-	var tashSet *common.TaskSet
+func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 	var err error
-	height := startHeight
+	validatorSetChanged := false
+	height := r.getLatestHeight()
 	common.Logger.Info("Start relayer daemon")
 	for {
-		latestHeight := r.getLatestHeight() - 1
-		if latestHeight > height+r.bbcExecutor.Config.BBCConfig.BehindBlockThreshold {
-			err := r.cleanPreviousPackages(latestHeight)
-			if err != nil {
-				common.Logger.Error(err.Error())
-			}
-			height = latestHeight + 1
-			continue // packages have been delivered on cleanup
-		}
-
-		tashSet, curValidatorsHash, err = r.bbcExecutor.MonitorCrossChainPackage(int64(height), curValidatorsHash)
+		validatorSetChanged, curValidatorsHash, err = r.bbcExecutor.MonitorValidatorSetChange(int64(height), curValidatorsHash)
 		if err != nil {
 			sleepTime := time.Duration(r.bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))
 			time.Sleep(sleepTime)
 			continue
 		}
-
 		// Found validator set change
-		if len(tashSet.TaskList) > 0 {
-			if tashSet.TaskList[0].ChannelID == executor.PureHeaderSyncChannelID {
-				txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(tashSet.Height)
-				if err != nil {
-					common.Logger.Error(err.Error())
-				}
-				common.Logger.Infof("Syncing header for validatorset update on Binance Chain, height:%d, txHash: %s", tashSet.Height, txHash.String())
+		if validatorSetChanged {
+			txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(height)
+			if err != nil {
+				common.Logger.Error(err.Error())
 			}
+			common.Logger.Infof("Syncing header for validatorset update on Binance Chain, height:%d, txHash: %s", height, txHash.String())
 		}
-
-		if height%r.bbcExecutor.Config.BBCConfig.BlockIntervalForCleanUpUndeliveredPackages == 0 {
+		if height % r.bbcExecutor.Config.BBCConfig.CleanUpBlockInterval == 0 {
 			err := r.cleanPreviousPackages(height)
 			if err != nil {
 				common.Logger.Error(err.Error())
-			}
-			height++
-			continue // packages have been delivered on cleanup
-		}
-
-		if len(tashSet.TaskList) == 0 || (len(tashSet.TaskList) == 1 && tashSet.TaskList[0].ChannelID == executor.PureHeaderSyncChannelID) {
-			height++
-			continue // skip this height
-		}
-
-		txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(tashSet.Height + 1)
-		if err != nil {
-			common.Logger.Error(err.Error())
-			continue // try again for this height
-		}
-		common.Logger.Infof("Syncing header: %d, txHash: %s", tashSet.Height+1, txHash.String())
-
-		for _, task := range tashSet.TaskList {
-			_, err := r.bscExecutor.RelayCrossChainPackage(task.ChannelID, task.Sequence, tashSet.Height)
-			if err != nil {
-				common.Logger.Error(err.Error())
-				continue
 			}
 		}
 		height++
@@ -123,14 +87,17 @@ func (r *Relayer) txTracker() {
 			var txStatus string
 			if txRecipient.Status == 0x01 {
 				txStatus = model.Success
-				statistic.AccumulatedSuccessTxFee += txFee
+				accumulatedSuccessTxFee, _ := decimal.NewFromString(statistic.AccumulatedSuccessTxFee)
+				statistic.AccumulatedSuccessTxFee = accumulatedSuccessTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 				statistic.SuccessTx++
 			} else {
 				txStatus = model.Failure
-				statistic.AccumulatedFailedTxFee += txFee
+				accumulatedFailedTxFee , _ := decimal.NewFromString(statistic.AccumulatedFailedTxFee)
+				statistic.AccumulatedFailedTxFee = accumulatedFailedTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 				statistic.FailedTx++
 			}
-			statistic.AccumulatedTotalTxFee += txFee
+			accumulatedTotalTxFee , _ := decimal.NewFromString(statistic.AccumulatedTotalTxFee)
+			statistic.AccumulatedTotalTxFee = accumulatedTotalTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 			err = r.db.Model(model.RelayTransaction{}).Where("id = ?", tx.Id).Updates(
 				map[string]interface{}{
 					"tx_status":   txStatus,

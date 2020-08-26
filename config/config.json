@@ -11,8 +11,7 @@
     "aws_secret_name": "",
     "mnemonic": "",
     "sleep_millisecond_for_wait_block": 500,
-    "block_interval_for_clean_up_undelivered_packages": 5500,
-    "behind_block_threshold": 100
+    "clean_up_block_interval": 20
   },
   "bsc_config": {
     "key_type": "local_private_key",
@@ -41,7 +40,8 @@
     "listen_addr": "0.0.0.0:8080"
   },
   "alert_config": {
-    "enable_alert": false,
+    "enable_alert": true,
+    "enable_heart_beat": false,
     "interval": 300,
     "telegram_bot_id": "your_bot_id",
     "telegram_chat_id": "your_chat_id",

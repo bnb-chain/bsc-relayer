@@ -41,16 +41,16 @@ func (RelayTransaction) TableName() string {
 type Statistic struct {
 	Id int64
 
-	TotalTx          uint64
-	SuccessTx        uint64
-	FailedTx         uint64
-	SyncHeaderTx     uint64
-	DeliverPackageTx uint64
+	TotalTx          int64
+	SuccessTx        int64
+	FailedTx         int64
+	SyncHeaderTx     int64
+	DeliverPackageTx int64
 
-	AccumulatedTotalTxFee   uint64
-	AccumulatedSuccessTxFee uint64
-	AccumulatedFailedTxFee  uint64
-	UpdateTime              uint64
+	AccumulatedTotalTxFee   string
+	AccumulatedSuccessTxFee string
+	AccumulatedFailedTxFee  string
+	UpdateTime              int64
 }
 
 func (Statistic) TableName() string {

@@ -7,7 +7,7 @@ import (
 
 func (r *Relayer) cleanPreviousPackages(height uint64) error {
 	blockSynced := false
-	common.Logger.Info("enter CleanPreviousPackages mode")
+	common.Logger.Infof("Cleanup packages at height %d", height)
 	for _, channelId := range r.bbcExecutor.Config.CrossChainConfig.MonitorChannelList {
 		nextSequence, err := r.bbcExecutor.GetNextSequence(common.CrossChainChannelID(channelId), int64(height))
 		if err != nil {
@@ -18,7 +18,6 @@ func (r *Relayer) cleanPreviousPackages(height uint64) error {
 			return err
 		}
 		nextDeliveredSeqAccordingToDB := r.getLatestDeliveredSequence(channelId) + 1
-		common.Logger.Infof("nextDeliverSequence: %d, nextDeliveredSeqAccordingToDB: %d", nextDeliverSequence, nextDeliveredSeqAccordingToDB)
 		if nextDeliverSequence < nextDeliveredSeqAccordingToDB {
 			nextDeliverSequence = nextDeliveredSeqAccordingToDB
 		}

@@ -47,14 +47,13 @@ func (cfg *AdminConfig) Validate() {
 }
 
 type BBCConfig struct {
-	RpcAddr                                    string `json:"rpc_addr"`
-	MnemonicType                               string `json:"mnemonic_type"`
-	AWSRegion                                  string `json:"aws_region"`
-	AWSSecretName                              string `json:"aws_secret_name"`
-	Mnemonic                                   string `json:"mnemonic"`
-	SleepMillisecondForWaitBlock               int64  `json:"sleep_millisecond_for_wait_block"`
-	BlockIntervalForCleanUpUndeliveredPackages uint64 `json:"block_interval_for_clean_up_undelivered_packages"`
-	BehindBlockThreshold                       uint64 `json:"behind_block_threshold"`
+	RpcAddr                      string `json:"rpc_addr"`
+	MnemonicType                 string `json:"mnemonic_type"`
+	AWSRegion                    string `json:"aws_region"`
+	AWSSecretName                string `json:"aws_secret_name"`
+	Mnemonic                     string `json:"mnemonic"`
+	SleepMillisecondForWaitBlock int64  `json:"sleep_millisecond_for_wait_block"`
+	CleanUpBlockInterval         uint64 `json:"clean_up_block_interval"`
 }
 
 func (cfg *BBCConfig) Validate() {
@@ -76,11 +75,8 @@ func (cfg *BBCConfig) Validate() {
 	if cfg.SleepMillisecondForWaitBlock < 0 {
 		panic("SleepMillisecondForWaitBlock must not be negative")
 	}
-	if cfg.BlockIntervalForCleanUpUndeliveredPackages == 0 {
+	if cfg.CleanUpBlockInterval == 0 {
 		panic("block interval for cleanup undelivered packages must not be zero")
-	}
-	if cfg.BehindBlockThreshold == 0 {
-		panic("behind block threshold should be be positive")
 	}
 }
 
@@ -145,8 +141,9 @@ func (cfg *LogConfig) Validate() {
 }
 
 type AlertConfig struct {
-	EnableAlert bool  `json:"enable_alert"`
-	Interval    int64 `json:"interval"`
+	EnableAlert     bool  `json:"enable_alert"`
+	EnableHeartBeat bool  `json:"enable_heart_beat"`
+	Interval        int64 `json:"interval"`
 
 	TelegramBotId  string `json:"telegram_bot_id"`
 	TelegramChatId string `json:"telegram_chat_id"`

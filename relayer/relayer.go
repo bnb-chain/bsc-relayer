@@ -32,7 +32,7 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 		panic(err)
 	}
 
-	go r.relayerDaemon(startHeight, curValidatorsHash)
+	go r.relayerDaemon(curValidatorsHash)
 	go r.txTracker()
 
 	if len(r.cfg.BSCConfig.MonitorDataSeedList) >= 2 {

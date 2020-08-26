@@ -32,9 +32,11 @@ func (r *Relayer) alert() {
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
-			util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, fmt.Sprintf("relayer balance: %s", balance.String()))
+			if !r.cfg.AlertConfig.EnableHeartBeat {
+				util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, fmt.Sprintf("Heartbeat message: relayer balance: %s", balance.String()))
+			}
 			if balance.Cmp(balanceThreshold) <= 0 {
-				msg := fmt.Sprintf("bsc-relayer balance (%s:BNB) on Binance Smart Chain is less than threshold (%s:BNB)",
+				msg := fmt.Sprintf("Alert: bsc-relayer balance (%s:BNB) on Binance Smart Chain is less than threshold (%s:BNB)",
 					balance.Div(decimal.NewFromInt(1e18)).String(), balanceThreshold.Div(decimal.NewFromInt(1e18)).String())
 				util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, msg)
 			}
