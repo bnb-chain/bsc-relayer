@@ -20,9 +20,9 @@ func (r *Relayer) cleanPreviousPackages(height uint64) error {
 		if err != nil {
 			return err
 		}
-		nextDeliveredSeqAccordingToDB := r.getLatestDeliveredSequence(channelId) + 1
-		if nextDeliverSequence < nextDeliveredSeqAccordingToDB {
-			nextDeliverSequence = nextDeliveredSeqAccordingToDB
+		nextDeliveredSeqFromDB := r.calculateNextDeliverSeqFromDB(channelId)
+		if nextDeliverSequence < nextDeliveredSeqFromDB {
+			nextDeliverSequence = nextDeliveredSeqFromDB
 		}
 		common.Logger.Infof("channelID: %d, next deliver sequence %d on BSC, next sequence %d on BC",
 			channelId, nextDeliverSequence, nextSequence)
@@ -48,11 +48,14 @@ func (r *Relayer) cleanPreviousPackages(height uint64) error {
 	return nil
 }
 
-func (r *Relayer) getLatestDeliveredSequence(channelID uint8) uint64 {
+func (r *Relayer) calculateNextDeliverSeqFromDB(channelID uint8) uint64 {
 	if r.db == nil {
 		return 0
 	}
 	tx := model.RelayTransaction{}
 	r.db.Where("channel_id = ? and tx_status != ?", channelID, model.Failure).Order("sequence desc").First(&tx)
-	return tx.Sequence
+	if tx.TxHash == "" {
+		return 0
+	}
+	return tx.Sequence + 1
 }
