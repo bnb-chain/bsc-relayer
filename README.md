@@ -2,13 +2,6 @@
 
 This is an canonical implementation of [bsc-relayer](https://github.com/binance-chain/whitepaper/blob/master/WHITEPAPER.md#bsc-relayers) service to relay cross chain packages from Binance Chain to Binance Smart Chain. It can also monitor double sign behavior on BSC and submit evidence to Binance Chain. Community members are encouraged to implement more implementations according to their own requirements.
 
-## Disclaimer
-
-**The software and related documentation are under active development, 
-all subject to potential future change without notification and not ready for production use. 
-The code and security audit have not been fully completed and not ready for any bug bounty.
-We advise you to be careful and experiment on the network at your own risk. Stay safe out there.**
-
 ## Quick Start
 
 **Note**: Requires [Go 1.13+](https://golang.org/dl/)
@@ -19,7 +12,19 @@ We advise you to be careful and experiment on the network at your own risk. Stay
 2. Transfer enough BNB to this account:
     1. 100:BNB for relayer register
     2. More than 10:BNB for transaction fee.
-3. If you want to monitor double sign behavior on BSC, you need to fill more than 1 endpoints in `bsc_config.monitor_data_seed_list`, example `monitor_data_seed_list` for testnet:
+3. Setup relayer mode:
+    ```json
+    {
+      
+      "competition_mode": true
+      
+    }
+    ```
+   If `competition_mode` is true, `bsc-relayer` will monitor cross chain packages in every block and try to deliver the packages immediately. Otherwise, `bsc-relayer` will check if there are undelivered packages in every `clean_up_block_interval` blocks and batch deliver these packages. Competition mode can accelerate package delivery but will cost more transaction fee. In contrary, in non-competition mode, package delivery will be slower but less transaction fee will be cost. 
+   
+4. If you want to monitor double sign behavior on BSC, you need to fill more than 1 endpoints in `bsc_config.monitor_data_seed_list`.
+
+    3.1 Testnet `monitor_data_seed_list`:
     ```json
     {
       "monitor_data_seed_list": [
@@ -32,9 +37,29 @@ We advise you to be careful and experiment on the network at your own risk. Stay
         ]
     }
     ```
+   
+   3.2 Mainnet: `monitor_data_seed_list`:
+   ```json
+   {
+     "monitor_data_seed_list": [
+           "wss://bsc-dataseed1.binance.org:443",
+           "wss://bsc-dataseed2.binance.org:443",
+           "wss://bsc-dataseed3.binance.org:443",
+           "wss://bsc-dataseed4.binance.org:443",
+           "wss://bsc-dataseed1.defibit.io:443",
+           "wss://bsc-dataseed2.defibit.io:443",
+           "wss://bsc-dataseed3.defibit.io:443",
+           "wss://bsc-dataseed4.defibit.io:443",
+           "wss://bsc-dataseed1.ninicoin.io:443",
+           "wss://bsc-dataseed2.ninicoin.io:443",
+           "wss://bsc-dataseed3.ninicoin.io:443",
+           "wss://bsc-dataseed4.ninicoin.io:443"
+       ]
+   }
+   ```
    Besides, you also need to provide proper Binance Chain `mnemonic`.
    
-4. The supported db platforms include `mysql` and `sqlite3`. This is an example db config:
+5. The supported db platforms include `mysql` and `sqlite3`. This is an example db config:
     ```json
     {
        "dialect": "mysql",
@@ -43,13 +68,16 @@ We advise you to be careful and experiment on the network at your own risk. Stay
     ```
    If you don't want to specify a db for your bsc-relayer, just leave `db_path` to empty.
    
-5. Send alert telegram message when the balance of relayer account is too low. This is an example alert config:
+6. Send alert telegram message when the balance of relayer account is too low. This is an example alert config:
     ```json
     {
         "enable_alert": true,
-        "telegram_bot_id": "1377262449:AAH70B43ES75uiKyyiyUh3fRCy6JrvK4O6c",
-        "telegram_chat_id": "@bsc_relayer",
-        "balance_threshold": "1000000000000000000"
+        "enable_heart_beat": false,
+        "interval": 300,
+        "telegram_bot_id": "your_bot_id",
+        "telegram_chat_id": "your_chat_id",
+        "balance_threshold": "1000000000000000000",
+        "sequence_gap_threshold": 10
     }
     ```
    Please refer to [telegram_bot](https://www.home-assistant.io/integrations/telegram_bot) to setup your telegram bot. If you don't want this feature, just set `enable_alert` to false.
@@ -71,12 +99,22 @@ docker build -t bsc-relayer:latest .
 
 ### Run
 
-Run locally:
+Run locally for testnet:
 ```shell script
-./build/bsc-relayer --config-type local --config-path config/config.json
+./build/bsc-relayer --bbc-network-type 0 --config-type local --config-path config/config.json
 ```
 
-Run docker:
+Run locally for mainnet:
+```shell script
+./build/bsc-relayer --bbc-network-type 1 --config-type local --config-path config/config.json
+```
+
+Run docker for testnet:
+```shell script
+docker run -e BBC_NETWORK=0 -e CONFIG_TYPE="local" -d -it bsc-relayer
+```
+
+Run docker for mainnet:
 ```shell script
 docker run -e BBC_NETWORK=1 -e CONFIG_TYPE="local" -d -it bsc-relayer
 ```
