@@ -16,21 +16,21 @@ import (
 )
 
 const (
-	BBCRpc     = "http://dex-qa-s1-bsc-dev-validator-alb-501442930.ap-northeast-1.elb.amazonaws.com:27147"
-	provider   = "http://dex-qa-s1-bsc-dev-validator-alb-501442930.ap-northeast-1.elb.amazonaws.com:8545"
+	BBCRpc     = "tcp://seed-pre-s3.binance.org:80"
+	provider   = "http://data-seed-prebsc-1-s1.binance.org:8545"
 	privateKey = "EB19E69C9EBF9737FCB41AFFF5D6E3B3711E15579E5FA89F03DC4656EEC34E4D"
 )
 
 var (
 	cfg = &config.Config{
-		CrossChainConfig: &config.CrossChainConfig{
+		CrossChainConfig: config.CrossChainConfig{
 			SourceChainID: 1,
-			DestChainID:   96,
+			DestChainID:   97,
 		},
-		BBCConfig: &config.BBCConfig{
+		BBCConfig: config.BBCConfig{
 			RpcAddr: BBCRpc,
 		},
-		BSCConfig: &config.BSCConfig{
+		BSCConfig: config.BSCConfig{
 			GasLimit:   4700000,
 			Provider:   provider,
 			PrivateKey: privateKey,

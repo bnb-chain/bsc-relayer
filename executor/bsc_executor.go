@@ -95,16 +95,15 @@ func (executor *BSCExecutor) getTransactor() (*bind.TransactOpts, error) {
 		return nil, err
 	}
 
-	gasPrice, err := executor.bscClient.SuggestGasPrice(context.Background())
-	if err != nil {
-		return nil, err
-	}
-
 	txOpts := bind.NewKeyedTransactor(executor.privateKey)
 	txOpts.Nonce = big.NewInt(int64(nonce))
 	txOpts.Value = big.NewInt(0)
 	txOpts.GasLimit = executor.bscConfig.GasLimit
-	txOpts.GasPrice = gasPrice
+	if executor.bscConfig.GasPrice == 0 {
+		txOpts.GasPrice = big.NewInt(DefaultGasPrice)
+	} else {
+		txOpts.GasPrice = big.NewInt(int64(executor.bscConfig.GasPrice))
+	}
 	return txOpts, nil
 }
 
