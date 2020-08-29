@@ -23,6 +23,7 @@
     "private_key": "",
     "provider": "https://data-seed-prebsc-1-s1.binance.org:8545",
     "gas_limit": 4700000,
+    "gas_price": 20000000000,
     "monitor_data_seed_list": []
   },
   "log_config": {

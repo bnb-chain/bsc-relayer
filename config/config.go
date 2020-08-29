@@ -90,6 +90,7 @@ type BSCConfig struct {
 	PrivateKey          string   `json:"private_key"`
 	Provider            string   `json:"provider"`
 	GasLimit            uint64   `json:"gas_limit"`
+	GasPrice            uint64   `json:"gas_price"`
 	MonitorDataSeedList []string `json:"monitor_data_seed_list"`
 }
 
@@ -113,7 +114,7 @@ func (cfg *BSCConfig) Validate() {
 	if cfg.KeyType != KeyTypeAWSPrivateKey && cfg.PrivateKey == "" {
 		panic(fmt.Sprintf("privateKey of Binance Smart Chain should not be empty"))
 	}
-	if cfg.GasLimit <= 0 {
+	if cfg.GasLimit == 0 {
 		panic(fmt.Sprintf("gas_limit of Binance Smart Chain should be larger than 0"))
 	}
 }
