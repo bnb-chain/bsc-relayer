@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
+	"fmt"
 	"sync"
 
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
+	util "github.com/binance-chain/bsc-relayer/config"
 	"github.com/ethereum/go-ethereum"
 	ethereumtype "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -92,6 +94,9 @@ func (monitor *DoubleSignMonitor) doubleSignChecker(channelNumber int, header *e
 		signature1, _ := twoHeader[1].GetSignature()
 		common.Logger.Infof("found double sign evidence: height %d, first signature %s, second signature %s",
 			header.Number.Int64(), hex.EncodeToString(signature0), hex.EncodeToString(signature1))
+		util.SendTelegramMessage(monitor.bbcExecutor.Config.AlertConfig.TelegramBotId, monitor.bbcExecutor.Config.AlertConfig.TelegramChatId,
+			fmt.Sprintf("Alert: found double sign evidence: height %d, first miner %s, signature %s; second miner %s, signature %s",
+				header.Number.Int64(), twoHeader[0].Coinbase.String(), hex.EncodeToString(signature0), twoHeader[1].Coinbase.String(), hex.EncodeToString(signature1)))
 
 		tx, err := monitor.bbcExecutor.SubmitEvidence(twoHeader[:])
 		if err != nil {
@@ -116,7 +121,7 @@ func (monitor *DoubleSignMonitor) doubleSignChecker(channelNumber int, header *e
 	monitor.ethereumHeaders[channelNumber][header.Number.Int64()] = header
 }
 
-func (r *Relayer)doubleSignMonitorDaemon() {
+func (r *Relayer) doubleSignMonitorDaemon() {
 	var bscProviderList = r.cfg.BSCConfig.MonitorDataSeedList
 	doubleSignMonitor := DoubleSignMonitor{
 		ethereumHeaders:       make([]map[int64]*ethereumtype.Header, len(bscProviderList)),
