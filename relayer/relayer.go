@@ -39,6 +39,8 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 
 	go r.txTracker()
 
+	go r.autoClaimRewardDaemon()
+
 	if len(r.cfg.BSCConfig.MonitorDataSeedList) >= 2 {
 		go r.doubleSignMonitorDaemon()
 	}

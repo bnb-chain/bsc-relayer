@@ -5,6 +5,7 @@ import (
 	"crypto/ecdsa"
 	"encoding/json"
 	"fmt"
+	"github.com/binance-chain/bsc-relayer/executor/relayerincentivize"
 	"math/big"
 	"time"
 
@@ -309,6 +310,42 @@ func (executor *BSCExecutor) RegisterRelayer() (common.Hash, error) {
 
 	txOpts.Value = big.NewInt(1).Mul(big.NewInt(100), big.NewInt(1e18)) //100 BNB
 	tx, err := instance.Register(txOpts)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	return tx.Hash(), nil
+}
+
+func (executor *BSCExecutor) QueryReward() (*big.Int, error) {
+	callOpts, err := executor.getCallOpts()
+	if err != nil {
+		return nil, err
+	}
+
+	instance, err := relayerincentivize.NewRelayerincentivize(relayerIncentivizeContractAddr, executor.bscClient)
+	if err != nil {
+		return nil, err
+	}
+
+	reward, err := instance.RelayerRewardVault(callOpts, executor.txSender)
+	if err != nil {
+		return nil, err
+	}
+	return reward, nil
+}
+
+func (executor *BSCExecutor) ClaimReward() (common.Hash, error) {
+	txOpts, err := executor.getTransactor()
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	instance, err := relayerincentivize.NewRelayerincentivize(relayerIncentivizeContractAddr, executor.bscClient)
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	tx, err := instance.ClaimRelayerReward(txOpts, executor.txSender)
 	if err != nil {
 		return common.Hash{}, err
 	}
