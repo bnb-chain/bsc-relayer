@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
+	"math/rand"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -27,7 +28,7 @@ import (
 type BSCExecutor struct {
 	db            *gorm.DB
 	bbcExecutor   *BBCExecutor
-	bscClient     *ethclient.Client
+	bscClients    []*ethclient.Client
 	sourceChainID relayercommon.CrossChainID
 	destChainID   relayercommon.CrossChainID
 	privateKey    *ecdsa.PrivateKey
@@ -62,11 +63,21 @@ func getPrivateKey(cfg *config.BSCConfig) (*ecdsa.PrivateKey, error) {
 	return privKey, nil
 }
 
-func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (*BSCExecutor, error) {
-	bscClient, err := ethclient.Dial(cfg.BSCConfig.Provider)
-	if err != nil {
-		return nil, err
+func initClients(providers []string) []*ethclient.Client {
+	clients := make([]*ethclient.Client, 0)
+
+	for _, provider := range providers {
+		client, err := ethclient.Dial(provider)
+		if err != nil {
+			panic("new eth client error")
+		}
+		clients = append(clients, client)
 	}
+
+	return clients
+}
+
+func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (*BSCExecutor, error) {
 	privKey, err := getPrivateKey(&cfg.BSCConfig)
 	if err != nil {
 		return nil, err
@@ -81,7 +92,7 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 	return &BSCExecutor{
 		db:            db,
 		bbcExecutor:   bbcExecutor,
-		bscClient:     bscClient,
+		bscClients:    initClients(cfg.BSCConfig.Providers),
 		privateKey:    privKey,
 		txSender:      txSender,
 		sourceChainID: relayercommon.CrossChainID(cfg.CrossChainConfig.SourceChainID),
@@ -90,8 +101,15 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 	}, nil
 }
 
+func (executor *BSCExecutor) GetClient() *ethclient.Client {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	idx := r.Intn(len(executor.bscClients))
+	return executor.bscClients[idx]
+}
+
 func (executor *BSCExecutor) getTransactor() (*bind.TransactOpts, error) {
-	nonce, err := executor.bscClient.PendingNonceAt(context.Background(), executor.txSender)
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +140,7 @@ func (executor *BSCExecutor) SyncTendermintLightClientHeader(height uint64) (com
 		return common.Hash{}, err
 	}
 
-	instance, err := tendermintlightclient.NewTendermintlightclient(tendermintLightClientContractAddr, executor.bscClient)
+	instance, err := tendermintlightclient.NewTendermintlightclient(tendermintLightClientContractAddr, executor.GetClient())
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -181,7 +199,7 @@ func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.C
 		return common.Hash{}, err
 	}
 
-	crossChainInstance, err := crosschain.NewCrosschain(crossChainContractAddr, executor.bscClient)
+	crossChainInstance, err := crosschain.NewCrosschain(crossChainContractAddr, executor.GetClient())
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -280,7 +298,7 @@ func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommo
 }
 
 func (executor *BSCExecutor) IsRelayer() (bool, error) {
-	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.bscClient)
+	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
 	if err != nil {
 		return false, err
 	}
@@ -303,7 +321,7 @@ func (executor *BSCExecutor) RegisterRelayer() (common.Hash, error) {
 		return common.Hash{}, err
 	}
 
-	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.bscClient)
+	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -322,7 +340,7 @@ func (executor *BSCExecutor) QueryReward() (*big.Int, error) {
 		return nil, err
 	}
 
-	instance, err := relayerincentivize.NewRelayerincentivize(relayerIncentivizeContractAddr, executor.bscClient)
+	instance, err := relayerincentivize.NewRelayerincentivize(relayerIncentivizeContractAddr, executor.GetClient())
 	if err != nil {
 		return nil, err
 	}
@@ -340,7 +358,7 @@ func (executor *BSCExecutor) ClaimReward() (common.Hash, error) {
 		return common.Hash{}, err
 	}
 
-	instance, err := relayerincentivize.NewRelayerincentivize(relayerIncentivizeContractAddr, executor.bscClient)
+	instance, err := relayerincentivize.NewRelayerincentivize(relayerIncentivizeContractAddr, executor.GetClient())
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -353,7 +371,7 @@ func (executor *BSCExecutor) ClaimReward() (common.Hash, error) {
 }
 
 func (executor *BSCExecutor) GetNextSequence(channelID relayercommon.CrossChainChannelID) (uint64, error) {
-	crossChainInstance, err := crosschain.NewCrosschain(crossChainContractAddr, executor.bscClient)
+	crossChainInstance, err := crosschain.NewCrosschain(crossChainContractAddr, executor.GetClient())
 	if err != nil {
 		return 0, err
 	}
@@ -367,11 +385,11 @@ func (executor *BSCExecutor) GetNextSequence(channelID relayercommon.CrossChainC
 }
 
 func (executor *BSCExecutor) GetTxRecipient(txHash common.Hash) (*types.Receipt, error) {
-	return executor.bscClient.TransactionReceipt(context.Background(), txHash)
+	return executor.GetClient().TransactionReceipt(context.Background(), txHash)
 }
 
 func (executor *BSCExecutor) GetRelayerBalance() (*big.Int, error) {
-	return executor.bscClient.BalanceAt(context.Background(), executor.txSender, nil)
+	return executor.GetClient().BalanceAt(context.Background(), executor.txSender, nil)
 }
 
 func (executor *BSCExecutor) saveRelayTx(relayTxModel *model.RelayTransaction) error {

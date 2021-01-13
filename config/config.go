@@ -48,19 +48,19 @@ func (cfg *AdminConfig) Validate() {
 }
 
 type BBCConfig struct {
-	RpcAddr                                    string `json:"rpc_addr"`
-	MnemonicType                               string `json:"mnemonic_type"`
-	AWSRegion                                  string `json:"aws_region"`
-	AWSSecretName                              string `json:"aws_secret_name"`
-	Mnemonic                                   string `json:"mnemonic"`
-	SleepMillisecondForWaitBlock               int64  `json:"sleep_millisecond_for_wait_block"`
-	CleanUpBlockInterval                       uint64 `json:"clean_up_block_interval"`
-	BlockIntervalForCleanUpUndeliveredPackages uint64 `json:"block_interval_for_clean_up_undelivered_packages"`
-	BehindBlockThreshold                       uint64 `json:"behind_block_threshold"`
+	RpcAddrs                                   []string `json:"rpc_addrs"`
+	MnemonicType                               string   `json:"mnemonic_type"`
+	AWSRegion                                  string   `json:"aws_region"`
+	AWSSecretName                              string   `json:"aws_secret_name"`
+	Mnemonic                                   string   `json:"mnemonic"`
+	SleepMillisecondForWaitBlock               int64    `json:"sleep_millisecond_for_wait_block"`
+	CleanUpBlockInterval                       uint64   `json:"clean_up_block_interval"`
+	BlockIntervalForCleanUpUndeliveredPackages uint64   `json:"block_interval_for_clean_up_undelivered_packages"`
+	BehindBlockThreshold                       uint64   `json:"behind_block_threshold"`
 }
 
 func (cfg *BBCConfig) Validate() {
-	if cfg.RpcAddr == "" {
+	if len(cfg.RpcAddrs) == 0 {
 		panic("rpc endpoint of Binance chain should not be empty")
 	}
 	if cfg.MnemonicType == "" {
@@ -88,14 +88,14 @@ type BSCConfig struct {
 	AWSRegion           string   `json:"aws_region"`
 	AWSSecretName       string   `json:"aws_secret_name"`
 	PrivateKey          string   `json:"private_key"`
-	Provider            string   `json:"provider"`
+	Providers           []string   `json:"providers"`
 	GasLimit            uint64   `json:"gas_limit"`
 	GasPrice            uint64   `json:"gas_price"`
 	MonitorDataSeedList []string `json:"monitor_data_seed_list"`
 }
 
 func (cfg *BSCConfig) Validate() {
-	if cfg.Provider == "" {
+	if len(cfg.Providers) == 0 {
 		panic(fmt.Sprintf("provider address of Binance Smart Chain should not be empty"))
 	}
 
