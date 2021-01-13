@@ -2,12 +2,12 @@ package relayer
 
 import (
 	"fmt"
-	util "github.com/binance-chain/bsc-relayer/config"
-	"github.com/shopspring/decimal"
 	"math/big"
 	"time"
 
 	"github.com/binance-chain/bsc-relayer/common"
+	util "github.com/binance-chain/bsc-relayer/config"
+	"github.com/shopspring/decimal"
 )
 
 const (

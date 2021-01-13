@@ -5,7 +5,6 @@ import (
 	"crypto/ecdsa"
 	"encoding/json"
 	"fmt"
-	"github.com/binance-chain/bsc-relayer/executor/relayerincentivize"
 	"math/big"
 	"time"
 
@@ -20,6 +19,7 @@ import (
 	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/bsc-relayer/executor/crosschain"
 	"github.com/binance-chain/bsc-relayer/executor/relayerhub"
+	"github.com/binance-chain/bsc-relayer/executor/relayerincentivize"
 	"github.com/binance-chain/bsc-relayer/executor/tendermintlightclient"
 	"github.com/binance-chain/bsc-relayer/model"
 )
