@@ -18,7 +18,7 @@ import (
 const (
 	BBCRpc     = "tcp://seed-pre-s3.binance.org:80"
 	provider   = "http://data-seed-prebsc-1-s1.binance.org:8545"
-	privateKey = "EB19E69C9EBF9737FCB41AFFF5D6E3B3711E15579E5FA89F03DC4656EEC34E4D"
+	privateKey = "EB19E69C9EBF9737FCB41AFFF5D6E3B3711E15579E5FA89F03DC4656EEC34E4D" // Just for test, never used in production environment
 )
 
 var (
