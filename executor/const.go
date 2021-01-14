@@ -32,6 +32,7 @@ var (
 	PureHeaderSyncChannelID relayercommon.CrossChainChannelID = -1
 
 	tendermintLightClientContractAddr = common.HexToAddress("0x0000000000000000000000000000000000001003")
+	relayerIncentivizeContractAddr    = common.HexToAddress("0x0000000000000000000000000000000000001005")
 	relayerHubContractAddr            = common.HexToAddress("0x0000000000000000000000000000000000001006")
 	crossChainContractAddr            = common.HexToAddress("0x0000000000000000000000000000000000002000")
 )

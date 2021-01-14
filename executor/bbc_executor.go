@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
@@ -23,7 +25,7 @@ import (
 )
 
 type BBCExecutor struct {
-	RpcClient     *rpc.HTTP
+	RpcClients    []*rpc.HTTP
 	Config        *config.Config
 	keyManager    keys.KeyManager
 	sourceChainID common.CrossChainID
@@ -55,25 +57,29 @@ func getMnemonic(cfg *config.BBCConfig) (string, error) {
 	return mnemonic, nil
 }
 
-func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCExecutor, error) {
-	rpcClient := rpc.NewRPCClient(cfg.BBCConfig.RpcAddr, networkType)
-
-	var keyManager keys.KeyManager
-	if len(cfg.BSCConfig.MonitorDataSeedList) >= 2 {
-		mnemonic, err := getMnemonic(&cfg.BBCConfig)
-		if err != nil {
-			return nil, err
-		}
-
-		keyManager, err = keys.NewMnemonicKeyManager(mnemonic)
-		if err != nil {
-			return nil, err
-		}
+func initBBCClients(keyManager keys.KeyManager, providers []string, network ctypes.ChainNetwork) []*rpc.HTTP {
+	bcClients := make([]*rpc.HTTP, 0)
+	for _, provider := range providers {
+		rpcClient := rpc.NewRPCClient(provider, network)
 		rpcClient.SetKeyManager(keyManager)
+		bcClients = append(bcClients, rpcClient)
+	}
+	return bcClients
+}
+
+func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCExecutor, error) {
+	mnemonic, err := getMnemonic(&cfg.BBCConfig)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	keyManager, err := keys.NewMnemonicKeyManager(mnemonic)
+	if err != nil {
+		panic(err.Error())
 	}
 
 	return &BBCExecutor{
-		RpcClient:     rpcClient,
+		RpcClients:    initBBCClients(keyManager, cfg.BBCConfig.RpcAddrs, networkType),
 		keyManager:    keyManager,
 		Config:        cfg,
 		sourceChainID: common.CrossChainID(cfg.CrossChainConfig.SourceChainID),
@@ -81,17 +87,24 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 	}, nil
 }
 
+func (executor *BBCExecutor) GetClient() *rpc.HTTP {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	idx := r.Intn(len(executor.RpcClients))
+	return executor.RpcClients[idx]
+}
+
 func (executor *BBCExecutor) SubmitEvidence(headers []*bsc.Header) (*coretypes.ResultBroadcastTx, error) {
-	return client.BSCSubmitEvidence(executor.RpcClient, executor.keyManager.GetAddr(), headers, rpc.Sync)
+	return client.BSCSubmitEvidence(executor.GetClient(), executor.keyManager.GetAddr(), headers, rpc.Sync)
 }
 
 func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidatorsHash cmn.HexBytes) (*common.TaskSet, cmn.HexBytes, error) {
-	block, err := executor.RpcClient.Block(&height)
+	block, err := executor.GetClient().Block(&height)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	blockResults, err := executor.RpcClient.BlockResults(&height)
+	blockResults, err := executor.GetClient().BlockResults(&height)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -161,9 +174,9 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 func (executor *BBCExecutor) MonitorValidatorSetChange(height int64, preValidatorsHash cmn.HexBytes) (bool, cmn.HexBytes, error) {
 	validatorSetChanged := false
 
-	block, err := executor.RpcClient.Block(&height)
+	block, err := executor.GetClient().Block(&height)
 	if err != nil {
-		return validatorSetChanged, nil, err
+		return false, nil, err
 	}
 
 	var curValidatorsHash cmn.HexBytes
@@ -181,18 +194,18 @@ func (executor *BBCExecutor) MonitorValidatorSetChange(height int64, preValidato
 }
 
 func (executor *BBCExecutor) GetInitConsensusState(height int64) (*common.ConsensusState, error) {
-	status, err := executor.RpcClient.Status()
+	status, err := executor.GetClient().Status()
 	if err != nil {
 		return nil, err
 	}
 
 	nextValHeight := height + 1
-	nextValidatorSet, err := executor.RpcClient.Validators(&nextValHeight)
+	nextValidatorSet, err := executor.GetClient().Validators(&nextValHeight)
 	if err != nil {
 		return nil, err
 	}
 
-	header, err := executor.RpcClient.Block(&height)
+	header, err := executor.GetClient().Block(&height)
 	if err != nil {
 		return nil, err
 	}
@@ -215,17 +228,17 @@ func (executor *BBCExecutor) GetInitConsensusState(height int64) (*common.Consen
 func (executor *BBCExecutor) QueryTendermintHeader(height int64) (*common.Header, error) {
 	nextHeight := height + 1
 
-	commit, err := executor.RpcClient.Commit(&height)
+	commit, err := executor.GetClient().Commit(&height)
 	if err != nil {
 		return nil, err
 	}
 
-	validators, err := executor.RpcClient.Validators(&height)
+	validators, err := executor.GetClient().Validators(&height)
 	if err != nil {
 		return nil, err
 	}
 
-	nextvalidators, err := executor.RpcClient.Validators(&nextHeight)
+	nextvalidators, err := executor.GetClient().Validators(&nextHeight)
 	if err != nil {
 		return nil, err
 	}
@@ -246,7 +259,7 @@ func (executor *BBCExecutor) QueryKeyWithProof(key []byte, height int64) (int64,
 	}
 
 	path := fmt.Sprintf("/store/%s/%s", packageStoreName, "key")
-	result, err := executor.RpcClient.ABCIQueryWithOptions(path, key, opts)
+	result, err := executor.GetClient().ABCIQueryWithOptions(path, key, opts)
 	if err != nil {
 		return 0, nil, nil, nil, err
 	}
@@ -267,7 +280,7 @@ func (executor *BBCExecutor) GetNextSequence(channelID common.CrossChainChannelI
 	path := fmt.Sprintf("/store/%s/%s", sequenceStoreName, "key")
 	key := buildChannelSequenceKey(executor.destChainID, channelID)
 
-	response, err := executor.RpcClient.ABCIQueryWithOptions(path, key, opts)
+	response, err := executor.GetClient().ABCIQueryWithOptions(path, key, opts)
 	if err != nil {
 		return 0, err
 	}

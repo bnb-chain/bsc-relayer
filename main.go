@@ -120,13 +120,13 @@ func main() {
 		common.Logger.Error(err.Error())
 		return
 	}
-	abciInfo, err := bbcExecutor.RpcClient.ABCIInfo()
+	abciInfo, err := bbcExecutor.GetClient().ABCIInfo()
 	if err != nil {
 		common.Logger.Error(err.Error())
 		return
 	}
 	startHeight := abciInfo.Response.LastBlockHeight - 1
-	block, err := bbcExecutor.RpcClient.Block(&(startHeight))
+	block, err := bbcExecutor.GetClient().Block(&(startHeight))
 	if err != nil {
 		common.Logger.Error(err.Error())
 		return
