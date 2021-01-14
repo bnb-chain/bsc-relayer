@@ -6,7 +6,9 @@
     "competition_mode": true
   },
   "bbc_config": {
-    "rpc_addr": "http://data-seed-prealpha-1-s1.binance.org:80",
+    "rpc_addrs": [
+      "http://data-seed-prealpha-1-s1.binance.org:80"
+    ],
     "mnemonic_type": "local_mnemonic",
     "aws_region": "",
     "aws_secret_name": "",
@@ -21,7 +23,9 @@
     "aws_region": "",
     "aws_secret_name": "",
     "private_key": "",
-    "provider": "https://data-seed-prebsc-1-s1.binance.org:8545",
+    "providers": [
+      "https://data-seed-prebsc-1-s1.binance.org:8545"
+    ],
     "gas_limit": 4700000,
     "gas_price": 20000000000,
     "monitor_data_seed_list": []

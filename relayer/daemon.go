@@ -19,7 +19,7 @@ const (
 )
 
 func (r *Relayer) getLatestHeight() uint64 {
-	abciInfo, err := r.bbcExecutor.RpcClient.ABCIInfo()
+	abciInfo, err := r.bbcExecutor.GetClient().ABCIInfo()
 	if err != nil {
 		common.Logger.Errorf("Query latest height error: %s", err.Error())
 		return 0

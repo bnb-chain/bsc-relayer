@@ -40,7 +40,7 @@ func (r *Relayer) autoClaimRewardDaemon() {
 			if err != nil {
 				common.Logger.Errorf("Claim bsc-relayer reward error: %s", err.Error())
 
-				msg := fmt.Sprintf("Encounter failure in trying to claim reward: %s", err.Error())
+				msg := fmt.Sprintf("Encountered failure in trying to claim reward: %s", err.Error())
 				util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, msg)
 
 				continue
