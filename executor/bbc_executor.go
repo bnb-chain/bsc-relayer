@@ -68,14 +68,16 @@ func initBBCClients(keyManager keys.KeyManager, providers []string, network ctyp
 }
 
 func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCExecutor, error) {
-	mnemonic, err := getMnemonic(&cfg.BBCConfig)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	keyManager, err := keys.NewMnemonicKeyManager(mnemonic)
-	if err != nil {
-		panic(err.Error())
+	var keyManager keys.KeyManager
+	if len(cfg.BSCConfig.MonitorDataSeedList) >= 2 {
+		mnemonic, err := getMnemonic(&cfg.BBCConfig)
+		if err != nil {
+			panic(err.Error())
+		}
+		keyManager, err = keys.NewMnemonicKeyManager(mnemonic)
+		if err != nil {
+			panic(err.Error())
+		}
 	}
 
 	return &BBCExecutor{

@@ -28,11 +28,11 @@ var (
 			DestChainID:   97,
 		},
 		BBCConfig: config.BBCConfig{
-			RpcAddrs: BBCRpc,
+			RpcAddrs: []string{BBCRpc},
 		},
 		BSCConfig: config.BSCConfig{
 			GasLimit:   4700000,
-			Providers:  provider,
+			Providers:  []string{provider},
 			PrivateKey: privateKey,
 			KeyType:    config.KeyTypeLocalPrivateKey,
 		},
@@ -202,7 +202,7 @@ func TestBSCExecutor_CheckRelayer(t *testing.T) {
 	callOpts, err := executor.getCallOpts()
 	require.NoError(t, err)
 
-	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.bscClients)
+	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
 	require.NoError(t, err)
 
 	isRelayer, err := instance.IsRelayer(callOpts, executor.txSender)
