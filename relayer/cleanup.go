@@ -20,10 +20,10 @@ func (r *Relayer) cleanPreviousPackages(height uint64) error {
 		if err != nil {
 			return err
 		}
-		nextDeliveredSeqFromDB := r.calculateNextDeliverSeqFromDB(channelId)
-		if nextDeliverSequence < nextDeliveredSeqFromDB {
-			nextDeliverSequence = nextDeliveredSeqFromDB
-		}
+		//nextDeliveredSeqFromDB := r.calculateNextDeliverSeqFromDB(channelId)
+		//if nextDeliverSequence < nextDeliveredSeqFromDB {
+		//	nextDeliverSequence = nextDeliveredSeqFromDB
+		//}
 		common.Logger.Infof("channelID: %d, next deliver sequence %d on BSC, next sequence %d on BC",
 			channelId, nextDeliverSequence, nextSequence)
 		if nextSequence > nextDeliverSequence {
