@@ -117,6 +117,7 @@ func (executor *BSCExecutor) SwitchBSCClient() {
 	if executor.clientIdx >= len(executor.bscClients) {
 		executor.clientIdx = 0
 	}
+	relayercommon.Logger.Infof("Switch to provider: %s", executor.bscConfig.Providers[executor.clientIdx])
 }
 
 func (executor *BSCExecutor) getTransactor() (*bind.TransactOpts, error) {
