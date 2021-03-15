@@ -5,8 +5,6 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/shopspring/decimal"
-
 	"github.com/binance-chain/bsc-relayer/common"
 	util "github.com/binance-chain/bsc-relayer/config"
 )
@@ -30,7 +28,7 @@ func (r *Relayer) autoClaimRewardDaemon() {
 		}
 		common.Logger.Infof("The accumulated reward of bsc-relayer: %s", reward.String())
 		if reward.Cmp(minimumReward) >= 0 {
-			rewardDecimals, err := decimal.NewFromString(reward.String())
+			//rewardDecimals, err := decimal.NewFromString(reward.String())
 			if err != nil {
 				common.Logger.Errorf("Query bcs-relayer reward error: %s, ", err.Error())
 				continue
@@ -47,9 +45,9 @@ func (r *Relayer) autoClaimRewardDaemon() {
 			}
 			common.Logger.Infof("Claim bsc-relayer reward tx hash: %s", tx.String())
 
-			msg := fmt.Sprintf("The accumulated reward of bsc-relayer is %s, try to claim reward, txhash: %s",
-				rewardDecimals.Div(decimal.NewFromInt(1e18)).String(), tx.String())
-			util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, msg)
+			//msg := fmt.Sprintf("The accumulated reward of bsc-relayer is %s, try to claim reward, txhash: %s",
+			//	rewardDecimals.Div(decimal.NewFromInt(1e18)).String(), tx.String())
+			//util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId, msg)
 		}
 
 	}
