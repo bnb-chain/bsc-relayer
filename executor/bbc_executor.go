@@ -6,10 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"math/rand"
 	"strconv"
 	"strings"
-	"time"
+	"sync"
 
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
@@ -25,6 +24,8 @@ import (
 )
 
 type BBCExecutor struct {
+	mutex         sync.RWMutex
+	clientIdx     int
 	RpcClients    []*rpc.HTTP
 	Config        *config.Config
 	keyManager    keys.KeyManager
@@ -81,6 +82,7 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 	}
 
 	return &BBCExecutor{
+		clientIdx:     0,
 		RpcClients:    initBBCClients(keyManager, cfg.BBCConfig.RpcAddrs, networkType),
 		keyManager:    keyManager,
 		Config:        cfg,
@@ -90,10 +92,18 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 }
 
 func (executor *BBCExecutor) GetClient() *rpc.HTTP {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	executor.mutex.RLock()
+	defer executor.mutex.RLock()
+	return executor.RpcClients[executor.clientIdx]
+}
 
-	idx := r.Intn(len(executor.RpcClients))
-	return executor.RpcClients[idx]
+func (executor *BBCExecutor) SwitchBCClient() {
+	executor.mutex.Lock()
+	defer executor.mutex.Lock()
+	executor.clientIdx++
+	if executor.clientIdx >= len(executor.RpcClients) {
+		executor.clientIdx = 0
+	}
 }
 
 func (executor *BBCExecutor) SubmitEvidence(headers []*bsc.Header) (*coretypes.ResultBroadcastTx, error) {

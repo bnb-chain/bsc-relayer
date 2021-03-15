@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
-	"math/rand"
+	"sync"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -26,8 +26,10 @@ import (
 )
 
 type BSCExecutor struct {
+	mutex         sync.RWMutex
 	db            *gorm.DB
 	bbcExecutor   *BBCExecutor
+	clientIdx     int
 	bscClients    []*ethclient.Client
 	sourceChainID relayercommon.CrossChainID
 	destChainID   relayercommon.CrossChainID
@@ -92,6 +94,7 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 	return &BSCExecutor{
 		db:            db,
 		bbcExecutor:   bbcExecutor,
+		clientIdx:     0,
 		bscClients:    initClients(cfg.BSCConfig.Providers),
 		privateKey:    privKey,
 		txSender:      txSender,
@@ -102,10 +105,18 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 }
 
 func (executor *BSCExecutor) GetClient() *ethclient.Client {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	executor.mutex.RLock()
+	defer executor.mutex.RLock()
+	return executor.bscClients[executor.clientIdx]
+}
 
-	idx := r.Intn(len(executor.bscClients))
-	return executor.bscClients[idx]
+func (executor *BSCExecutor) SwitchBSCClient() {
+	executor.mutex.Lock()
+	defer executor.mutex.Lock()
+	executor.clientIdx++
+	if executor.clientIdx >= len(executor.bscClients) {
+		executor.clientIdx = 0
+	}
 }
 
 func (executor *BSCExecutor) getTransactor() (*bind.TransactOpts, error) {

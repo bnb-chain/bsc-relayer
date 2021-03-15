@@ -1,9 +1,10 @@
 package relayer
 
 import (
+	"time"
+
 	"github.com/binance-chain/bsc-relayer/executor"
 	"github.com/shopspring/decimal"
-	"time"
 
 	ethcmm "github.com/ethereum/go-ethereum/common"
 	cmn "github.com/tendermint/tendermint/libs/common"
@@ -13,9 +14,9 @@ import (
 )
 
 const (
-	IgnoredTimeGap       = 1800
-	BatchSize            = 100
-	WaitSecondForTrackTx = 10
+	IgnoredTimeGap         = 1800
+	BatchSize              = 100
+	WaitSecondForTrackTx   = 10
 )
 
 func (r *Relayer) getLatestHeight() uint64 {
@@ -129,6 +130,7 @@ func (r *Relayer) txTracker() {
 	}
 
 	relayTxs := make([]model.RelayTransaction, 0)
+	leaveAloneHistoryTx := false
 	for {
 		statistic := model.Statistic{}
 		r.db.First(&statistic)
@@ -136,6 +138,25 @@ func (r *Relayer) txTracker() {
 		r.db.Where("create_time >= ? and tx_status = ?", time.Now().Unix()-IgnoredTimeGap, model.Created).Find(&relayTxs).Order("create_time desc").Limit(BatchSize)
 		if len(relayTxs) != 0 {
 			common.Logger.Infof("get %d unconfirmed transactions", len(relayTxs))
+			if len(relayTxs) > int(r.cfg.BSCConfig.UnconfirmedTxThreshold) {
+				r.bscExecutor.SwitchBSCClient()
+				leaveAloneHistoryTx = true
+			} else {
+				leaveAloneHistoryTx = false
+			}
+		}
+		if leaveAloneHistoryTx {
+			for _, tx := range relayTxs {
+				err := r.db.Model(model.RelayTransaction{}).Where("id = ?", tx.Id).Updates(
+					map[string]interface{}{
+						"tx_status":   model.Missed,
+						"update_time": time.Now().Unix(),
+					}).Error
+				if err != nil {
+					common.Logger.Infof("update relayer transaction error: %s", err.Error())
+				}
+			}
+			continue
 		}
 		for _, tx := range relayTxs {
 			txRecipient, err := r.bscExecutor.GetTxRecipient(ethcmm.HexToHash(tx.TxHash))
@@ -176,6 +197,7 @@ func (r *Relayer) txTracker() {
 			if err != nil {
 				common.Logger.Infof("update relayer transaction error: %s", err.Error())
 			}
+			time.Sleep(100 * time.Millisecond) // sleep 0.1 second
 		}
 		if statistic.Id == 0 {
 			tx := r.db.Begin()

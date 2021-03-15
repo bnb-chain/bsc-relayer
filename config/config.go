@@ -84,14 +84,15 @@ func (cfg *BBCConfig) Validate() {
 }
 
 type BSCConfig struct {
-	KeyType             string   `json:"key_type"`
-	AWSRegion           string   `json:"aws_region"`
-	AWSSecretName       string   `json:"aws_secret_name"`
-	PrivateKey          string   `json:"private_key"`
-	Providers           []string   `json:"providers"`
-	GasLimit            uint64   `json:"gas_limit"`
-	GasPrice            uint64   `json:"gas_price"`
-	MonitorDataSeedList []string `json:"monitor_data_seed_list"`
+	KeyType                string   `json:"key_type"`
+	AWSRegion              string   `json:"aws_region"`
+	AWSSecretName          string   `json:"aws_secret_name"`
+	PrivateKey             string   `json:"private_key"`
+	Providers              []string `json:"providers"`
+	GasLimit               uint64   `json:"gas_limit"`
+	GasPrice               uint64   `json:"gas_price"`
+	UnconfirmedTxThreshold uint64   `json:"unconfirmed_tx_threshold"`
+	MonitorDataSeedList    []string `json:"monitor_data_seed_list"`
 }
 
 func (cfg *BSCConfig) Validate() {
@@ -116,6 +117,9 @@ func (cfg *BSCConfig) Validate() {
 	}
 	if cfg.GasLimit == 0 {
 		panic(fmt.Sprintf("gas_limit of Binance Smart Chain should be larger than 0"))
+	}
+	if cfg.UnconfirmedTxThreshold == 0 {
+		panic(fmt.Sprintf("unconfirmed_tx_threshold of Binance Smart Chain should be larger than 0"))
 	}
 }
 

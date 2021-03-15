@@ -14,6 +14,7 @@ func (r *Relayer) cleanPreviousPackages(height uint64) error {
 	for _, channelId := range r.bbcExecutor.Config.CrossChainConfig.MonitorChannelList {
 		nextSequence, err := r.bbcExecutor.GetNextSequence(common.CrossChainChannelID(channelId), int64(height))
 		if err != nil {
+			r.bbcExecutor.SwitchBCClient()
 			return err
 		}
 		nextDeliverSequence, err := r.bscExecutor.GetNextSequence(common.CrossChainChannelID(channelId))

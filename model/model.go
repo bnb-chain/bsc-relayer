@@ -11,6 +11,7 @@ const (
 	Created = "Created"
 	Success = "Success"
 	Failure = "Failed"
+	Missed  = "Missed"
 )
 
 type RelayTransaction struct {
