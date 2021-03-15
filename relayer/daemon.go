@@ -1,9 +1,10 @@
 package relayer
 
 import (
+	"time"
+
 	"github.com/binance-chain/bsc-relayer/executor"
 	"github.com/shopspring/decimal"
-	"time"
 
 	ethcmm "github.com/ethereum/go-ethereum/common"
 	cmn "github.com/tendermint/tendermint/libs/common"
@@ -13,9 +14,10 @@ import (
 )
 
 const (
-	IgnoredTimeGap       = 1800
-	BatchSize            = 100
-	WaitSecondForTrackTx = 10
+	IgnoredTimeGap         = 1800
+	BatchSize              = 100
+	WaitSecondForTrackTx   = 10
+	UnconfirmedTxThreshold = 50
 )
 
 func (r *Relayer) getLatestHeight() uint64 {
@@ -136,6 +138,9 @@ func (r *Relayer) txTracker() {
 		r.db.Where("create_time >= ? and tx_status = ?", time.Now().Unix()-IgnoredTimeGap, model.Created).Find(&relayTxs).Order("create_time desc").Limit(BatchSize)
 		if len(relayTxs) != 0 {
 			common.Logger.Infof("get %d unconfirmed transactions", len(relayTxs))
+			if len(relayTxs) > UnconfirmedTxThreshold {
+				r.bscExecutor.SwitchBSCClient()
+			}
 		}
 		for _, tx := range relayTxs {
 			txRecipient, err := r.bscExecutor.GetTxRecipient(ethcmm.HexToHash(tx.TxHash))
