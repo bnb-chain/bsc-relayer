@@ -104,6 +104,7 @@ func (executor *BBCExecutor) SwitchBCClient() {
 	if executor.clientIdx >= len(executor.RpcClients) {
 		executor.clientIdx = 0
 	}
+	common.Logger.Infof("Switch to RPC endpoint: %s", executor.Config.BBCConfig.RpcAddrs[executor.clientIdx])
 }
 
 func (executor *BBCExecutor) SubmitEvidence(headers []*bsc.Header) (*coretypes.ResultBroadcastTx, error) {
