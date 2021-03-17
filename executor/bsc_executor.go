@@ -106,13 +106,13 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 
 func (executor *BSCExecutor) GetClient() *ethclient.Client {
 	executor.mutex.RLock()
-	defer executor.mutex.RLock()
+	defer executor.mutex.RUnlock()
 	return executor.bscClients[executor.clientIdx]
 }
 
 func (executor *BSCExecutor) SwitchBSCClient() {
 	executor.mutex.Lock()
-	defer executor.mutex.Lock()
+	defer executor.mutex.Unlock()
 	executor.clientIdx++
 	if executor.clientIdx >= len(executor.bscClients) {
 		executor.clientIdx = 0

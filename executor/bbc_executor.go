@@ -93,13 +93,13 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 
 func (executor *BBCExecutor) GetClient() *rpc.HTTP {
 	executor.mutex.RLock()
-	defer executor.mutex.RLock()
+	defer executor.mutex.RUnlock()
 	return executor.RpcClients[executor.clientIdx]
 }
 
 func (executor *BBCExecutor) SwitchBCClient() {
 	executor.mutex.Lock()
-	defer executor.mutex.Lock()
+	defer executor.mutex.Unlock()
 	executor.clientIdx++
 	if executor.clientIdx >= len(executor.RpcClients) {
 		executor.clientIdx = 0
