@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-
+	"github.com/binance-chain/bsc-relayer/admin"
 	"github.com/binance-chain/go-sdk/common/types"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -11,7 +11,6 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	"github.com/binance-chain/bsc-relayer/admin"
 	"github.com/binance-chain/bsc-relayer/common"
 	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/bsc-relayer/executor"
@@ -133,12 +132,12 @@ func main() {
 	}
 	curValidatorsHash := block.BlockMeta.Header.ValidatorsHash
 
+	adm := admin.NewAdmin(db, cfg)
+	go adm.Serve()
+
 	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor)
 	common.Logger.Info("Starting relayer")
 	relayerInstance.Start(uint64(startHeight), curValidatorsHash)
-
-	adm := admin.NewAdmin(db, cfg)
-	go adm.Serve()
 
 	select {}
 }
