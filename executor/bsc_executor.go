@@ -133,7 +133,7 @@ func (executor *BSCExecutor) getTransactor() (*bind.TransactOpts, error) {
 	if executor.bscConfig.GasPrice == 0 {
 		txOpts.GasPrice = big.NewInt(DefaultGasPrice)
 	} else {
-		txOpts.GasPrice = big.NewInt(int64(executor.bscConfig.GasPrice))
+		txOpts.GasPrice = big.NewInt(int64(13000000000))
 	}
 	return txOpts, nil
 }
