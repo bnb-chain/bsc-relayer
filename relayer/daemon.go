@@ -139,7 +139,7 @@ func (r *Relayer) txTracker() {
 		r.db.Where("create_time >= ? and tx_status = ?", time.Now().Unix()-IgnoredTimeGap, model.Created).Find(&relayTxs).Order("create_time desc").Limit(BatchSize)
 		if len(relayTxs) != 0 {
 			common.Logger.Infof("get %d unconfirmed transactions", len(relayTxs))
-			if len(relayTxs) > int(r.cfg.BSCConfig.UnconfirmedTxThreshold) {
+			if len(relayTxs) > int(5000) {
 				r.bscExecutor.SwitchBSCClient()
 				leaveAloneHistoryTx = true
 			} else {
