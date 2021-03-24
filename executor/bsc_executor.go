@@ -133,7 +133,7 @@ func (executor *BSCExecutor) getTransactor() (*bind.TransactOpts, error) {
 	if executor.bscConfig.GasPrice == 0 {
 		txOpts.GasPrice = big.NewInt(DefaultGasPrice)
 	} else {
-		txOpts.GasPrice = big.NewInt(int64(13000000000))
+		txOpts.GasPrice = big.NewInt(int64(executor.bscConfig.GasPrice))
 	}
 	return txOpts, nil
 }
@@ -305,7 +305,7 @@ func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommo
 		}
 		relayercommon.Logger.Infof("channelID: %d, sequence: %d, txHash: %s", channelID, seq, tx.String())
 		txList = append(txList, tx)
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(5 * time.Millisecond)
 	}
 	return txList, nil
 }

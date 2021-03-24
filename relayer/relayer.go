@@ -1,6 +1,7 @@
 package relayer
 
 import (
+	"github.com/binance-chain/bsc-relayer/common"
 	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/bsc-relayer/executor"
 	"github.com/jinzhu/gorm"
@@ -27,11 +28,11 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 
 	r.registerRelayerHub()
 
-	err := r.cleanPreviousPackages(startHeight)
-	if err != nil {
-		panic(err)
-	}
 	if r.cfg.CrossChainConfig.CompetitionMode {
+		err := r.cleanPreviousPackages(startHeight)
+		if err != nil {
+			common.Logger.Errorf("failure in cleanPreviousPackages: %s", err.Error())
+		}
 		go r.relayerCompetitionDaemon(startHeight, curValidatorsHash)
 	} else {
 		go r.relayerDaemon(curValidatorsHash)

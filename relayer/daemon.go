@@ -16,8 +16,8 @@ import (
 const (
 	IgnoredTimeGap                      = 1800
 	BatchSize                           = 100
-	SleepMillisecondBetweenBatchTrackTx = 1000 // 1 second
-	SleepMillisecondBetweenEachTrackTx  = 10   // 0.01 second
+	SleepMillisecondBetweenBatchTrackTx = 500
+	SleepMillisecondBetweenEachTrackTx  = 10
 )
 
 func (r *Relayer) getLatestHeight() uint64 {
@@ -139,7 +139,7 @@ func (r *Relayer) txTracker() {
 		r.db.Where("create_time >= ? and tx_status = ?", time.Now().Unix()-IgnoredTimeGap, model.Created).Find(&relayTxs).Order("create_time desc").Limit(BatchSize)
 		if len(relayTxs) != 0 {
 			common.Logger.Infof("get %d unconfirmed transactions", len(relayTxs))
-			if len(relayTxs) > int(5000) {
+			if len(relayTxs) > int(r.cfg.BSCConfig.UnconfirmedTxThreshold) {
 				r.bscExecutor.SwitchBSCClient()
 				leaveAloneHistoryTx = true
 			} else {
