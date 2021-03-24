@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"github.com/binance-chain/go-sdk/common/types"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -109,6 +108,9 @@ func main() {
 		model.InitTables(db)
 	}
 
+	adm := admin.NewAdmin(db, cfg)
+	go adm.Serve()
+
 	bbcExecutor, err := executor.NewBBCExecutor(cfg, types.ChainNetwork(bbcNetworkType))
 	if err != nil {
 		common.Logger.Error(err.Error())
@@ -136,9 +138,6 @@ func main() {
 	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor)
 	common.Logger.Info("Starting relayer")
 	relayerInstance.Start(uint64(startHeight), curValidatorsHash)
-
-	adm := admin.NewAdmin(db, cfg)
-	go adm.Serve()
 
 	select {}
 }

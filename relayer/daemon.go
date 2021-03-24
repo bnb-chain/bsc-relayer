@@ -14,9 +14,10 @@ import (
 )
 
 const (
-	IgnoredTimeGap         = 1800
-	BatchSize              = 100
-	WaitSecondForTrackTx   = 10
+	IgnoredTimeGap                      = 1800
+	BatchSize                           = 100
+	SleepMillisecondBetweenBatchTrackTx = 500
+	SleepMillisecondBetweenEachTrackTx  = 10
 )
 
 func (r *Relayer) getLatestHeight() uint64 {
@@ -197,7 +198,7 @@ func (r *Relayer) txTracker() {
 			if err != nil {
 				common.Logger.Infof("update relayer transaction error: %s", err.Error())
 			}
-			time.Sleep(100 * time.Millisecond) // sleep 0.1 second
+			time.Sleep(SleepMillisecondBetweenEachTrackTx * time.Millisecond)
 		}
 		if statistic.Id == 0 {
 			tx := r.db.Begin()
@@ -232,6 +233,6 @@ func (r *Relayer) txTracker() {
 		}
 
 		relayTxs = relayTxs[:0]
-		time.Sleep(WaitSecondForTrackTx * time.Second)
+		time.Sleep(SleepMillisecondBetweenBatchTrackTx * time.Millisecond)
 	}
 }
