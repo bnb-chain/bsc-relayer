@@ -120,12 +120,7 @@ func (executor *BSCExecutor) SwitchBSCClient() {
 	relayercommon.Logger.Infof("Switch to provider: %s", executor.bscConfig.Providers[executor.clientIdx])
 }
 
-func (executor *BSCExecutor) getTransactor() (*bind.TransactOpts, error) {
-	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
-	if err != nil {
-		return nil, err
-	}
-
+func (executor *BSCExecutor) getTransactor(nonce uint64) (*bind.TransactOpts, error) {
 	txOpts := bind.NewKeyedTransactor(executor.privateKey)
 	txOpts.Nonce = big.NewInt(int64(nonce))
 	txOpts.Value = big.NewInt(0)
@@ -147,7 +142,11 @@ func (executor *BSCExecutor) getCallOpts() (*bind.CallOpts, error) {
 }
 
 func (executor *BSCExecutor) SyncTendermintLightClientHeader(height uint64) (common.Hash, error) {
-	txOpts, err := executor.getTransactor()
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -205,8 +204,8 @@ tryAgain:
 	return tx.Hash(), nil
 }
 
-func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.CrossChainChannelID, height, sequence uint64, msgBytes, proofBytes []byte) (common.Hash, error) {
-	txOpts, err := executor.getTransactor()
+func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.CrossChainChannelID, height, sequence uint64, msgBytes, proofBytes []byte, nonce uint64) (common.Hash, error) {
+	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -277,8 +276,11 @@ func (executor *BSCExecutor) RelayCrossChainPackage(channelID relayercommon.Cros
 	if err != nil {
 		return common.Hash{}, err
 	}
-
-	tx, err := executor.CallBuildInSystemContract(channelID, height, sequence, msgBytes, proofBytes)
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	tx, err := executor.CallBuildInSystemContract(channelID, height, sequence, msgBytes, proofBytes, nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -289,6 +291,10 @@ func (executor *BSCExecutor) RelayCrossChainPackage(channelID relayercommon.Cros
 
 func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommon.CrossChainChannelID, startSequence, endSequence, height uint64) ([]common.Hash, error) {
 	var txList []common.Hash
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return nil, err
+	}
 	for seq := startSequence; seq < endSequence; seq++ {
 		msgBytes, proofBytes, err := executor.GetPackage(channelID, seq, height)
 		if err != nil {
@@ -299,10 +305,11 @@ func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommo
 			return nil, fmt.Errorf("failed to query cross chain package on BC")
 		}
 
-		tx, err := executor.CallBuildInSystemContract(channelID, height, seq, msgBytes, proofBytes)
+		tx, err := executor.CallBuildInSystemContract(channelID, height, seq, msgBytes, proofBytes, nonce)
 		if err != nil {
 			return nil, err
 		}
+		nonce++
 		relayercommon.Logger.Infof("channelID: %d, sequence: %d, txHash: %s", channelID, seq, tx.String())
 		txList = append(txList, tx)
 		time.Sleep(5 * time.Millisecond)
@@ -329,7 +336,11 @@ func (executor *BSCExecutor) IsRelayer() (bool, error) {
 }
 
 func (executor *BSCExecutor) RegisterRelayer() (common.Hash, error) {
-	txOpts, err := executor.getTransactor()
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -366,7 +377,11 @@ func (executor *BSCExecutor) QueryReward() (*big.Int, error) {
 }
 
 func (executor *BSCExecutor) ClaimReward() (common.Hash, error) {
-	txOpts, err := executor.getTransactor()
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
