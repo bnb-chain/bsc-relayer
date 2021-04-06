@@ -24,8 +24,9 @@ const (
 
 	DefaultGasPrice = 20000000000 // 20 GWei
 
-	FallBehindThreshold        = 5
-	SleepSecondForUpdateClient = 10
+	FallBehindThreshold          = 5
+	SleepSecondForUpdateClient   = 10
+	DataSeedDenyServiceThreshold = 60
 )
 
 var (

@@ -29,8 +29,7 @@ type BSCClient struct {
 	BSCClient     *ethclient.Client
 	Provider      string
 	CurrentHeight int64
-	BlockTime     int64
-	UpdatedAt     int64
+	UpdatedAt     time.Time
 }
 
 type BSCExecutor struct {
@@ -43,7 +42,7 @@ type BSCExecutor struct {
 	destChainID   relayercommon.CrossChainID
 	privateKey    *ecdsa.PrivateKey
 	txSender      common.Address
-	bscConfig     *config.BSCConfig
+	cfg           *config.Config
 }
 
 func getPrivateKey(cfg *config.BSCConfig) (*ecdsa.PrivateKey, error) {
@@ -111,7 +110,7 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 		txSender:      txSender,
 		sourceChainID: relayercommon.CrossChainID(cfg.CrossChainConfig.SourceChainID),
 		destChainID:   relayercommon.CrossChainID(cfg.CrossChainConfig.DestChainID),
-		bscConfig:     &cfg.BSCConfig,
+		cfg:           cfg,
 	}, nil
 }
 
@@ -128,33 +127,35 @@ func (executor *BSCExecutor) SwitchBSCClient() {
 	if executor.clientIdx >= len(executor.bscClients) {
 		executor.clientIdx = 0
 	}
-	relayercommon.Logger.Infof("Switch to provider: %s", executor.bscConfig.Providers[executor.clientIdx])
+	relayercommon.Logger.Infof("Switch to provider: %s", executor.cfg.BSCConfig.Providers[executor.clientIdx])
 }
 
-func (executor *BSCExecutor) GetLatestBlockHeight(client *ethclient.Client) (int64, int64, error) {
+func (executor *BSCExecutor) GetLatestBlockHeight(client *ethclient.Client) (int64, error) {
 	ctxWithTimeout, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	block, err := client.BlockByNumber(ctxWithTimeout, nil)
 	if err != nil {
-		return 0, 0, err
+		return 0, err
 	}
-	return block.Number().Int64(), int64(block.Time()), nil
+	return block.Number().Int64(), nil
 }
 
 func (executor *BSCExecutor) UpdateClients() {
 	for {
 		relayercommon.Logger.Infof("start update BSC clients")
 		for _, client := range executor.bscClients {
-			height, blockTime, err := executor.GetLatestBlockHeight(client.BSCClient)
+			height, err := executor.GetLatestBlockHeight(client.BSCClient)
 			if err != nil {
 				relayercommon.Logger.Errorf("get latest block height error, err=%s", err.Error())
 				continue
 			}
-
+			if time.Since(client.UpdatedAt) > DataSeedDenyServiceThreshold {
+				msg := fmt.Sprintf("data seed %s is not accessable", client.Provider)
+				config.SendTelegramMessage(executor.cfg.AlertConfig.Identity, executor.cfg.AlertConfig.TelegramBotId, executor.cfg.AlertConfig.TelegramChatId, msg)
+			}
 			client.CurrentHeight = height
-			client.BlockTime = blockTime
-			client.UpdatedAt = time.Now().Unix()
+			client.UpdatedAt = time.Now()
 		}
 
 		highestHeight := int64(0)
@@ -181,11 +182,11 @@ func (executor *BSCExecutor) getTransactor(nonce uint64) (*bind.TransactOpts, er
 	txOpts := bind.NewKeyedTransactor(executor.privateKey)
 	txOpts.Nonce = big.NewInt(int64(nonce))
 	txOpts.Value = big.NewInt(0)
-	txOpts.GasLimit = executor.bscConfig.GasLimit
-	if executor.bscConfig.GasPrice == 0 {
+	txOpts.GasLimit = executor.cfg.BSCConfig.GasLimit
+	if executor.cfg.BSCConfig.GasPrice == 0 {
 		txOpts.GasPrice = big.NewInt(DefaultGasPrice)
 	} else {
-		txOpts.GasPrice = big.NewInt(int64(executor.bscConfig.GasPrice))
+		txOpts.GasPrice = big.NewInt(int64(executor.cfg.BSCConfig.GasPrice))
 	}
 	return txOpts, nil
 }

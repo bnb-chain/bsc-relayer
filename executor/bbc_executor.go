@@ -28,8 +28,7 @@ type BBCClient struct {
 	BBCClient     *rpc.HTTP
 	Provider      string
 	CurrentHeight int64
-	BlockTime     int64
-	UpdatedAt     int64
+	UpdatedAt     time.Time
 }
 
 type BBCExecutor struct {
@@ -119,27 +118,29 @@ func (executor *BBCExecutor) SwitchBCClient() {
 	common.Logger.Infof("Switch to RPC endpoint: %s", executor.Config.BBCConfig.RpcAddrs[executor.clientIdx])
 }
 
-func (executor *BBCExecutor) GetLatestBlockHeight(client rpc.Client) (int64, int64, error) {
+func (executor *BBCExecutor) GetLatestBlockHeight(client rpc.Client) (int64, error) {
 	status, err := client.Status()
 	if err != nil {
-		return 0, 0, err
+		return 0, err
 	}
-	return status.SyncInfo.LatestBlockHeight, status.SyncInfo.LatestBlockTime.Unix(), nil
+	return status.SyncInfo.LatestBlockHeight, nil
 }
 
 func (executor *BBCExecutor) UpdateClients() {
 	for {
 		common.Logger.Infof("start update BBC clients")
 		for _, bbcClient := range executor.BBCClients {
-			height, blockTime, err := executor.GetLatestBlockHeight(bbcClient.BBCClient)
+			height, err := executor.GetLatestBlockHeight(bbcClient.BBCClient)
 			if err != nil {
 				common.Logger.Errorf("get latest block height error, err=%s", err.Error())
 				continue
 			}
-
+			if time.Since(bbcClient.UpdatedAt) > DataSeedDenyServiceThreshold {
+				msg := fmt.Sprintf("data seed %s is not accessable", bbcClient.Provider)
+				config.SendTelegramMessage(executor.Config.AlertConfig.Identity, executor.Config.AlertConfig.TelegramBotId, executor.Config.AlertConfig.TelegramChatId, msg)
+			}
 			bbcClient.CurrentHeight = height
-			bbcClient.BlockTime = blockTime
-			bbcClient.UpdatedAt = time.Now().Unix()
+			bbcClient.UpdatedAt = time.Now()
 		}
 		highestHeight := int64(0)
 		highestIdx := 0
