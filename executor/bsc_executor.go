@@ -159,21 +159,21 @@ func (executor *BSCExecutor) UpdateClients() {
 
 		highestHeight := int64(0)
 		highestIdx := 0
-		for idx :=0; idx < len(executor.bscClients); idx ++ {
+		for idx := 0; idx < len(executor.bscClients); idx++ {
 			if executor.bscClients[idx].CurrentHeight > highestHeight {
 				highestHeight = executor.bscClients[idx].CurrentHeight
 				highestIdx = idx
 			}
 		}
 		// current client block sync is fall behind, switch to the client with highest block height
-		if executor.bscClients[executor.clientIdx].CurrentHeight + 10 < highestHeight {
+		if executor.bscClients[executor.clientIdx].CurrentHeight+FallBehindThreshold < highestHeight {
 			func() {
 				executor.mutex.Lock()
 				defer executor.mutex.Unlock()
 				executor.clientIdx = highestIdx
 			}()
 		}
-		time.Sleep(10 * time.Second)
+		time.Sleep(SleepSecondForUpdateClient * time.Second)
 	}
 }
 

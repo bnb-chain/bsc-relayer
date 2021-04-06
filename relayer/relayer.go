@@ -38,6 +38,9 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 		go r.relayerDaemon(curValidatorsHash)
 	}
 
+	go r.bbcExecutor.UpdateClients()
+	go r.bscExecutor.UpdateClients()
+
 	go r.txTracker()
 
 	go r.autoClaimRewardDaemon()

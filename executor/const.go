@@ -23,6 +23,9 @@ const (
 	CorssChainPackageInfoAttributeValue = "%d" + separator + "%d" + separator + "%d" // destChainID channelID sequence
 
 	DefaultGasPrice = 20000000000 // 20 GWei
+
+	FallBehindThreshold        = 5
+	SleepSecondForUpdateClient = 10
 )
 
 var (
