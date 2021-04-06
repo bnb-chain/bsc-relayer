@@ -170,11 +170,9 @@ func (executor *BSCExecutor) UpdateClients() {
 		}
 		// current client block sync is fall behind, switch to the client with highest block height
 		if executor.bscClients[executor.clientIdx].CurrentHeight+FallBehindThreshold < highestHeight {
-			func() {
-				executor.mutex.Lock()
-				defer executor.mutex.Unlock()
-				executor.clientIdx = highestIdx
-			}()
+			executor.mutex.Lock()
+			executor.clientIdx = highestIdx
+			executor.mutex.Unlock()
 		}
 		time.Sleep(SleepSecondForUpdateClient * time.Second)
 	}
