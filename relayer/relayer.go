@@ -29,7 +29,7 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	r.registerRelayerHub()
 
 	if r.cfg.CrossChainConfig.CompetitionMode {
-		err := r.cleanPreviousPackages(startHeight)
+		_, err := r.cleanPreviousPackages(startHeight)
 		if err != nil {
 			common.Logger.Errorf("failure in cleanPreviousPackages: %s", err.Error())
 		}
@@ -37,6 +37,9 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	} else {
 		go r.relayerDaemon(curValidatorsHash)
 	}
+
+	go r.bbcExecutor.UpdateClients()
+	go r.bscExecutor.UpdateClients()
 
 	go r.txTracker()
 

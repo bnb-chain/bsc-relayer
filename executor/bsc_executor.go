@@ -25,17 +25,24 @@ import (
 	"github.com/binance-chain/bsc-relayer/model"
 )
 
+type BSCClient struct {
+	BSCClient     *ethclient.Client
+	Provider      string
+	CurrentHeight int64
+	UpdatedAt     time.Time
+}
+
 type BSCExecutor struct {
 	mutex         sync.RWMutex
 	db            *gorm.DB
 	bbcExecutor   *BBCExecutor
 	clientIdx     int
-	bscClients    []*ethclient.Client
+	bscClients    []*BSCClient
 	sourceChainID relayercommon.CrossChainID
 	destChainID   relayercommon.CrossChainID
 	privateKey    *ecdsa.PrivateKey
 	txSender      common.Address
-	bscConfig     *config.BSCConfig
+	cfg           *config.Config
 }
 
 func getPrivateKey(cfg *config.BSCConfig) (*ecdsa.PrivateKey, error) {
@@ -65,15 +72,18 @@ func getPrivateKey(cfg *config.BSCConfig) (*ecdsa.PrivateKey, error) {
 	return privKey, nil
 }
 
-func initClients(providers []string) []*ethclient.Client {
-	clients := make([]*ethclient.Client, 0)
+func initClients(providers []string) []*BSCClient {
+	clients := make([]*BSCClient, 0)
 
 	for _, provider := range providers {
 		client, err := ethclient.Dial(provider)
 		if err != nil {
 			panic("new eth client error")
 		}
-		clients = append(clients, client)
+		clients = append(clients, &BSCClient{
+			BSCClient: client,
+			Provider:  provider,
+		})
 	}
 
 	return clients
@@ -100,14 +110,14 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 		txSender:      txSender,
 		sourceChainID: relayercommon.CrossChainID(cfg.CrossChainConfig.SourceChainID),
 		destChainID:   relayercommon.CrossChainID(cfg.CrossChainConfig.DestChainID),
-		bscConfig:     &cfg.BSCConfig,
+		cfg:           cfg,
 	}, nil
 }
 
 func (executor *BSCExecutor) GetClient() *ethclient.Client {
 	executor.mutex.RLock()
 	defer executor.mutex.RUnlock()
-	return executor.bscClients[executor.clientIdx]
+	return executor.bscClients[executor.clientIdx].BSCClient
 }
 
 func (executor *BSCExecutor) SwitchBSCClient() {
@@ -117,18 +127,66 @@ func (executor *BSCExecutor) SwitchBSCClient() {
 	if executor.clientIdx >= len(executor.bscClients) {
 		executor.clientIdx = 0
 	}
-	relayercommon.Logger.Infof("Switch to provider: %s", executor.bscConfig.Providers[executor.clientIdx])
+	relayercommon.Logger.Infof("Switch to provider: %s", executor.cfg.BSCConfig.Providers[executor.clientIdx])
+}
+
+func (executor *BSCExecutor) GetLatestBlockHeight(client *ethclient.Client) (int64, error) {
+	ctxWithTimeout, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	block, err := client.BlockByNumber(ctxWithTimeout, nil)
+	if err != nil {
+		return 0, err
+	}
+	return block.Number().Int64(), nil
+}
+
+func (executor *BSCExecutor) UpdateClients() {
+	for {
+		relayercommon.Logger.Infof("start update BSC clients")
+		for _, client := range executor.bscClients {
+			height, err := executor.GetLatestBlockHeight(client.BSCClient)
+			if err != nil {
+				relayercommon.Logger.Errorf("get latest block height error, err=%s", err.Error())
+				continue
+			}
+			if time.Since(client.UpdatedAt) > DataSeedDenyServiceThreshold {
+				msg := fmt.Sprintf("data seed %s is not accessable", client.Provider)
+				config.SendTelegramMessage(executor.cfg.AlertConfig.Identity, executor.cfg.AlertConfig.TelegramBotId, executor.cfg.AlertConfig.TelegramChatId, msg)
+			}
+			client.CurrentHeight = height
+			client.UpdatedAt = time.Now()
+		}
+
+		highestHeight := int64(0)
+		highestIdx := 0
+		for idx := 0; idx < len(executor.bscClients); idx++ {
+			if executor.bscClients[idx].CurrentHeight > highestHeight {
+				highestHeight = executor.bscClients[idx].CurrentHeight
+				highestIdx = idx
+			}
+		}
+		// current client block sync is fall behind, switch to the client with highest block height
+		if executor.bscClients[executor.clientIdx].CurrentHeight+FallBehindThreshold < highestHeight {
+			func() {
+				executor.mutex.Lock()
+				defer executor.mutex.Unlock()
+				executor.clientIdx = highestIdx
+			}()
+		}
+		time.Sleep(SleepSecondForUpdateClient * time.Second)
+	}
 }
 
 func (executor *BSCExecutor) getTransactor(nonce uint64) (*bind.TransactOpts, error) {
 	txOpts := bind.NewKeyedTransactor(executor.privateKey)
 	txOpts.Nonce = big.NewInt(int64(nonce))
 	txOpts.Value = big.NewInt(0)
-	txOpts.GasLimit = executor.bscConfig.GasLimit
-	if executor.bscConfig.GasPrice == 0 {
+	txOpts.GasLimit = executor.cfg.BSCConfig.GasLimit
+	if executor.cfg.BSCConfig.GasPrice == 0 {
 		txOpts.GasPrice = big.NewInt(DefaultGasPrice)
 	} else {
-		txOpts.GasPrice = big.NewInt(int64(executor.bscConfig.GasPrice))
+		txOpts.GasPrice = big.NewInt(int64(executor.cfg.BSCConfig.GasPrice))
 	}
 	return txOpts, nil
 }

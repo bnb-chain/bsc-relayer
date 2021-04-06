@@ -153,6 +153,7 @@ type AlertConfig struct {
 	EnableHeartBeat bool  `json:"enable_heart_beat"`
 	Interval        int64 `json:"interval"`
 
+	Identity       string `json:"identity"`
 	TelegramBotId  string `json:"telegram_bot_id"`
 	TelegramChatId string `json:"telegram_chat_id"`
 

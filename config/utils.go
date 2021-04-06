@@ -47,7 +47,7 @@ func GetSecret(secretName, region string) (string, error) {
 	}
 }
 
-func SendTelegramMessage(botId string, chatId string, msg string) {
+func SendTelegramMessage(identity string, botId string, chatId string, msg string) {
 	if botId == "" || chatId == "" || msg == "" {
 		return
 	}
@@ -56,7 +56,7 @@ func SendTelegramMessage(botId string, chatId string, msg string) {
 	formData := url.Values{
 		"chat_id":    {chatId},
 		"parse_mode": {"html"},
-		"text":       {msg},
+		"text":       {fmt.Sprintf("%s: %s", identity, msg)},
 	}
 	_, err := http.PostForm(endPoint, formData)
 	if err != nil {

@@ -94,7 +94,7 @@ func (monitor *DoubleSignMonitor) doubleSignChecker(channelNumber int, header *e
 		signature1, _ := twoHeader[1].GetSignature()
 		common.Logger.Infof("found double sign evidence: height %d, first signature %s, second signature %s",
 			header.Number.Int64(), hex.EncodeToString(signature0), hex.EncodeToString(signature1))
-		util.SendTelegramMessage(monitor.bbcExecutor.Config.AlertConfig.TelegramBotId, monitor.bbcExecutor.Config.AlertConfig.TelegramChatId,
+		util.SendTelegramMessage(monitor.bbcExecutor.Config.AlertConfig.Identity, monitor.bbcExecutor.Config.AlertConfig.TelegramBotId, monitor.bbcExecutor.Config.AlertConfig.TelegramChatId,
 			fmt.Sprintf("Alert: found double sign evidence: height %d, first miner %s, signature %s; second miner %s, signature %s",
 				header.Number.Int64(), twoHeader[0].Coinbase.String(), hex.EncodeToString(signature0), twoHeader[1].Coinbase.String(), hex.EncodeToString(signature1)))
 
