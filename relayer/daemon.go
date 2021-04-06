@@ -37,7 +37,7 @@ func (r *Relayer) relayerCompetitionDaemon(startHeight uint64, curValidatorsHash
 	for {
 		latestHeight := r.getLatestHeight() - 1
 		if latestHeight > height+r.bbcExecutor.Config.BBCConfig.BehindBlockThreshold {
-			err := r.cleanPreviousPackages(latestHeight)
+			_, err := r.cleanPreviousPackages(latestHeight)
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
@@ -64,7 +64,7 @@ func (r *Relayer) relayerCompetitionDaemon(startHeight uint64, curValidatorsHash
 		}
 
 		if height%r.bbcExecutor.Config.BBCConfig.BlockIntervalForCleanUpUndeliveredPackages == 0 {
-			err := r.cleanPreviousPackages(height)
+			_, err := r.cleanPreviousPackages(height)
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
@@ -100,6 +100,7 @@ func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 	validatorSetChanged := false
 	height := r.getLatestHeight()
 	common.Logger.Info("Start relayer daemon in normal model")
+	needAccelerate := false
 	for {
 		validatorSetChanged, curValidatorsHash, err = r.bbcExecutor.MonitorValidatorSetChange(int64(height), curValidatorsHash)
 		if err != nil {
@@ -115,8 +116,13 @@ func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 			}
 			common.Logger.Infof("Syncing header for validatorset update on Binance Chain, height:%d, txHash: %s", height, txHash.String())
 		}
-		if height % r.bbcExecutor.Config.BBCConfig.CleanUpBlockInterval == 0 {
-			err := r.cleanPreviousPackages(height)
+		if needAccelerate {
+			needAccelerate, err = r.cleanPreviousPackages(height)
+			if err != nil {
+				common.Logger.Error(err.Error())
+			}
+		} else if height % r.bbcExecutor.Config.BBCConfig.CleanUpBlockInterval == 0 {
+			needAccelerate, err = r.cleanPreviousPackages(height)
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
