@@ -74,6 +74,7 @@ func initBBCClients(keyManager keys.KeyManager, providers []string, network ctyp
 		bcClients = append(bcClients, &BBCClient{
 			BBCClient: rpcClient,
 			Provider:  provider,
+			UpdatedAt: time.Now(),
 		})
 	}
 	return bcClients
@@ -128,16 +129,17 @@ func (executor *BBCExecutor) GetLatestBlockHeight(client rpc.Client) (int64, err
 
 func (executor *BBCExecutor) UpdateClients() {
 	for {
-		common.Logger.Infof("start update BBC clients")
+		common.Logger.Infof("Start to monitor bc data-seeds' healthy")
 		for _, bbcClient := range executor.BBCClients {
+			if time.Since(bbcClient.UpdatedAt) > DataSeedDenyServiceThreshold {
+				msg := fmt.Sprintf("data seed %s is not accessable", bbcClient.Provider)
+				common.Logger.Error(msg)
+				config.SendTelegramMessage(executor.Config.AlertConfig.Identity, executor.Config.AlertConfig.TelegramBotId, executor.Config.AlertConfig.TelegramChatId, msg)
+			}
 			height, err := executor.GetLatestBlockHeight(bbcClient.BBCClient)
 			if err != nil {
 				common.Logger.Errorf("get latest block height error, err=%s", err.Error())
 				continue
-			}
-			if time.Since(bbcClient.UpdatedAt) > DataSeedDenyServiceThreshold {
-				msg := fmt.Sprintf("data seed %s is not accessable", bbcClient.Provider)
-				config.SendTelegramMessage(executor.Config.AlertConfig.Identity, executor.Config.AlertConfig.TelegramBotId, executor.Config.AlertConfig.TelegramChatId, msg)
 			}
 			bbcClient.CurrentHeight = height
 			bbcClient.UpdatedAt = time.Now()

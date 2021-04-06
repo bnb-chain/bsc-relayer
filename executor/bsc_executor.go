@@ -83,6 +83,7 @@ func initClients(providers []string) []*BSCClient {
 		clients = append(clients, &BSCClient{
 			BSCClient: client,
 			Provider:  provider,
+			UpdatedAt: time.Now(),
 		})
 	}
 
@@ -143,16 +144,17 @@ func (executor *BSCExecutor) GetLatestBlockHeight(client *ethclient.Client) (int
 
 func (executor *BSCExecutor) UpdateClients() {
 	for {
-		relayercommon.Logger.Infof("start update BSC clients")
+		relayercommon.Logger.Infof("Start to monitor bsc data-seeds' healthy")
 		for _, client := range executor.bscClients {
+			if time.Since(client.UpdatedAt) > DataSeedDenyServiceThreshold {
+				msg := fmt.Sprintf("data seed %s is not accessable", client.Provider)
+				relayercommon.Logger.Error(msg)
+				config.SendTelegramMessage(executor.cfg.AlertConfig.Identity, executor.cfg.AlertConfig.TelegramBotId, executor.cfg.AlertConfig.TelegramChatId, msg)
+			}
 			height, err := executor.GetLatestBlockHeight(client.BSCClient)
 			if err != nil {
 				relayercommon.Logger.Errorf("get latest block height error, err=%s", err.Error())
 				continue
-			}
-			if time.Since(client.UpdatedAt) > DataSeedDenyServiceThreshold {
-				msg := fmt.Sprintf("data seed %s is not accessable", client.Provider)
-				config.SendTelegramMessage(executor.cfg.AlertConfig.Identity, executor.cfg.AlertConfig.TelegramBotId, executor.cfg.AlertConfig.TelegramChatId, msg)
 			}
 			client.CurrentHeight = height
 			client.UpdatedAt = time.Now()
