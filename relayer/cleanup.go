@@ -29,7 +29,7 @@ func (r *Relayer) cleanPreviousPackages(height uint64) error {
 			channelId, nextDeliverSequence, nextSequence)
 		if nextSequence > nextDeliverSequence {
 			if nextSequence-nextDeliverSequence >= r.cfg.AlertConfig.SequenceGapThreshold {
-				util.SendTelegramMessage(r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId,
+				util.SendTelegramMessage(r.cfg.AlertConfig.Identity, r.cfg.AlertConfig.TelegramBotId, r.cfg.AlertConfig.TelegramChatId,
 					fmt.Sprintf("Alert: channel %d, undelivered package quantity %d", channelId, nextSequence-nextDeliverSequence))
 			}
 			if !blockSynced {
