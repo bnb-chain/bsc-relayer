@@ -39,7 +39,7 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	}
 
 	go r.bbcExecutor.UpdateClients()
-	go r.bscExecutor.UpdateClients()
+	//go r.bscExecutor.UpdateClients()
 
 	go r.txTracker()
 

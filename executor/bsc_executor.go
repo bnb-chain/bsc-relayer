@@ -144,9 +144,9 @@ func (executor *BSCExecutor) GetLatestBlockHeight(client *ethclient.Client) (int
 
 func (executor *BSCExecutor) UpdateClients() {
 	for {
-		relayercommon.Logger.Infof("Start to monitor bsc data-seeds' healthy")
+		relayercommon.Logger.Infof("Start to monitor bsc data-seeds healthy")
 		for _, client := range executor.bscClients {
-			if time.Since(client.UpdatedAt) > DataSeedDenyServiceThreshold {
+			if time.Since(client.UpdatedAt).Seconds() > DataSeedDenyServiceThreshold {
 				msg := fmt.Sprintf("data seed %s is not accessable", client.Provider)
 				relayercommon.Logger.Error(msg)
 				config.SendTelegramMessage(executor.cfg.AlertConfig.Identity, executor.cfg.AlertConfig.TelegramBotId, executor.cfg.AlertConfig.TelegramChatId, msg)

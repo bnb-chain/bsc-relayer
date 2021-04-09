@@ -129,9 +129,9 @@ func (executor *BBCExecutor) GetLatestBlockHeight(client rpc.Client) (int64, err
 
 func (executor *BBCExecutor) UpdateClients() {
 	for {
-		common.Logger.Infof("Start to monitor bc data-seeds' healthy")
+		common.Logger.Infof("Start to monitor bc data-seeds healthy")
 		for _, bbcClient := range executor.BBCClients {
-			if time.Since(bbcClient.UpdatedAt) > DataSeedDenyServiceThreshold {
+			if time.Since(bbcClient.UpdatedAt).Seconds() > DataSeedDenyServiceThreshold {
 				msg := fmt.Sprintf("data seed %s is not accessable", bbcClient.Provider)
 				common.Logger.Error(msg)
 				config.SendTelegramMessage(executor.Config.AlertConfig.Identity, executor.Config.AlertConfig.TelegramBotId, executor.Config.AlertConfig.TelegramChatId, msg)
