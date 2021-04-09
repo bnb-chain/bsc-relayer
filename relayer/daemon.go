@@ -18,6 +18,7 @@ const (
 	BatchSize                           = 100
 	SleepMillisecondBetweenBatchTrackTx = 500
 	SleepMillisecondBetweenEachTrackTx  = 10
+	HeightBehindThreshold               = 10
 )
 
 func (r *Relayer) getLatestHeight() uint64 {
@@ -102,6 +103,11 @@ func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 	common.Logger.Info("Start relayer daemon in normal model")
 	needAccelerate := false
 	for {
+		// accelerate if block height fall behind
+		if currHeight := r.getLatestHeight(); currHeight > height+HeightBehindThreshold {
+			needAccelerate = true
+			height = currHeight
+		}
 		validatorSetChanged, curValidatorsHash, err = r.bbcExecutor.MonitorValidatorSetChange(int64(height), curValidatorsHash)
 		if err != nil {
 			sleepTime := time.Duration(r.bbcExecutor.Config.BBCConfig.SleepMillisecondForWaitBlock * int64(time.Millisecond))
