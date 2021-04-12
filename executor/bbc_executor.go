@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
@@ -23,10 +24,17 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 
+type BBCClient struct {
+	BBCClient     *rpc.HTTP
+	Provider      string
+	CurrentHeight int64
+	UpdatedAt     time.Time
+}
+
 type BBCExecutor struct {
 	mutex         sync.RWMutex
 	clientIdx     int
-	RpcClients    []*rpc.HTTP
+	BBCClients    []*BBCClient
 	Config        *config.Config
 	keyManager    keys.KeyManager
 	sourceChainID common.CrossChainID
@@ -58,12 +66,16 @@ func getMnemonic(cfg *config.BBCConfig) (string, error) {
 	return mnemonic, nil
 }
 
-func initBBCClients(keyManager keys.KeyManager, providers []string, network ctypes.ChainNetwork) []*rpc.HTTP {
-	bcClients := make([]*rpc.HTTP, 0)
+func initBBCClients(keyManager keys.KeyManager, providers []string, network ctypes.ChainNetwork) []*BBCClient {
+	bcClients := make([]*BBCClient, 0)
 	for _, provider := range providers {
 		rpcClient := rpc.NewRPCClient(provider, network)
 		rpcClient.SetKeyManager(keyManager)
-		bcClients = append(bcClients, rpcClient)
+		bcClients = append(bcClients, &BBCClient{
+			BBCClient: rpcClient,
+			Provider:  provider,
+			UpdatedAt: time.Now(),
+		})
 	}
 	return bcClients
 }
@@ -83,7 +95,7 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 
 	return &BBCExecutor{
 		clientIdx:     0,
-		RpcClients:    initBBCClients(keyManager, cfg.BBCConfig.RpcAddrs, networkType),
+		BBCClients:    initBBCClients(keyManager, cfg.BBCConfig.RpcAddrs, networkType),
 		keyManager:    keyManager,
 		Config:        cfg,
 		sourceChainID: common.CrossChainID(cfg.CrossChainConfig.SourceChainID),
@@ -94,17 +106,60 @@ func NewBBCExecutor(cfg *config.Config, networkType ctypes.ChainNetwork) (*BBCEx
 func (executor *BBCExecutor) GetClient() *rpc.HTTP {
 	executor.mutex.RLock()
 	defer executor.mutex.RUnlock()
-	return executor.RpcClients[executor.clientIdx]
+	return executor.BBCClients[executor.clientIdx].BBCClient
 }
 
 func (executor *BBCExecutor) SwitchBCClient() {
 	executor.mutex.Lock()
 	defer executor.mutex.Unlock()
 	executor.clientIdx++
-	if executor.clientIdx >= len(executor.RpcClients) {
+	if executor.clientIdx >= len(executor.BBCClients) {
 		executor.clientIdx = 0
 	}
 	common.Logger.Infof("Switch to RPC endpoint: %s", executor.Config.BBCConfig.RpcAddrs[executor.clientIdx])
+}
+
+func (executor *BBCExecutor) GetLatestBlockHeight(client rpc.Client) (int64, error) {
+	status, err := client.Status()
+	if err != nil {
+		return 0, err
+	}
+	return status.SyncInfo.LatestBlockHeight, nil
+}
+
+func (executor *BBCExecutor) UpdateClients() {
+	for {
+		common.Logger.Infof("Start to monitor bc data-seeds healthy")
+		for _, bbcClient := range executor.BBCClients {
+			if time.Since(bbcClient.UpdatedAt).Seconds() > DataSeedDenyServiceThreshold {
+				msg := fmt.Sprintf("data seed %s is not accessable", bbcClient.Provider)
+				common.Logger.Error(msg)
+				config.SendTelegramMessage(executor.Config.AlertConfig.Identity, executor.Config.AlertConfig.TelegramBotId, executor.Config.AlertConfig.TelegramChatId, msg)
+			}
+			height, err := executor.GetLatestBlockHeight(bbcClient.BBCClient)
+			if err != nil {
+				common.Logger.Errorf("get latest block height error, err=%s", err.Error())
+				continue
+			}
+			bbcClient.CurrentHeight = height
+			bbcClient.UpdatedAt = time.Now()
+		}
+		highestHeight := int64(0)
+		highestIdx := 0
+		for idx := 0; idx < len(executor.BBCClients); idx++ {
+			if executor.BBCClients[idx].CurrentHeight > highestHeight {
+				highestHeight = executor.BBCClients[idx].CurrentHeight
+				highestIdx = idx
+			}
+		}
+		// current bbcClient block sync is fall behind, switch to the bbcClient with highest block height
+		if executor.BBCClients[executor.clientIdx].CurrentHeight+FallBehindThreshold < highestHeight {
+			executor.mutex.Lock()
+			executor.clientIdx = highestIdx
+			executor.mutex.Unlock()
+		}
+		time.Sleep(SleepSecondForUpdateClient * time.Second)
+	}
 }
 
 func (executor *BBCExecutor) SubmitEvidence(headers []*bsc.Header) (*coretypes.ResultBroadcastTx, error) {

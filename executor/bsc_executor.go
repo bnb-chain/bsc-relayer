@@ -25,17 +25,24 @@ import (
 	"github.com/binance-chain/bsc-relayer/model"
 )
 
+type BSCClient struct {
+	BSCClient     *ethclient.Client
+	Provider      string
+	CurrentHeight int64
+	UpdatedAt     time.Time
+}
+
 type BSCExecutor struct {
 	mutex         sync.RWMutex
 	db            *gorm.DB
 	bbcExecutor   *BBCExecutor
 	clientIdx     int
-	bscClients    []*ethclient.Client
+	bscClients    []*BSCClient
 	sourceChainID relayercommon.CrossChainID
 	destChainID   relayercommon.CrossChainID
 	privateKey    *ecdsa.PrivateKey
 	txSender      common.Address
-	bscConfig     *config.BSCConfig
+	cfg           *config.Config
 }
 
 func getPrivateKey(cfg *config.BSCConfig) (*ecdsa.PrivateKey, error) {
@@ -65,15 +72,19 @@ func getPrivateKey(cfg *config.BSCConfig) (*ecdsa.PrivateKey, error) {
 	return privKey, nil
 }
 
-func initClients(providers []string) []*ethclient.Client {
-	clients := make([]*ethclient.Client, 0)
+func initClients(providers []string) []*BSCClient {
+	clients := make([]*BSCClient, 0)
 
 	for _, provider := range providers {
 		client, err := ethclient.Dial(provider)
 		if err != nil {
 			panic("new eth client error")
 		}
-		clients = append(clients, client)
+		clients = append(clients, &BSCClient{
+			BSCClient: client,
+			Provider:  provider,
+			UpdatedAt: time.Now(),
+		})
 	}
 
 	return clients
@@ -100,14 +111,14 @@ func NewBSCExecutor(db *gorm.DB, bbcExecutor *BBCExecutor, cfg *config.Config) (
 		txSender:      txSender,
 		sourceChainID: relayercommon.CrossChainID(cfg.CrossChainConfig.SourceChainID),
 		destChainID:   relayercommon.CrossChainID(cfg.CrossChainConfig.DestChainID),
-		bscConfig:     &cfg.BSCConfig,
+		cfg:           cfg,
 	}, nil
 }
 
 func (executor *BSCExecutor) GetClient() *ethclient.Client {
 	executor.mutex.RLock()
 	defer executor.mutex.RUnlock()
-	return executor.bscClients[executor.clientIdx]
+	return executor.bscClients[executor.clientIdx].BSCClient
 }
 
 func (executor *BSCExecutor) SwitchBSCClient() {
@@ -117,23 +128,65 @@ func (executor *BSCExecutor) SwitchBSCClient() {
 	if executor.clientIdx >= len(executor.bscClients) {
 		executor.clientIdx = 0
 	}
-	relayercommon.Logger.Infof("Switch to provider: %s", executor.bscConfig.Providers[executor.clientIdx])
+	relayercommon.Logger.Infof("Switch to provider: %s", executor.cfg.BSCConfig.Providers[executor.clientIdx])
 }
 
-func (executor *BSCExecutor) getTransactor() (*bind.TransactOpts, error) {
-	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
-	if err != nil {
-		return nil, err
-	}
+func (executor *BSCExecutor) GetLatestBlockHeight(client *ethclient.Client) (int64, error) {
+	ctxWithTimeout, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
+	block, err := client.BlockByNumber(ctxWithTimeout, nil)
+	if err != nil {
+		return 0, err
+	}
+	return block.Number().Int64(), nil
+}
+
+func (executor *BSCExecutor) UpdateClients() {
+	for {
+		relayercommon.Logger.Infof("Start to monitor bsc data-seeds healthy")
+		for _, client := range executor.bscClients {
+			if time.Since(client.UpdatedAt).Seconds() > DataSeedDenyServiceThreshold {
+				msg := fmt.Sprintf("data seed %s is not accessable", client.Provider)
+				relayercommon.Logger.Error(msg)
+				config.SendTelegramMessage(executor.cfg.AlertConfig.Identity, executor.cfg.AlertConfig.TelegramBotId, executor.cfg.AlertConfig.TelegramChatId, msg)
+			}
+			height, err := executor.GetLatestBlockHeight(client.BSCClient)
+			if err != nil {
+				relayercommon.Logger.Errorf("get latest block height error, err=%s", err.Error())
+				continue
+			}
+			client.CurrentHeight = height
+			client.UpdatedAt = time.Now()
+		}
+
+		highestHeight := int64(0)
+		highestIdx := 0
+		for idx := 0; idx < len(executor.bscClients); idx++ {
+			if executor.bscClients[idx].CurrentHeight > highestHeight {
+				highestHeight = executor.bscClients[idx].CurrentHeight
+				highestIdx = idx
+			}
+		}
+		// current client block sync is fall behind, switch to the client with highest block height
+		if executor.bscClients[executor.clientIdx].CurrentHeight+FallBehindThreshold < highestHeight {
+			executor.mutex.Lock()
+			executor.clientIdx = highestIdx
+			executor.mutex.Unlock()
+		}
+		time.Sleep(SleepSecondForUpdateClient * time.Second)
+	}
+}
+
+func (executor *BSCExecutor) getTransactor(nonce uint64) (*bind.TransactOpts, error) {
 	txOpts := bind.NewKeyedTransactor(executor.privateKey)
 	txOpts.Nonce = big.NewInt(int64(nonce))
 	txOpts.Value = big.NewInt(0)
-	txOpts.GasLimit = executor.bscConfig.GasLimit
-	if executor.bscConfig.GasPrice == 0 {
+	txOpts.GasLimit = executor.cfg.BSCConfig.GasLimit
+	if executor.cfg.BSCConfig.GasPrice == 0 {
 		txOpts.GasPrice = big.NewInt(DefaultGasPrice)
 	} else {
-		txOpts.GasPrice = big.NewInt(int64(executor.bscConfig.GasPrice))
+		txOpts.GasPrice = big.NewInt(int64(executor.cfg.BSCConfig.GasPrice))
 	}
 	return txOpts, nil
 }
@@ -147,7 +200,11 @@ func (executor *BSCExecutor) getCallOpts() (*bind.CallOpts, error) {
 }
 
 func (executor *BSCExecutor) SyncTendermintLightClientHeader(height uint64) (common.Hash, error) {
-	txOpts, err := executor.getTransactor()
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -205,8 +262,8 @@ tryAgain:
 	return tx.Hash(), nil
 }
 
-func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.CrossChainChannelID, height, sequence uint64, msgBytes, proofBytes []byte) (common.Hash, error) {
-	txOpts, err := executor.getTransactor()
+func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.CrossChainChannelID, height, sequence uint64, msgBytes, proofBytes []byte, nonce uint64) (common.Hash, error) {
+	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -277,8 +334,11 @@ func (executor *BSCExecutor) RelayCrossChainPackage(channelID relayercommon.Cros
 	if err != nil {
 		return common.Hash{}, err
 	}
-
-	tx, err := executor.CallBuildInSystemContract(channelID, height, sequence, msgBytes, proofBytes)
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	tx, err := executor.CallBuildInSystemContract(channelID, height, sequence, msgBytes, proofBytes, nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -289,6 +349,10 @@ func (executor *BSCExecutor) RelayCrossChainPackage(channelID relayercommon.Cros
 
 func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommon.CrossChainChannelID, startSequence, endSequence, height uint64) ([]common.Hash, error) {
 	var txList []common.Hash
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return nil, err
+	}
 	for seq := startSequence; seq < endSequence; seq++ {
 		msgBytes, proofBytes, err := executor.GetPackage(channelID, seq, height)
 		if err != nil {
@@ -299,10 +363,11 @@ func (executor *BSCExecutor) BatchRelayCrossChainPackages(channelID relayercommo
 			return nil, fmt.Errorf("failed to query cross chain package on BC")
 		}
 
-		tx, err := executor.CallBuildInSystemContract(channelID, height, seq, msgBytes, proofBytes)
+		tx, err := executor.CallBuildInSystemContract(channelID, height, seq, msgBytes, proofBytes, nonce)
 		if err != nil {
 			return nil, err
 		}
+		nonce++
 		relayercommon.Logger.Infof("channelID: %d, sequence: %d, txHash: %s", channelID, seq, tx.String())
 		txList = append(txList, tx)
 		time.Sleep(5 * time.Millisecond)
@@ -329,7 +394,11 @@ func (executor *BSCExecutor) IsRelayer() (bool, error) {
 }
 
 func (executor *BSCExecutor) RegisterRelayer() (common.Hash, error) {
-	txOpts, err := executor.getTransactor()
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -366,7 +435,11 @@ func (executor *BSCExecutor) QueryReward() (*big.Int, error) {
 }
 
 func (executor *BSCExecutor) ClaimReward() (common.Hash, error) {
-	txOpts, err := executor.getTransactor()
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return common.Hash{}, err
+	}
+	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
 	}

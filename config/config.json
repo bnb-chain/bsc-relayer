@@ -51,6 +51,7 @@
     "enable_alert": true,
     "enable_heart_beat": false,
     "interval": 300,
+    "identity": "your_service_name",
     "telegram_bot_id": "your_bot_id",
     "telegram_chat_id": "your_chat_id",
     "balance_threshold": "1000000000000000000",
