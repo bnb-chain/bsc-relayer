@@ -11,17 +11,13 @@ require (
 	github.com/cespare/cp v1.1.1 // indirect
 	github.com/deckarep/golang-set v1.7.1 // indirect
 	github.com/edsrzf/mmap-go v1.0.0 // indirect
-	github.com/elastic/gosigar v0.10.5 // indirect
-	github.com/ethereum/go-ethereum v1.9.13
+	github.com/ethereum/go-ethereum v1.9.25
 	github.com/fjl/memsize v0.0.0-20190710130421-bcb5799ab5e5 // indirect
 	github.com/gballet/go-libpcsclite v0.0.0-20191108122812-4678299bea08 // indirect
 	github.com/gorilla/mux v1.7.3
-	github.com/hashicorp/golang-lru v0.5.1 // indirect
-	github.com/huin/goupnp v1.0.0 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
 	github.com/jinzhu/gorm v1.9.12
 	github.com/karalabe/usb v0.0.0-20191104083709-911d15fe12a9 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/olekukonko/tablewriter v0.0.4 // indirect
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/pborman/uuid v1.2.0 // indirect
