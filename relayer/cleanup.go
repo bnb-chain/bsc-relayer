@@ -8,6 +8,10 @@ import (
 	"github.com/binance-chain/bsc-relayer/model"
 )
 
+const (
+	MaxBatchSize = 30
+)
+
 func (r *Relayer) cleanPreviousPackages(height uint64) (bool, error) {
 	blockSynced := false
 	needAccelerate := false
@@ -22,14 +26,11 @@ func (r *Relayer) cleanPreviousPackages(height uint64) (bool, error) {
 		if err != nil {
 			return needAccelerate, err
 		}
-		//nextDeliveredSeqFromDB := r.calculateNextDeliverSeqFromDB(channelId)
-		//if nextDeliverSequence < nextDeliveredSeqFromDB {
-		//	nextDeliverSequence = nextDeliveredSeqFromDB
-		//}
+
 		common.Logger.Infof("channelID: %d, next deliver sequence %d on BSC, next sequence %d on BC",
 			channelId, nextDeliverSequence, nextSequence)
 		if nextSequence > nextDeliverSequence {
-			if nextSequence-nextDeliverSequence >= r.cfg.AlertConfig.SequenceGapThreshold / 2 { //Accelerate if the sequence gap reaches half of threshold
+			if nextSequence-nextDeliverSequence >= r.cfg.AlertConfig.SequenceGapThreshold/2 { //Accelerate if the sequence gap reaches half of threshold
 				needAccelerate = true
 			}
 			if nextSequence-nextDeliverSequence >= r.cfg.AlertConfig.SequenceGapThreshold {
@@ -43,6 +44,9 @@ func (r *Relayer) cleanPreviousPackages(height uint64) (bool, error) {
 				}
 				blockSynced = true
 				common.Logger.Infof("Sync header %d, txHash %s", height+1, tx.String())
+			}
+			if nextSequence > nextDeliverSequence+MaxBatchSize {
+				nextSequence = nextDeliverSequence + MaxBatchSize
 			}
 			_, err = r.bscExecutor.BatchRelayCrossChainPackages(common.CrossChainChannelID(channelId), nextDeliverSequence, nextSequence, height)
 			if err != nil {
