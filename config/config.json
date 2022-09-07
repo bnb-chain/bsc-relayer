@@ -9,7 +9,7 @@
     "rpc_addrs": [
       "http://data-seed-prealpha-1-s1.binance.org:80"
     ],
-    "mnemonic_type": "local_mnemonic",
+    "mnemonic_type": "local_mnemonic",< witness pitch peasant bird year sponsor conduct push enhance melt betray spare police region strategy hammer potato lecture cloud business habit student vehicle allow>
     "aws_region": "",
     "aws_secret_name": "",
     "mnemonic": "",
@@ -19,10 +19,10 @@
     "behind_block_threshold": 100
   },
   "bsc_config": {
-    "key_type": "local_private_key",
+    "key_type": "local_private_key",< 5576779EB3F28F1067BE07AC643A81A8C74E6C55EDE38BEEF68BE1E9D4C1CA3C>
     "aws_region": "",
     "aws_secret_name": "",
-    "private_key": "",
+    "private_key": "",< 5576779EB3F28F1067BE07AC643A81A8C74E6C55EDE38BEEF68BE1E9D4C1CA3C>
     "providers": [
       "https://data-seed-prebsc-1-s1.binance.org:8545"
     ],
