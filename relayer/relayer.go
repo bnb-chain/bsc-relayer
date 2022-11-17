@@ -38,6 +38,8 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 		go r.relayerDaemon(curValidatorsHash)
 	}
 
+	go r.WatchBcValidatorSetChange()
+
 	go r.bbcExecutor.UpdateClients()
 	go r.bscExecutor.UpdateClients()
 

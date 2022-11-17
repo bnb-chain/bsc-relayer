@@ -137,6 +137,55 @@ func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 	}
 }
 
+func (r *Relayer) WatchBcValidatorSetChange() {
+	var latestHeight int64
+	var latestValidatorHash cmn.HexBytes
+	for {
+		time.Sleep(15 * time.Second)
+		// get light client latestHeight on BSC
+		lightClientLatestHeight, err := r.bscExecutor.GetLightClientLatestHeight()
+		if err != nil {
+			common.Logger.Warningf("Get light client latest height error: %s", err.Error())
+			continue
+		}
+		common.Logger.Infof("Light client latest height: %d", lightClientLatestHeight)
+		if int64(lightClientLatestHeight) > latestHeight {
+			latestHeight = int64(lightClientLatestHeight)
+			block, err := r.bbcExecutor.GetClient().Block(&(latestHeight))
+			if err != nil {
+				common.Logger.Warningf("Get block %d error: %s", latestHeight, err.Error())
+				continue
+			}
+			latestValidatorHash = block.BlockMeta.Header.ValidatorsHash
+			common.Logger.Infof("BSC Light client ValidatorSetHash changed. latest height: %d, validatorSetHash: %s", latestHeight, latestValidatorHash)
+		}
+		block, err := r.bbcExecutor.GetClient().Block(nil)
+		if err != nil {
+			common.Logger.Warningf("Get latest block error: %s", err.Error())
+			continue
+		}
+		latestBlockHeight := block.BlockMeta.Header.Height
+		common.Logger.Infof("Latest bc block height: %d, hash: %s", latestBlockHeight, block.BlockMeta.Header.ValidatorsHash.String())
+		if block.BlockMeta.Header.ValidatorsHash.String() != latestValidatorHash.String() {
+			// find the height of validator set change and sync the header to bsc
+			validatorSetChangeHeight, err := r.bbcExecutor.FindValidatorSetChangeHeight(latestHeight, latestBlockHeight, latestValidatorHash, block.BlockMeta.Header.ValidatorsHash)
+			if err != nil {
+				common.Logger.Warningf("Find validator set change height error: %s", err.Error())
+				continue
+			}
+			txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(uint64(validatorSetChangeHeight))
+			if err != nil {
+				common.Logger.Warningf("Sync validatorSetChangeHeight %d header error: %s", validatorSetChangeHeight, err.Error())
+				continue // try again for this height
+			}
+			common.Logger.Infof("validator set change Syncing header: %d, txHash: %s", validatorSetChangeHeight, txHash.String())
+		} else {
+			latestHeight = latestBlockHeight
+			common.Logger.Infof("BC Light client ValidatorSetHash not changed. latest bc height: %d, validatorSetHash: %s", latestHeight, latestValidatorHash)
+		}
+	}
+}
+
 func (r *Relayer) txTracker() {
 	if r.db == nil {
 		return

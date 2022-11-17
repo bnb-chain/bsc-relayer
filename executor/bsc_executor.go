@@ -199,6 +199,19 @@ func (executor *BSCExecutor) getCallOpts() (*bind.CallOpts, error) {
 	return callOpts, nil
 }
 
+func (executor *BSCExecutor) GetLightClientLatestHeight() (uint64, error) {
+	instance, err := tendermintlightclient.NewTendermintlightclient(tendermintLightClientContractAddr, executor.GetClient())
+	if err != nil {
+		return 0, err
+	}
+	callOpts, err := executor.getCallOpts()
+	if err != nil {
+		return 0, err
+	}
+	latestHeight, err := instance.LatestHeight(callOpts)
+	return latestHeight, err
+}
+
 func (executor *BSCExecutor) SyncTendermintLightClientHeader(height uint64) (common.Hash, error) {
 	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
 	if err != nil {

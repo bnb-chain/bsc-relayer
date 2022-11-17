@@ -259,7 +259,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "_latestHeight",
+		"name": "latestHeight",
 		"outputs": [
 			{
 				"internalType": "uint64",
