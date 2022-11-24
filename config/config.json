@@ -28,6 +28,7 @@
     ],
     "gas_limit": 4700000,
     "gas_price": 20000000000,
+    "unconfirmed_tx_threshold": 1,
     "monitor_data_seed_list": []
   },
   "log_config": {
