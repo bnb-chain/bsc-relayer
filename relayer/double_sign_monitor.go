@@ -37,7 +37,7 @@ func isDoubleSignHeaders(headers [2]*bsc.Header) bool {
 	if headers[0].Number != (headers[1].Number) {
 		return false
 	}
-	if bytes.Equal(headers[0].ParentHash[:], headers[1].ParentHash[:]) {
+	if !bytes.Equal(headers[0].ParentHash[:], headers[1].ParentHash[:]) {
 		return false
 	}
 	signature1, err := headers[0].GetSignature()
