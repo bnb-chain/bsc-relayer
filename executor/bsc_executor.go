@@ -406,29 +406,6 @@ func (executor *BSCExecutor) IsRelayer() (bool, error) {
 	return isRelayer, nil
 }
 
-func (executor *BSCExecutor) RegisterRelayer() (common.Hash, error) {
-	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
-	if err != nil {
-		return common.Hash{}, err
-	}
-	txOpts, err := executor.getTransactor(nonce)
-	if err != nil {
-		return common.Hash{}, err
-	}
-
-	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
-	if err != nil {
-		return common.Hash{}, err
-	}
-
-	txOpts.Value = big.NewInt(1).Mul(big.NewInt(100), big.NewInt(1e18)) //100 BNB
-	tx, err := instance.Register(txOpts)
-	if err != nil {
-		return common.Hash{}, err
-	}
-	return tx.Hash(), nil
-}
-
 func (executor *BSCExecutor) QueryReward() (*big.Int, error) {
 	callOpts, err := executor.getCallOpts()
 	if err != nil {

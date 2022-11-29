@@ -182,17 +182,6 @@ func TestBSCExecutor_RelayStakingPackage(t *testing.T) {
 	t.Log(txHash.String())
 }
 
-func TestBSCExecutor_RegisterRelayer(t *testing.T) {
-	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
-	require.NoError(t, err)
-	executor, err := NewBSCExecutor(nil, bbcExecutor, cfg)
-	require.NoError(t, err)
-
-	txHash, err := executor.RegisterRelayer()
-	require.NoError(t, err)
-	t.Log(txHash.String())
-}
-
 func TestBSCExecutor_CheckRelayer(t *testing.T) {
 	bbcExecutor, err := NewBBCExecutor(cfg, ctypes.TmpTestNetwork)
 	require.NoError(t, err)
