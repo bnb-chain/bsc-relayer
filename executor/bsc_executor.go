@@ -406,27 +406,44 @@ func (executor *BSCExecutor) IsRelayer() (bool, error) {
 	return isRelayer, nil
 }
 
-func (executor *BSCExecutor) RegisterRelayer() (common.Hash, error) {
+func (executor *BSCExecutor) IsProvisionalRelayer() (bool, error) {
+	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
+	if err != nil {
+		return false, err
+	}
+
+	callOpts, err := executor.getCallOpts()
+	if err != nil {
+		return false, err
+	}
+
+	isProvisionalRelayer, err := instance.IsProvisionalRelayer(callOpts, executor.txSender)
+	if err != nil {
+		return false, err
+	}
+	return isProvisionalRelayer, nil
+}
+
+func (executor *BSCExecutor) AcceptBeingRelayer(manager common.Address) (bool, error) {
+	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
+	if err != nil {
+		return false, err
+	}
+
 	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
 	if err != nil {
-		return common.Hash{}, err
+		return false, err
 	}
 	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
-		return common.Hash{}, err
+		return false, err
 	}
-
-	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
+	txOpts.GasLimit = 0
+	_, err = instance.AcceptBeingRelayer(txOpts, manager)
 	if err != nil {
-		return common.Hash{}, err
+		return false, err
 	}
-
-	txOpts.Value = big.NewInt(1).Mul(big.NewInt(100), big.NewInt(1e18)) //100 BNB
-	tx, err := instance.Register(txOpts)
-	if err != nil {
-		return common.Hash{}, err
-	}
-	return tx.Hash(), nil
+	return true, nil
 }
 
 func (executor *BSCExecutor) QueryReward() (*big.Int, error) {

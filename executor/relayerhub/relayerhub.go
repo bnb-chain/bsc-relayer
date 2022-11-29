@@ -28,7 +28,7 @@ var (
 )
 
 // RelayerhubABI is the input ABI used to generate the binding from.
-const RelayerhubABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"key\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"paramChange\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_relayer\",\"type\":\"address\"}],\"name\":\"relayerRegister\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_relayer\",\"type\":\"address\"}],\"name\":\"relayerUnRegister\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"GOV_HUB_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INCENTIVIZE_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INIT_DUES\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INIT_REQUIRED_DEPOSIT\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"LIGHT_CLIENT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"RELAYERHUB_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"RELAYER_REWARD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASH_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SYSTEM_REWARD_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOKEN_HUB_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"alreadyInit\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"dues\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"isRelayer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"register\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"requiredDeposit\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unregister\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"key\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"updateParam\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+const RelayerhubABI = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_addedManager\",\"type\":\"address\"}],\"name\":\"managerAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_removedManager\",\"type\":\"address\"}],\"name\":\"managerRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"key\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"paramChange\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_relayer\",\"type\":\"address\"}],\"name\":\"relayerAddedProvisionally\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_relayer\",\"type\":\"address\"}],\"name\":\"relayerUnRegister\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"}],\"name\":\"relayerUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"BIND_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CODE_OK\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CROSS_CHAIN_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CROSS_STAKE_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ERROR_FAIL_DECODE\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"GOV_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"GOV_HUB_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INCENTIVIZE_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INIT_DUES\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INIT_REQUIRED_DEPOSIT\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"LIGHT_CLIENT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"RELAYERHUB_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASH_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASH_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SYSTEM_REWARD_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOKEN_HUB_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOKEN_MANAGER_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_IN_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_OUT_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WHITELIST_1\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WHITELIST_2\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"manager\",\"type\":\"address\"}],\"name\":\"acceptBeingRelayer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"alreadyInit\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bscChainID\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"managerAddress\",\"type\":\"address\"}],\"name\":\"isManager\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"relayerAddress\",\"type\":\"address\"}],\"name\":\"isProvisionalRelayer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"relayerAddress\",\"type\":\"address\"}],\"name\":\"isRelayer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"removeManagerByHimself\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unregister\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"key\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"updateParam\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"relayerToBeAdded\",\"type\":\"address\"}],\"name\":\"updateRelayer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"whitelistInit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"whitelistInitDone\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 // Relayerhub is an auto generated Go binding around an Ethereum contract.
 type Relayerhub struct {
@@ -170,6 +170,162 @@ func (_Relayerhub *RelayerhubTransactorRaw) Transfer(opts *bind.TransactOpts) (*
 // Transact invokes the (paid) contract method with params as input values.
 func (_Relayerhub *RelayerhubTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _Relayerhub.Contract.contract.Transact(opts, method, params...)
+}
+
+// BINDCHANNELID is a free data retrieval call binding the contract method 0x3dffc387.
+//
+// Solidity: function BIND_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCaller) BINDCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "BIND_CHANNELID")
+	return *ret0, err
+}
+
+// BINDCHANNELID is a free data retrieval call binding the contract method 0x3dffc387.
+//
+// Solidity: function BIND_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubSession) BINDCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.BINDCHANNELID(&_Relayerhub.CallOpts)
+}
+
+// BINDCHANNELID is a free data retrieval call binding the contract method 0x3dffc387.
+//
+// Solidity: function BIND_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCallerSession) BINDCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.BINDCHANNELID(&_Relayerhub.CallOpts)
+}
+
+// CODEOK is a free data retrieval call binding the contract method 0xab51bb96.
+//
+// Solidity: function CODE_OK() constant returns(uint32)
+func (_Relayerhub *RelayerhubCaller) CODEOK(opts *bind.CallOpts) (uint32, error) {
+	var (
+		ret0 = new(uint32)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "CODE_OK")
+	return *ret0, err
+}
+
+// CODEOK is a free data retrieval call binding the contract method 0xab51bb96.
+//
+// Solidity: function CODE_OK() constant returns(uint32)
+func (_Relayerhub *RelayerhubSession) CODEOK() (uint32, error) {
+	return _Relayerhub.Contract.CODEOK(&_Relayerhub.CallOpts)
+}
+
+// CODEOK is a free data retrieval call binding the contract method 0xab51bb96.
+//
+// Solidity: function CODE_OK() constant returns(uint32)
+func (_Relayerhub *RelayerhubCallerSession) CODEOK() (uint32, error) {
+	return _Relayerhub.Contract.CODEOK(&_Relayerhub.CallOpts)
+}
+
+// CROSSCHAINCONTRACTADDR is a free data retrieval call binding the contract method 0x51e80672.
+//
+// Solidity: function CROSS_CHAIN_CONTRACT_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubCaller) CROSSCHAINCONTRACTADDR(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "CROSS_CHAIN_CONTRACT_ADDR")
+	return *ret0, err
+}
+
+// CROSSCHAINCONTRACTADDR is a free data retrieval call binding the contract method 0x51e80672.
+//
+// Solidity: function CROSS_CHAIN_CONTRACT_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubSession) CROSSCHAINCONTRACTADDR() (common.Address, error) {
+	return _Relayerhub.Contract.CROSSCHAINCONTRACTADDR(&_Relayerhub.CallOpts)
+}
+
+// CROSSCHAINCONTRACTADDR is a free data retrieval call binding the contract method 0x51e80672.
+//
+// Solidity: function CROSS_CHAIN_CONTRACT_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubCallerSession) CROSSCHAINCONTRACTADDR() (common.Address, error) {
+	return _Relayerhub.Contract.CROSSCHAINCONTRACTADDR(&_Relayerhub.CallOpts)
+}
+
+// CROSSSTAKECHANNELID is a free data retrieval call binding the contract method 0x718a8aa8.
+//
+// Solidity: function CROSS_STAKE_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCaller) CROSSSTAKECHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "CROSS_STAKE_CHANNELID")
+	return *ret0, err
+}
+
+// CROSSSTAKECHANNELID is a free data retrieval call binding the contract method 0x718a8aa8.
+//
+// Solidity: function CROSS_STAKE_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubSession) CROSSSTAKECHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.CROSSSTAKECHANNELID(&_Relayerhub.CallOpts)
+}
+
+// CROSSSTAKECHANNELID is a free data retrieval call binding the contract method 0x718a8aa8.
+//
+// Solidity: function CROSS_STAKE_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCallerSession) CROSSSTAKECHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.CROSSSTAKECHANNELID(&_Relayerhub.CallOpts)
+}
+
+// ERRORFAILDECODE is a free data retrieval call binding the contract method 0x0bee7a67.
+//
+// Solidity: function ERROR_FAIL_DECODE() constant returns(uint32)
+func (_Relayerhub *RelayerhubCaller) ERRORFAILDECODE(opts *bind.CallOpts) (uint32, error) {
+	var (
+		ret0 = new(uint32)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "ERROR_FAIL_DECODE")
+	return *ret0, err
+}
+
+// ERRORFAILDECODE is a free data retrieval call binding the contract method 0x0bee7a67.
+//
+// Solidity: function ERROR_FAIL_DECODE() constant returns(uint32)
+func (_Relayerhub *RelayerhubSession) ERRORFAILDECODE() (uint32, error) {
+	return _Relayerhub.Contract.ERRORFAILDECODE(&_Relayerhub.CallOpts)
+}
+
+// ERRORFAILDECODE is a free data retrieval call binding the contract method 0x0bee7a67.
+//
+// Solidity: function ERROR_FAIL_DECODE() constant returns(uint32)
+func (_Relayerhub *RelayerhubCallerSession) ERRORFAILDECODE() (uint32, error) {
+	return _Relayerhub.Contract.ERRORFAILDECODE(&_Relayerhub.CallOpts)
+}
+
+// GOVCHANNELID is a free data retrieval call binding the contract method 0x96713da9.
+//
+// Solidity: function GOV_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCaller) GOVCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "GOV_CHANNELID")
+	return *ret0, err
+}
+
+// GOVCHANNELID is a free data retrieval call binding the contract method 0x96713da9.
+//
+// Solidity: function GOV_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubSession) GOVCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.GOVCHANNELID(&_Relayerhub.CallOpts)
+}
+
+// GOVCHANNELID is a free data retrieval call binding the contract method 0x96713da9.
+//
+// Solidity: function GOV_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCallerSession) GOVCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.GOVCHANNELID(&_Relayerhub.CallOpts)
 }
 
 // GOVHUBADDR is a free data retrieval call binding the contract method 0x9dc09262.
@@ -328,30 +484,30 @@ func (_Relayerhub *RelayerhubCallerSession) RELAYERHUBCONTRACTADDR() (common.Add
 	return _Relayerhub.Contract.RELAYERHUBCONTRACTADDR(&_Relayerhub.CallOpts)
 }
 
-// RELAYERREWARD is a free data retrieval call binding the contract method 0x75405d0d.
+// SLASHCHANNELID is a free data retrieval call binding the contract method 0x7942fd05.
 //
-// Solidity: function RELAYER_REWARD() constant returns(uint256)
-func (_Relayerhub *RelayerhubCaller) RELAYERREWARD(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function SLASH_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCaller) SLASHCHANNELID(opts *bind.CallOpts) (uint8, error) {
 	var (
-		ret0 = new(*big.Int)
+		ret0 = new(uint8)
 	)
 	out := ret0
-	err := _Relayerhub.contract.Call(opts, out, "RELAYER_REWARD")
+	err := _Relayerhub.contract.Call(opts, out, "SLASH_CHANNELID")
 	return *ret0, err
 }
 
-// RELAYERREWARD is a free data retrieval call binding the contract method 0x75405d0d.
+// SLASHCHANNELID is a free data retrieval call binding the contract method 0x7942fd05.
 //
-// Solidity: function RELAYER_REWARD() constant returns(uint256)
-func (_Relayerhub *RelayerhubSession) RELAYERREWARD() (*big.Int, error) {
-	return _Relayerhub.Contract.RELAYERREWARD(&_Relayerhub.CallOpts)
+// Solidity: function SLASH_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubSession) SLASHCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.SLASHCHANNELID(&_Relayerhub.CallOpts)
 }
 
-// RELAYERREWARD is a free data retrieval call binding the contract method 0x75405d0d.
+// SLASHCHANNELID is a free data retrieval call binding the contract method 0x7942fd05.
 //
-// Solidity: function RELAYER_REWARD() constant returns(uint256)
-func (_Relayerhub *RelayerhubCallerSession) RELAYERREWARD() (*big.Int, error) {
-	return _Relayerhub.Contract.RELAYERREWARD(&_Relayerhub.CallOpts)
+// Solidity: function SLASH_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCallerSession) SLASHCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.SLASHCHANNELID(&_Relayerhub.CallOpts)
 }
 
 // SLASHCONTRACTADDR is a free data retrieval call binding the contract method 0x43756e5c.
@@ -378,6 +534,58 @@ func (_Relayerhub *RelayerhubSession) SLASHCONTRACTADDR() (common.Address, error
 // Solidity: function SLASH_CONTRACT_ADDR() constant returns(address)
 func (_Relayerhub *RelayerhubCallerSession) SLASHCONTRACTADDR() (common.Address, error) {
 	return _Relayerhub.Contract.SLASHCONTRACTADDR(&_Relayerhub.CallOpts)
+}
+
+// STAKINGCHANNELID is a free data retrieval call binding the contract method 0x4bf6c882.
+//
+// Solidity: function STAKING_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCaller) STAKINGCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "STAKING_CHANNELID")
+	return *ret0, err
+}
+
+// STAKINGCHANNELID is a free data retrieval call binding the contract method 0x4bf6c882.
+//
+// Solidity: function STAKING_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubSession) STAKINGCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.STAKINGCHANNELID(&_Relayerhub.CallOpts)
+}
+
+// STAKINGCHANNELID is a free data retrieval call binding the contract method 0x4bf6c882.
+//
+// Solidity: function STAKING_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCallerSession) STAKINGCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.STAKINGCHANNELID(&_Relayerhub.CallOpts)
+}
+
+// STAKINGCONTRACTADDR is a free data retrieval call binding the contract method 0x0e2374a5.
+//
+// Solidity: function STAKING_CONTRACT_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubCaller) STAKINGCONTRACTADDR(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "STAKING_CONTRACT_ADDR")
+	return *ret0, err
+}
+
+// STAKINGCONTRACTADDR is a free data retrieval call binding the contract method 0x0e2374a5.
+//
+// Solidity: function STAKING_CONTRACT_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubSession) STAKINGCONTRACTADDR() (common.Address, error) {
+	return _Relayerhub.Contract.STAKINGCONTRACTADDR(&_Relayerhub.CallOpts)
+}
+
+// STAKINGCONTRACTADDR is a free data retrieval call binding the contract method 0x0e2374a5.
+//
+// Solidity: function STAKING_CONTRACT_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubCallerSession) STAKINGCONTRACTADDR() (common.Address, error) {
+	return _Relayerhub.Contract.STAKINGCONTRACTADDR(&_Relayerhub.CallOpts)
 }
 
 // SYSTEMREWARDADDR is a free data retrieval call binding the contract method 0xc81b1662.
@@ -432,6 +640,84 @@ func (_Relayerhub *RelayerhubCallerSession) TOKENHUBADDR() (common.Address, erro
 	return _Relayerhub.Contract.TOKENHUBADDR(&_Relayerhub.CallOpts)
 }
 
+// TOKENMANAGERADDR is a free data retrieval call binding the contract method 0x75d47a0a.
+//
+// Solidity: function TOKEN_MANAGER_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubCaller) TOKENMANAGERADDR(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "TOKEN_MANAGER_ADDR")
+	return *ret0, err
+}
+
+// TOKENMANAGERADDR is a free data retrieval call binding the contract method 0x75d47a0a.
+//
+// Solidity: function TOKEN_MANAGER_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubSession) TOKENMANAGERADDR() (common.Address, error) {
+	return _Relayerhub.Contract.TOKENMANAGERADDR(&_Relayerhub.CallOpts)
+}
+
+// TOKENMANAGERADDR is a free data retrieval call binding the contract method 0x75d47a0a.
+//
+// Solidity: function TOKEN_MANAGER_ADDR() constant returns(address)
+func (_Relayerhub *RelayerhubCallerSession) TOKENMANAGERADDR() (common.Address, error) {
+	return _Relayerhub.Contract.TOKENMANAGERADDR(&_Relayerhub.CallOpts)
+}
+
+// TRANSFERINCHANNELID is a free data retrieval call binding the contract method 0x70fd5bad.
+//
+// Solidity: function TRANSFER_IN_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCaller) TRANSFERINCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "TRANSFER_IN_CHANNELID")
+	return *ret0, err
+}
+
+// TRANSFERINCHANNELID is a free data retrieval call binding the contract method 0x70fd5bad.
+//
+// Solidity: function TRANSFER_IN_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubSession) TRANSFERINCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.TRANSFERINCHANNELID(&_Relayerhub.CallOpts)
+}
+
+// TRANSFERINCHANNELID is a free data retrieval call binding the contract method 0x70fd5bad.
+//
+// Solidity: function TRANSFER_IN_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCallerSession) TRANSFERINCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.TRANSFERINCHANNELID(&_Relayerhub.CallOpts)
+}
+
+// TRANSFEROUTCHANNELID is a free data retrieval call binding the contract method 0xfc3e5908.
+//
+// Solidity: function TRANSFER_OUT_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCaller) TRANSFEROUTCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "TRANSFER_OUT_CHANNELID")
+	return *ret0, err
+}
+
+// TRANSFEROUTCHANNELID is a free data retrieval call binding the contract method 0xfc3e5908.
+//
+// Solidity: function TRANSFER_OUT_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubSession) TRANSFEROUTCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.TRANSFEROUTCHANNELID(&_Relayerhub.CallOpts)
+}
+
+// TRANSFEROUTCHANNELID is a free data retrieval call binding the contract method 0xfc3e5908.
+//
+// Solidity: function TRANSFER_OUT_CHANNELID() constant returns(uint8)
+func (_Relayerhub *RelayerhubCallerSession) TRANSFEROUTCHANNELID() (uint8, error) {
+	return _Relayerhub.Contract.TRANSFEROUTCHANNELID(&_Relayerhub.CallOpts)
+}
+
 // VALIDATORCONTRACTADDR is a free data retrieval call binding the contract method 0xf9a2bbc7.
 //
 // Solidity: function VALIDATOR_CONTRACT_ADDR() constant returns(address)
@@ -456,6 +742,58 @@ func (_Relayerhub *RelayerhubSession) VALIDATORCONTRACTADDR() (common.Address, e
 // Solidity: function VALIDATOR_CONTRACT_ADDR() constant returns(address)
 func (_Relayerhub *RelayerhubCallerSession) VALIDATORCONTRACTADDR() (common.Address, error) {
 	return _Relayerhub.Contract.VALIDATORCONTRACTADDR(&_Relayerhub.CallOpts)
+}
+
+// WHITELIST1 is a free data retrieval call binding the contract method 0x049a5716.
+//
+// Solidity: function WHITELIST_1() constant returns(address)
+func (_Relayerhub *RelayerhubCaller) WHITELIST1(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "WHITELIST_1")
+	return *ret0, err
+}
+
+// WHITELIST1 is a free data retrieval call binding the contract method 0x049a5716.
+//
+// Solidity: function WHITELIST_1() constant returns(address)
+func (_Relayerhub *RelayerhubSession) WHITELIST1() (common.Address, error) {
+	return _Relayerhub.Contract.WHITELIST1(&_Relayerhub.CallOpts)
+}
+
+// WHITELIST1 is a free data retrieval call binding the contract method 0x049a5716.
+//
+// Solidity: function WHITELIST_1() constant returns(address)
+func (_Relayerhub *RelayerhubCallerSession) WHITELIST1() (common.Address, error) {
+	return _Relayerhub.Contract.WHITELIST1(&_Relayerhub.CallOpts)
+}
+
+// WHITELIST2 is a free data retrieval call binding the contract method 0xa74b83ca.
+//
+// Solidity: function WHITELIST_2() constant returns(address)
+func (_Relayerhub *RelayerhubCaller) WHITELIST2(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "WHITELIST_2")
+	return *ret0, err
+}
+
+// WHITELIST2 is a free data retrieval call binding the contract method 0xa74b83ca.
+//
+// Solidity: function WHITELIST_2() constant returns(address)
+func (_Relayerhub *RelayerhubSession) WHITELIST2() (common.Address, error) {
+	return _Relayerhub.Contract.WHITELIST2(&_Relayerhub.CallOpts)
+}
+
+// WHITELIST2 is a free data retrieval call binding the contract method 0xa74b83ca.
+//
+// Solidity: function WHITELIST_2() constant returns(address)
+func (_Relayerhub *RelayerhubCallerSession) WHITELIST2() (common.Address, error) {
+	return _Relayerhub.Contract.WHITELIST2(&_Relayerhub.CallOpts)
 }
 
 // AlreadyInit is a free data retrieval call binding the contract method 0xa78abc16.
@@ -484,82 +822,155 @@ func (_Relayerhub *RelayerhubCallerSession) AlreadyInit() (bool, error) {
 	return _Relayerhub.Contract.AlreadyInit(&_Relayerhub.CallOpts)
 }
 
-// Dues is a free data retrieval call binding the contract method 0x6a87d780.
+// BscChainID is a free data retrieval call binding the contract method 0x493279b1.
 //
-// Solidity: function dues() constant returns(uint256)
-func (_Relayerhub *RelayerhubCaller) Dues(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function bscChainID() constant returns(uint16)
+func (_Relayerhub *RelayerhubCaller) BscChainID(opts *bind.CallOpts) (uint16, error) {
 	var (
-		ret0 = new(*big.Int)
+		ret0 = new(uint16)
 	)
 	out := ret0
-	err := _Relayerhub.contract.Call(opts, out, "dues")
+	err := _Relayerhub.contract.Call(opts, out, "bscChainID")
 	return *ret0, err
 }
 
-// Dues is a free data retrieval call binding the contract method 0x6a87d780.
+// BscChainID is a free data retrieval call binding the contract method 0x493279b1.
 //
-// Solidity: function dues() constant returns(uint256)
-func (_Relayerhub *RelayerhubSession) Dues() (*big.Int, error) {
-	return _Relayerhub.Contract.Dues(&_Relayerhub.CallOpts)
+// Solidity: function bscChainID() constant returns(uint16)
+func (_Relayerhub *RelayerhubSession) BscChainID() (uint16, error) {
+	return _Relayerhub.Contract.BscChainID(&_Relayerhub.CallOpts)
 }
 
-// Dues is a free data retrieval call binding the contract method 0x6a87d780.
+// BscChainID is a free data retrieval call binding the contract method 0x493279b1.
 //
-// Solidity: function dues() constant returns(uint256)
-func (_Relayerhub *RelayerhubCallerSession) Dues() (*big.Int, error) {
-	return _Relayerhub.Contract.Dues(&_Relayerhub.CallOpts)
+// Solidity: function bscChainID() constant returns(uint16)
+func (_Relayerhub *RelayerhubCallerSession) BscChainID() (uint16, error) {
+	return _Relayerhub.Contract.BscChainID(&_Relayerhub.CallOpts)
 }
 
-// IsRelayer is a free data retrieval call binding the contract method 0x541d5548.
+// IsManager is a free data retrieval call binding the contract method 0xf3ae2415.
 //
-// Solidity: function isRelayer(address sender) constant returns(bool)
-func (_Relayerhub *RelayerhubCaller) IsRelayer(opts *bind.CallOpts, sender common.Address) (bool, error) {
+// Solidity: function isManager(address managerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubCaller) IsManager(opts *bind.CallOpts, managerAddress common.Address) (bool, error) {
 	var (
 		ret0 = new(bool)
 	)
 	out := ret0
-	err := _Relayerhub.contract.Call(opts, out, "isRelayer", sender)
+	err := _Relayerhub.contract.Call(opts, out, "isManager", managerAddress)
 	return *ret0, err
 }
 
-// IsRelayer is a free data retrieval call binding the contract method 0x541d5548.
+// IsManager is a free data retrieval call binding the contract method 0xf3ae2415.
 //
-// Solidity: function isRelayer(address sender) constant returns(bool)
-func (_Relayerhub *RelayerhubSession) IsRelayer(sender common.Address) (bool, error) {
-	return _Relayerhub.Contract.IsRelayer(&_Relayerhub.CallOpts, sender)
+// Solidity: function isManager(address managerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubSession) IsManager(managerAddress common.Address) (bool, error) {
+	return _Relayerhub.Contract.IsManager(&_Relayerhub.CallOpts, managerAddress)
 }
 
-// IsRelayer is a free data retrieval call binding the contract method 0x541d5548.
+// IsManager is a free data retrieval call binding the contract method 0xf3ae2415.
 //
-// Solidity: function isRelayer(address sender) constant returns(bool)
-func (_Relayerhub *RelayerhubCallerSession) IsRelayer(sender common.Address) (bool, error) {
-	return _Relayerhub.Contract.IsRelayer(&_Relayerhub.CallOpts, sender)
+// Solidity: function isManager(address managerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubCallerSession) IsManager(managerAddress common.Address) (bool, error) {
+	return _Relayerhub.Contract.IsManager(&_Relayerhub.CallOpts, managerAddress)
 }
 
-// RequiredDeposit is a free data retrieval call binding the contract method 0xfb7cfdd7.
+// IsProvisionalRelayer is a free data retrieval call binding the contract method 0x6a6a419e.
 //
-// Solidity: function requiredDeposit() constant returns(uint256)
-func (_Relayerhub *RelayerhubCaller) RequiredDeposit(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function isProvisionalRelayer(address relayerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubCaller) IsProvisionalRelayer(opts *bind.CallOpts, relayerAddress common.Address) (bool, error) {
 	var (
-		ret0 = new(*big.Int)
+		ret0 = new(bool)
 	)
 	out := ret0
-	err := _Relayerhub.contract.Call(opts, out, "requiredDeposit")
+	err := _Relayerhub.contract.Call(opts, out, "isProvisionalRelayer", relayerAddress)
 	return *ret0, err
 }
 
-// RequiredDeposit is a free data retrieval call binding the contract method 0xfb7cfdd7.
+// IsProvisionalRelayer is a free data retrieval call binding the contract method 0x6a6a419e.
 //
-// Solidity: function requiredDeposit() constant returns(uint256)
-func (_Relayerhub *RelayerhubSession) RequiredDeposit() (*big.Int, error) {
-	return _Relayerhub.Contract.RequiredDeposit(&_Relayerhub.CallOpts)
+// Solidity: function isProvisionalRelayer(address relayerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubSession) IsProvisionalRelayer(relayerAddress common.Address) (bool, error) {
+	return _Relayerhub.Contract.IsProvisionalRelayer(&_Relayerhub.CallOpts, relayerAddress)
 }
 
-// RequiredDeposit is a free data retrieval call binding the contract method 0xfb7cfdd7.
+// IsProvisionalRelayer is a free data retrieval call binding the contract method 0x6a6a419e.
 //
-// Solidity: function requiredDeposit() constant returns(uint256)
-func (_Relayerhub *RelayerhubCallerSession) RequiredDeposit() (*big.Int, error) {
-	return _Relayerhub.Contract.RequiredDeposit(&_Relayerhub.CallOpts)
+// Solidity: function isProvisionalRelayer(address relayerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubCallerSession) IsProvisionalRelayer(relayerAddress common.Address) (bool, error) {
+	return _Relayerhub.Contract.IsProvisionalRelayer(&_Relayerhub.CallOpts, relayerAddress)
+}
+
+// IsRelayer is a free data retrieval call binding the contract method 0x541d5548.
+//
+// Solidity: function isRelayer(address relayerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubCaller) IsRelayer(opts *bind.CallOpts, relayerAddress common.Address) (bool, error) {
+	var (
+		ret0 = new(bool)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "isRelayer", relayerAddress)
+	return *ret0, err
+}
+
+// IsRelayer is a free data retrieval call binding the contract method 0x541d5548.
+//
+// Solidity: function isRelayer(address relayerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubSession) IsRelayer(relayerAddress common.Address) (bool, error) {
+	return _Relayerhub.Contract.IsRelayer(&_Relayerhub.CallOpts, relayerAddress)
+}
+
+// IsRelayer is a free data retrieval call binding the contract method 0x541d5548.
+//
+// Solidity: function isRelayer(address relayerAddress) constant returns(bool)
+func (_Relayerhub *RelayerhubCallerSession) IsRelayer(relayerAddress common.Address) (bool, error) {
+	return _Relayerhub.Contract.IsRelayer(&_Relayerhub.CallOpts, relayerAddress)
+}
+
+// WhitelistInitDone is a free data retrieval call binding the contract method 0xfd30d9b8.
+//
+// Solidity: function whitelistInitDone() constant returns(bool)
+func (_Relayerhub *RelayerhubCaller) WhitelistInitDone(opts *bind.CallOpts) (bool, error) {
+	var (
+		ret0 = new(bool)
+	)
+	out := ret0
+	err := _Relayerhub.contract.Call(opts, out, "whitelistInitDone")
+	return *ret0, err
+}
+
+// WhitelistInitDone is a free data retrieval call binding the contract method 0xfd30d9b8.
+//
+// Solidity: function whitelistInitDone() constant returns(bool)
+func (_Relayerhub *RelayerhubSession) WhitelistInitDone() (bool, error) {
+	return _Relayerhub.Contract.WhitelistInitDone(&_Relayerhub.CallOpts)
+}
+
+// WhitelistInitDone is a free data retrieval call binding the contract method 0xfd30d9b8.
+//
+// Solidity: function whitelistInitDone() constant returns(bool)
+func (_Relayerhub *RelayerhubCallerSession) WhitelistInitDone() (bool, error) {
+	return _Relayerhub.Contract.WhitelistInitDone(&_Relayerhub.CallOpts)
+}
+
+// AcceptBeingRelayer is a paid mutator transaction binding the contract method 0x78beee67.
+//
+// Solidity: function acceptBeingRelayer(address manager) returns()
+func (_Relayerhub *RelayerhubTransactor) AcceptBeingRelayer(opts *bind.TransactOpts, manager common.Address) (*types.Transaction, error) {
+	return _Relayerhub.contract.Transact(opts, "acceptBeingRelayer", manager)
+}
+
+// AcceptBeingRelayer is a paid mutator transaction binding the contract method 0x78beee67.
+//
+// Solidity: function acceptBeingRelayer(address manager) returns()
+func (_Relayerhub *RelayerhubSession) AcceptBeingRelayer(manager common.Address) (*types.Transaction, error) {
+	return _Relayerhub.Contract.AcceptBeingRelayer(&_Relayerhub.TransactOpts, manager)
+}
+
+// AcceptBeingRelayer is a paid mutator transaction binding the contract method 0x78beee67.
+//
+// Solidity: function acceptBeingRelayer(address manager) returns()
+func (_Relayerhub *RelayerhubTransactorSession) AcceptBeingRelayer(manager common.Address) (*types.Transaction, error) {
+	return _Relayerhub.Contract.AcceptBeingRelayer(&_Relayerhub.TransactOpts, manager)
 }
 
 // Init is a paid mutator transaction binding the contract method 0xe1c7392a.
@@ -583,25 +994,25 @@ func (_Relayerhub *RelayerhubTransactorSession) Init() (*types.Transaction, erro
 	return _Relayerhub.Contract.Init(&_Relayerhub.TransactOpts)
 }
 
-// Register is a paid mutator transaction binding the contract method 0x1aa3a008.
+// RemoveManagerByHimself is a paid mutator transaction binding the contract method 0x03aff02b.
 //
-// Solidity: function register() returns()
-func (_Relayerhub *RelayerhubTransactor) Register(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Relayerhub.contract.Transact(opts, "register")
+// Solidity: function removeManagerByHimself() returns()
+func (_Relayerhub *RelayerhubTransactor) RemoveManagerByHimself(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Relayerhub.contract.Transact(opts, "removeManagerByHimself")
 }
 
-// Register is a paid mutator transaction binding the contract method 0x1aa3a008.
+// RemoveManagerByHimself is a paid mutator transaction binding the contract method 0x03aff02b.
 //
-// Solidity: function register() returns()
-func (_Relayerhub *RelayerhubSession) Register() (*types.Transaction, error) {
-	return _Relayerhub.Contract.Register(&_Relayerhub.TransactOpts)
+// Solidity: function removeManagerByHimself() returns()
+func (_Relayerhub *RelayerhubSession) RemoveManagerByHimself() (*types.Transaction, error) {
+	return _Relayerhub.Contract.RemoveManagerByHimself(&_Relayerhub.TransactOpts)
 }
 
-// Register is a paid mutator transaction binding the contract method 0x1aa3a008.
+// RemoveManagerByHimself is a paid mutator transaction binding the contract method 0x03aff02b.
 //
-// Solidity: function register() returns()
-func (_Relayerhub *RelayerhubTransactorSession) Register() (*types.Transaction, error) {
-	return _Relayerhub.Contract.Register(&_Relayerhub.TransactOpts)
+// Solidity: function removeManagerByHimself() returns()
+func (_Relayerhub *RelayerhubTransactorSession) RemoveManagerByHimself() (*types.Transaction, error) {
+	return _Relayerhub.Contract.RemoveManagerByHimself(&_Relayerhub.TransactOpts)
 }
 
 // Unregister is a paid mutator transaction binding the contract method 0xe79a198f.
@@ -644,6 +1055,314 @@ func (_Relayerhub *RelayerhubSession) UpdateParam(key string, value []byte) (*ty
 // Solidity: function updateParam(string key, bytes value) returns()
 func (_Relayerhub *RelayerhubTransactorSession) UpdateParam(key string, value []byte) (*types.Transaction, error) {
 	return _Relayerhub.Contract.UpdateParam(&_Relayerhub.TransactOpts, key, value)
+}
+
+// UpdateRelayer is a paid mutator transaction binding the contract method 0x8f83ab13.
+//
+// Solidity: function updateRelayer(address relayerToBeAdded) returns()
+func (_Relayerhub *RelayerhubTransactor) UpdateRelayer(opts *bind.TransactOpts, relayerToBeAdded common.Address) (*types.Transaction, error) {
+	return _Relayerhub.contract.Transact(opts, "updateRelayer", relayerToBeAdded)
+}
+
+// UpdateRelayer is a paid mutator transaction binding the contract method 0x8f83ab13.
+//
+// Solidity: function updateRelayer(address relayerToBeAdded) returns()
+func (_Relayerhub *RelayerhubSession) UpdateRelayer(relayerToBeAdded common.Address) (*types.Transaction, error) {
+	return _Relayerhub.Contract.UpdateRelayer(&_Relayerhub.TransactOpts, relayerToBeAdded)
+}
+
+// UpdateRelayer is a paid mutator transaction binding the contract method 0x8f83ab13.
+//
+// Solidity: function updateRelayer(address relayerToBeAdded) returns()
+func (_Relayerhub *RelayerhubTransactorSession) UpdateRelayer(relayerToBeAdded common.Address) (*types.Transaction, error) {
+	return _Relayerhub.Contract.UpdateRelayer(&_Relayerhub.TransactOpts, relayerToBeAdded)
+}
+
+// WhitelistInit is a paid mutator transaction binding the contract method 0xdd91d1c5.
+//
+// Solidity: function whitelistInit() returns()
+func (_Relayerhub *RelayerhubTransactor) WhitelistInit(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Relayerhub.contract.Transact(opts, "whitelistInit")
+}
+
+// WhitelistInit is a paid mutator transaction binding the contract method 0xdd91d1c5.
+//
+// Solidity: function whitelistInit() returns()
+func (_Relayerhub *RelayerhubSession) WhitelistInit() (*types.Transaction, error) {
+	return _Relayerhub.Contract.WhitelistInit(&_Relayerhub.TransactOpts)
+}
+
+// WhitelistInit is a paid mutator transaction binding the contract method 0xdd91d1c5.
+//
+// Solidity: function whitelistInit() returns()
+func (_Relayerhub *RelayerhubTransactorSession) WhitelistInit() (*types.Transaction, error) {
+	return _Relayerhub.Contract.WhitelistInit(&_Relayerhub.TransactOpts)
+}
+
+// RelayerhubManagerAddedIterator is returned from FilterManagerAdded and is used to iterate over the raw logs and unpacked data for ManagerAdded events raised by the Relayerhub contract.
+type RelayerhubManagerAddedIterator struct {
+	Event *RelayerhubManagerAdded // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *RelayerhubManagerAddedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(RelayerhubManagerAdded)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(RelayerhubManagerAdded)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *RelayerhubManagerAddedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *RelayerhubManagerAddedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// RelayerhubManagerAdded represents a ManagerAdded event raised by the Relayerhub contract.
+type RelayerhubManagerAdded struct {
+	AddedManager common.Address
+	Raw          types.Log // Blockchain specific contextual infos
+}
+
+// FilterManagerAdded is a free log retrieval operation binding the contract event 0xe0de8e71a22c046647f4ef744348fa126ad6d052d4ce070999481f69d4557517.
+//
+// Solidity: event managerAdded(address _addedManager)
+func (_Relayerhub *RelayerhubFilterer) FilterManagerAdded(opts *bind.FilterOpts) (*RelayerhubManagerAddedIterator, error) {
+
+	logs, sub, err := _Relayerhub.contract.FilterLogs(opts, "managerAdded")
+	if err != nil {
+		return nil, err
+	}
+	return &RelayerhubManagerAddedIterator{contract: _Relayerhub.contract, event: "managerAdded", logs: logs, sub: sub}, nil
+}
+
+// WatchManagerAdded is a free log subscription operation binding the contract event 0xe0de8e71a22c046647f4ef744348fa126ad6d052d4ce070999481f69d4557517.
+//
+// Solidity: event managerAdded(address _addedManager)
+func (_Relayerhub *RelayerhubFilterer) WatchManagerAdded(opts *bind.WatchOpts, sink chan<- *RelayerhubManagerAdded) (event.Subscription, error) {
+
+	logs, sub, err := _Relayerhub.contract.WatchLogs(opts, "managerAdded")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(RelayerhubManagerAdded)
+				if err := _Relayerhub.contract.UnpackLog(event, "managerAdded", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseManagerAdded is a log parse operation binding the contract event 0xe0de8e71a22c046647f4ef744348fa126ad6d052d4ce070999481f69d4557517.
+//
+// Solidity: event managerAdded(address _addedManager)
+func (_Relayerhub *RelayerhubFilterer) ParseManagerAdded(log types.Log) (*RelayerhubManagerAdded, error) {
+	event := new(RelayerhubManagerAdded)
+	if err := _Relayerhub.contract.UnpackLog(event, "managerAdded", log); err != nil {
+		return nil, err
+	}
+	return event, nil
+}
+
+// RelayerhubManagerRemovedIterator is returned from FilterManagerRemoved and is used to iterate over the raw logs and unpacked data for ManagerRemoved events raised by the Relayerhub contract.
+type RelayerhubManagerRemovedIterator struct {
+	Event *RelayerhubManagerRemoved // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *RelayerhubManagerRemovedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(RelayerhubManagerRemoved)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(RelayerhubManagerRemoved)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *RelayerhubManagerRemovedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *RelayerhubManagerRemovedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// RelayerhubManagerRemoved represents a ManagerRemoved event raised by the Relayerhub contract.
+type RelayerhubManagerRemoved struct {
+	RemovedManager common.Address
+	Raw            types.Log // Blockchain specific contextual infos
+}
+
+// FilterManagerRemoved is a free log retrieval operation binding the contract event 0x2002866d443ac6c241fecaaa2af4895828c7de2cc423b9d01f7969650f557c76.
+//
+// Solidity: event managerRemoved(address _removedManager)
+func (_Relayerhub *RelayerhubFilterer) FilterManagerRemoved(opts *bind.FilterOpts) (*RelayerhubManagerRemovedIterator, error) {
+
+	logs, sub, err := _Relayerhub.contract.FilterLogs(opts, "managerRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return &RelayerhubManagerRemovedIterator{contract: _Relayerhub.contract, event: "managerRemoved", logs: logs, sub: sub}, nil
+}
+
+// WatchManagerRemoved is a free log subscription operation binding the contract event 0x2002866d443ac6c241fecaaa2af4895828c7de2cc423b9d01f7969650f557c76.
+//
+// Solidity: event managerRemoved(address _removedManager)
+func (_Relayerhub *RelayerhubFilterer) WatchManagerRemoved(opts *bind.WatchOpts, sink chan<- *RelayerhubManagerRemoved) (event.Subscription, error) {
+
+	logs, sub, err := _Relayerhub.contract.WatchLogs(opts, "managerRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(RelayerhubManagerRemoved)
+				if err := _Relayerhub.contract.UnpackLog(event, "managerRemoved", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseManagerRemoved is a log parse operation binding the contract event 0x2002866d443ac6c241fecaaa2af4895828c7de2cc423b9d01f7969650f557c76.
+//
+// Solidity: event managerRemoved(address _removedManager)
+func (_Relayerhub *RelayerhubFilterer) ParseManagerRemoved(log types.Log) (*RelayerhubManagerRemoved, error) {
+	event := new(RelayerhubManagerRemoved)
+	if err := _Relayerhub.contract.UnpackLog(event, "managerRemoved", log); err != nil {
+		return nil, err
+	}
+	return event, nil
 }
 
 // RelayerhubParamChangeIterator is returned from FilterParamChange and is used to iterate over the raw logs and unpacked data for ParamChange events raised by the Relayerhub contract.
@@ -780,9 +1499,9 @@ func (_Relayerhub *RelayerhubFilterer) ParseParamChange(log types.Log) (*Relayer
 	return event, nil
 }
 
-// RelayerhubRelayerRegisterIterator is returned from FilterRelayerRegister and is used to iterate over the raw logs and unpacked data for RelayerRegister events raised by the Relayerhub contract.
-type RelayerhubRelayerRegisterIterator struct {
-	Event *RelayerhubRelayerRegister // Event containing the contract specifics and raw log
+// RelayerhubRelayerAddedProvisionallyIterator is returned from FilterRelayerAddedProvisionally and is used to iterate over the raw logs and unpacked data for RelayerAddedProvisionally events raised by the Relayerhub contract.
+type RelayerhubRelayerAddedProvisionallyIterator struct {
+	Event *RelayerhubRelayerAddedProvisionally // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -796,7 +1515,7 @@ type RelayerhubRelayerRegisterIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *RelayerhubRelayerRegisterIterator) Next() bool {
+func (it *RelayerhubRelayerAddedProvisionallyIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -805,7 +1524,7 @@ func (it *RelayerhubRelayerRegisterIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(RelayerhubRelayerRegister)
+			it.Event = new(RelayerhubRelayerAddedProvisionally)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -820,7 +1539,7 @@ func (it *RelayerhubRelayerRegisterIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(RelayerhubRelayerRegister)
+		it.Event = new(RelayerhubRelayerAddedProvisionally)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -836,41 +1555,41 @@ func (it *RelayerhubRelayerRegisterIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *RelayerhubRelayerRegisterIterator) Error() error {
+func (it *RelayerhubRelayerAddedProvisionallyIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *RelayerhubRelayerRegisterIterator) Close() error {
+func (it *RelayerhubRelayerAddedProvisionallyIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// RelayerhubRelayerRegister represents a RelayerRegister event raised by the Relayerhub contract.
-type RelayerhubRelayerRegister struct {
+// RelayerhubRelayerAddedProvisionally represents a RelayerAddedProvisionally event raised by the Relayerhub contract.
+type RelayerhubRelayerAddedProvisionally struct {
 	Relayer common.Address
 	Raw     types.Log // Blockchain specific contextual infos
 }
 
-// FilterRelayerRegister is a free log retrieval operation binding the contract event 0xdb33a09d38b59a8fa8b7d92a1d82c8015e99f05f67ae9c9ae623157767959496.
+// FilterRelayerAddedProvisionally is a free log retrieval operation binding the contract event 0xfba56633276570c7d3120d4535bf3bce26523da53958e40734210b9fd99b3693.
 //
-// Solidity: event relayerRegister(address _relayer)
-func (_Relayerhub *RelayerhubFilterer) FilterRelayerRegister(opts *bind.FilterOpts) (*RelayerhubRelayerRegisterIterator, error) {
+// Solidity: event relayerAddedProvisionally(address _relayer)
+func (_Relayerhub *RelayerhubFilterer) FilterRelayerAddedProvisionally(opts *bind.FilterOpts) (*RelayerhubRelayerAddedProvisionallyIterator, error) {
 
-	logs, sub, err := _Relayerhub.contract.FilterLogs(opts, "relayerRegister")
+	logs, sub, err := _Relayerhub.contract.FilterLogs(opts, "relayerAddedProvisionally")
 	if err != nil {
 		return nil, err
 	}
-	return &RelayerhubRelayerRegisterIterator{contract: _Relayerhub.contract, event: "relayerRegister", logs: logs, sub: sub}, nil
+	return &RelayerhubRelayerAddedProvisionallyIterator{contract: _Relayerhub.contract, event: "relayerAddedProvisionally", logs: logs, sub: sub}, nil
 }
 
-// WatchRelayerRegister is a free log subscription operation binding the contract event 0xdb33a09d38b59a8fa8b7d92a1d82c8015e99f05f67ae9c9ae623157767959496.
+// WatchRelayerAddedProvisionally is a free log subscription operation binding the contract event 0xfba56633276570c7d3120d4535bf3bce26523da53958e40734210b9fd99b3693.
 //
-// Solidity: event relayerRegister(address _relayer)
-func (_Relayerhub *RelayerhubFilterer) WatchRelayerRegister(opts *bind.WatchOpts, sink chan<- *RelayerhubRelayerRegister) (event.Subscription, error) {
+// Solidity: event relayerAddedProvisionally(address _relayer)
+func (_Relayerhub *RelayerhubFilterer) WatchRelayerAddedProvisionally(opts *bind.WatchOpts, sink chan<- *RelayerhubRelayerAddedProvisionally) (event.Subscription, error) {
 
-	logs, sub, err := _Relayerhub.contract.WatchLogs(opts, "relayerRegister")
+	logs, sub, err := _Relayerhub.contract.WatchLogs(opts, "relayerAddedProvisionally")
 	if err != nil {
 		return nil, err
 	}
@@ -880,8 +1599,8 @@ func (_Relayerhub *RelayerhubFilterer) WatchRelayerRegister(opts *bind.WatchOpts
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(RelayerhubRelayerRegister)
-				if err := _Relayerhub.contract.UnpackLog(event, "relayerRegister", log); err != nil {
+				event := new(RelayerhubRelayerAddedProvisionally)
+				if err := _Relayerhub.contract.UnpackLog(event, "relayerAddedProvisionally", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -902,12 +1621,12 @@ func (_Relayerhub *RelayerhubFilterer) WatchRelayerRegister(opts *bind.WatchOpts
 	}), nil
 }
 
-// ParseRelayerRegister is a log parse operation binding the contract event 0xdb33a09d38b59a8fa8b7d92a1d82c8015e99f05f67ae9c9ae623157767959496.
+// ParseRelayerAddedProvisionally is a log parse operation binding the contract event 0xfba56633276570c7d3120d4535bf3bce26523da53958e40734210b9fd99b3693.
 //
-// Solidity: event relayerRegister(address _relayer)
-func (_Relayerhub *RelayerhubFilterer) ParseRelayerRegister(log types.Log) (*RelayerhubRelayerRegister, error) {
-	event := new(RelayerhubRelayerRegister)
-	if err := _Relayerhub.contract.UnpackLog(event, "relayerRegister", log); err != nil {
+// Solidity: event relayerAddedProvisionally(address _relayer)
+func (_Relayerhub *RelayerhubFilterer) ParseRelayerAddedProvisionally(log types.Log) (*RelayerhubRelayerAddedProvisionally, error) {
+	event := new(RelayerhubRelayerAddedProvisionally)
+	if err := _Relayerhub.contract.UnpackLog(event, "relayerAddedProvisionally", log); err != nil {
 		return nil, err
 	}
 	return event, nil
@@ -1041,6 +1760,140 @@ func (_Relayerhub *RelayerhubFilterer) WatchRelayerUnRegister(opts *bind.WatchOp
 func (_Relayerhub *RelayerhubFilterer) ParseRelayerUnRegister(log types.Log) (*RelayerhubRelayerUnRegister, error) {
 	event := new(RelayerhubRelayerUnRegister)
 	if err := _Relayerhub.contract.UnpackLog(event, "relayerUnRegister", log); err != nil {
+		return nil, err
+	}
+	return event, nil
+}
+
+// RelayerhubRelayerUpdatedIterator is returned from FilterRelayerUpdated and is used to iterate over the raw logs and unpacked data for RelayerUpdated events raised by the Relayerhub contract.
+type RelayerhubRelayerUpdatedIterator struct {
+	Event *RelayerhubRelayerUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *RelayerhubRelayerUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(RelayerhubRelayerUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(RelayerhubRelayerUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *RelayerhubRelayerUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *RelayerhubRelayerUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// RelayerhubRelayerUpdated represents a RelayerUpdated event raised by the Relayerhub contract.
+type RelayerhubRelayerUpdated struct {
+	From common.Address
+	To   common.Address
+	Raw  types.Log // Blockchain specific contextual infos
+}
+
+// FilterRelayerUpdated is a free log retrieval operation binding the contract event 0xa5a19d7e9dab30a215022382d7abe782b579986fcbedec9942ecd0db9510a148.
+//
+// Solidity: event relayerUpdated(address _from, address _to)
+func (_Relayerhub *RelayerhubFilterer) FilterRelayerUpdated(opts *bind.FilterOpts) (*RelayerhubRelayerUpdatedIterator, error) {
+
+	logs, sub, err := _Relayerhub.contract.FilterLogs(opts, "relayerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &RelayerhubRelayerUpdatedIterator{contract: _Relayerhub.contract, event: "relayerUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchRelayerUpdated is a free log subscription operation binding the contract event 0xa5a19d7e9dab30a215022382d7abe782b579986fcbedec9942ecd0db9510a148.
+//
+// Solidity: event relayerUpdated(address _from, address _to)
+func (_Relayerhub *RelayerhubFilterer) WatchRelayerUpdated(opts *bind.WatchOpts, sink chan<- *RelayerhubRelayerUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _Relayerhub.contract.WatchLogs(opts, "relayerUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(RelayerhubRelayerUpdated)
+				if err := _Relayerhub.contract.UnpackLog(event, "relayerUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseRelayerUpdated is a log parse operation binding the contract event 0xa5a19d7e9dab30a215022382d7abe782b579986fcbedec9942ecd0db9510a148.
+//
+// Solidity: event relayerUpdated(address _from, address _to)
+func (_Relayerhub *RelayerhubFilterer) ParseRelayerUpdated(log types.Log) (*RelayerhubRelayerUpdated, error) {
+	event := new(RelayerhubRelayerUpdated)
+	if err := _Relayerhub.contract.UnpackLog(event, "relayerUpdated", log); err != nil {
 		return nil, err
 	}
 	return event, nil

@@ -9,9 +9,7 @@ This is an canonical implementation of [bsc-relayer](https://github.com/binance-
 ### Setup config
 
 1. Edit `config/config.json` and input your private key to `bsc_config.private_key`
-2. Transfer enough BNB to this account:
-    1. 100:BNB for relayer register
-    2. More than 10:BNB for transaction fee.
+2. Transfer enough BNB to this account - more than 10:BNB for transaction fee.
 3. Setup relayer mode:
     ```json
     {
