@@ -4,7 +4,7 @@ This is an canonical implementation of [bsc-relayer](https://github.com/binance-
 
 ## Quick Start
 
-**Note**: Requires [Go 1.13+](https://golang.org/dl/)
+**Note**: Requires [Go 1.19+](https://golang.org/dl/)
 
 ### Setup config
 
