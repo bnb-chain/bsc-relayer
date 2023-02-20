@@ -121,7 +121,7 @@ docker run -e BBC_NETWORK=1 -e CONFIG_TYPE="local" -d -it bsc-relayer
 
 ### TroubleShooting
 
-1. Please fill proper bsc private key to `bsc_config.private_key`, example private key: `5576779EB3F28F1067BE07AC643A81A8C74E6C55EDE38BEEF68BE1E9D4C1CA3C`
+1. Please fill proper bsc private key to `bsc_config.private_key`, example private key: `your_private_key`
 
     ```
     panic: privateKey of Binance Smart Chain should not be empty
@@ -129,7 +129,7 @@ docker run -e BBC_NETWORK=1 -e CONFIG_TYPE="local" -d -it bsc-relayer
     goroutine 1 [running]:
     ```
 
-2. Please fill your mnemonic to `bbc_config.mnemonic`, example mnemonic: `witness pitch peasant bird year sponsor conduct push enhance melt betray spare police region strategy hammer potato lecture cloud business habit student vehicle allow`
+2. Please fill your mnemonic to `bbc_config.mnemonic`, example mnemonic: `your_mnemonic`
 
     ```
     ERROR main missing local mnemonic
