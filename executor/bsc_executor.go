@@ -406,6 +406,46 @@ func (executor *BSCExecutor) IsRelayer() (bool, error) {
 	return isRelayer, nil
 }
 
+func (executor *BSCExecutor) IsProvisionalRelayer() (bool, error) {
+	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
+	if err != nil {
+		return false, err
+	}
+
+	callOpts, err := executor.getCallOpts()
+	if err != nil {
+		return false, err
+	}
+
+	isProvisionalRelayer, err := instance.IsProvisionalRelayer(callOpts, executor.txSender)
+	if err != nil {
+		return false, err
+	}
+	return isProvisionalRelayer, nil
+}
+
+func (executor *BSCExecutor) AcceptBeingRelayer(manager common.Address) (bool, error) {
+	instance, err := relayerhub.NewRelayerhub(relayerHubContractAddr, executor.GetClient())
+	if err != nil {
+		return false, err
+	}
+
+	nonce, err := executor.GetClient().PendingNonceAt(context.Background(), executor.txSender)
+	if err != nil {
+		return false, err
+	}
+	txOpts, err := executor.getTransactor(nonce)
+	if err != nil {
+		return false, err
+	}
+
+	_, err = instance.AcceptBeingRelayer(txOpts, manager)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 func (executor *BSCExecutor) QueryReward() (*big.Int, error) {
 	callOpts, err := executor.getCallOpts()
 	if err != nil {

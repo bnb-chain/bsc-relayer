@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/binance-chain/go-sdk/common/types"
+	common2 "github.com/ethereum/go-ethereum/common"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -25,6 +26,7 @@ const (
 	flagBBCNetworkType     = "bbc-network-type"
 	flagConfigAwsRegion    = "aws-region"
 	flagConfigAwsSecretKey = "aws-secret-key"
+	flagManager            = "manager"
 )
 
 func initFlags() {
@@ -33,6 +35,8 @@ func initFlags() {
 	flag.Int(flagBBCNetworkType, int(types.TmpTestNetwork), "Binance chain network type")
 	flag.String(flagConfigAwsRegion, "", "aws region")
 	flag.String(flagConfigAwsSecretKey, "", "aws secret key")
+
+	flag.String(flagManager, "", "manager")
 
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 	pflag.Parse()
@@ -136,7 +140,7 @@ func main() {
 	}
 	curValidatorsHash := block.BlockMeta.Header.ValidatorsHash
 
-	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor)
+	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor, common2.HexToAddress(flagManager))
 	common.Logger.Info("Starting relayer")
 	relayerInstance.Start(uint64(startHeight), curValidatorsHash)
 

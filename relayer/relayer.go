@@ -4,6 +4,7 @@ import (
 	"github.com/bnb-chain/bsc-relayer/common"
 	config "github.com/bnb-chain/bsc-relayer/config"
 	"github.com/bnb-chain/bsc-relayer/executor"
+	cmnEth "github.com/ethereum/go-ethereum/common"
 	"github.com/jinzhu/gorm"
 	cmn "github.com/tendermint/tendermint/libs/common"
 )
@@ -13,14 +14,16 @@ type Relayer struct {
 	cfg         *config.Config
 	bbcExecutor *executor.BBCExecutor
 	bscExecutor *executor.BSCExecutor
+	manager     cmnEth.Address
 }
 
-func NewRelayer(db *gorm.DB, cfg *config.Config, bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor) *Relayer {
+func NewRelayer(db *gorm.DB, cfg *config.Config, bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor, manager cmnEth.Address) *Relayer {
 	return &Relayer{
 		db:          db,
 		cfg:         cfg,
 		bbcExecutor: bbcExecutor,
 		bscExecutor: bscExecutor,
+		manager:     manager,
 	}
 }
 
