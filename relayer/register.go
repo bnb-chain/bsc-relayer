@@ -5,6 +5,10 @@ import (
 )
 
 func (r *Relayer) registerRelayerHub() {
+	_, err := r.bscExecutor.AcceptBeingRelayer(r.manager)
+	if err != nil {
+		panic(err)
+	}
 	isRelayer, err := r.bscExecutor.IsRelayer()
 	if err != nil {
 		panic(err)
