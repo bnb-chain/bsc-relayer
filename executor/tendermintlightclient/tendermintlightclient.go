@@ -28,7 +28,7 @@ var (
 )
 
 // TendermintlightclientABI is the input ABI used to generate the binding from.
-const TendermintlightclientABI = "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"initHeight\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"appHash\",\"type\":\"bytes32\"}],\"name\":\"InitConsensusState\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"preValidatorSetChangeHeight\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"appHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"validatorChanged\",\"type\":\"bool\"}],\"name\":\"SyncConsensusState\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"GOV_HUB_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INCENTIVIZE_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INIT_CONSENSUS_STATE_BYTES\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"LIGHT_CLIENT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"RELAYERHUB_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"RELAYER_REWARD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASH_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SYSTEM_REWARD_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOKEN_HUB_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"name\":\"_BBCLightClientConsensusState\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"preValidatorSetChangeHeight\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"appHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"curValidatorSetHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"nextValidatorSet\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_alreadyInit\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_chainID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_initialHeight\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_latestHeight\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"name\":\"_submitters\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"}],\"name\":\"getAppHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getChainID\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"}],\"name\":\"getSubmitter\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"}],\"name\":\"isHeaderSynced\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardForValidatorSetChange\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"header\",\"type\":\"bytes\"},{\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"}],\"name\":\"syncTendermintHeader\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+const TendermintlightclientABI = "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"initHeight\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"appHash\",\"type\":\"bytes32\"}],\"name\":\"initConsensusState\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"key\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"paramChange\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"preValidatorSetChangeHeight\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"appHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"validatorChanged\",\"type\":\"bool\"}],\"name\":\"syncConsensusState\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"BIND_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CODE_OK\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CROSS_CHAIN_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CROSS_STAKE_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ERROR_FAIL_DECODE\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"GOV_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"GOV_HUB_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INCENTIVIZE_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INIT_CONSENSUS_STATE_BYTES\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"INIT_REWARD_FOR_VALIDATOR_SER_CHANGE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"LIGHT_CLIENT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"RELAYERHUB_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASH_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SLASH_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKING_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SYSTEM_REWARD_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOKEN_HUB_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOKEN_MANAGER_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_IN_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_OUT_CHANNELID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_CONTRACT_ADDR\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"alreadyInit\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"bscChainID\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"chainID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"}],\"name\":\"getAppHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getChainID\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"}],\"name\":\"getSubmitter\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"init\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initialHeight\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"}],\"name\":\"isHeaderSynced\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"latestHeight\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"name\":\"lightClientConsensusStates\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"preValidatorSetChangeHeight\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"appHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"curValidatorSetHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"nextValidatorSet\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardForValidatorSetChange\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"name\":\"submitters\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"header\",\"type\":\"bytes\"},{\"internalType\":\"uint64\",\"name\":\"height\",\"type\":\"uint64\"}],\"name\":\"syncTendermintHeader\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"key\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"updateParam\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
 
 // Tendermintlightclient is an auto generated Go binding around an Ethereum contract.
 type Tendermintlightclient struct {
@@ -172,6 +172,162 @@ func (_Tendermintlightclient *TendermintlightclientTransactorRaw) Transact(opts 
 	return _Tendermintlightclient.Contract.contract.Transact(opts, method, params...)
 }
 
+// BINDCHANNELID is a free data retrieval call binding the contract method 0x3dffc387.
+//
+// Solidity: function BIND_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCaller) BINDCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "BIND_CHANNELID")
+	return *ret0, err
+}
+
+// BINDCHANNELID is a free data retrieval call binding the contract method 0x3dffc387.
+//
+// Solidity: function BIND_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientSession) BINDCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.BINDCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// BINDCHANNELID is a free data retrieval call binding the contract method 0x3dffc387.
+//
+// Solidity: function BIND_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) BINDCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.BINDCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// CODEOK is a free data retrieval call binding the contract method 0xab51bb96.
+//
+// Solidity: function CODE_OK() constant returns(uint32)
+func (_Tendermintlightclient *TendermintlightclientCaller) CODEOK(opts *bind.CallOpts) (uint32, error) {
+	var (
+		ret0 = new(uint32)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "CODE_OK")
+	return *ret0, err
+}
+
+// CODEOK is a free data retrieval call binding the contract method 0xab51bb96.
+//
+// Solidity: function CODE_OK() constant returns(uint32)
+func (_Tendermintlightclient *TendermintlightclientSession) CODEOK() (uint32, error) {
+	return _Tendermintlightclient.Contract.CODEOK(&_Tendermintlightclient.CallOpts)
+}
+
+// CODEOK is a free data retrieval call binding the contract method 0xab51bb96.
+//
+// Solidity: function CODE_OK() constant returns(uint32)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) CODEOK() (uint32, error) {
+	return _Tendermintlightclient.Contract.CODEOK(&_Tendermintlightclient.CallOpts)
+}
+
+// CROSSCHAINCONTRACTADDR is a free data retrieval call binding the contract method 0x51e80672.
+//
+// Solidity: function CROSS_CHAIN_CONTRACT_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientCaller) CROSSCHAINCONTRACTADDR(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "CROSS_CHAIN_CONTRACT_ADDR")
+	return *ret0, err
+}
+
+// CROSSCHAINCONTRACTADDR is a free data retrieval call binding the contract method 0x51e80672.
+//
+// Solidity: function CROSS_CHAIN_CONTRACT_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientSession) CROSSCHAINCONTRACTADDR() (common.Address, error) {
+	return _Tendermintlightclient.Contract.CROSSCHAINCONTRACTADDR(&_Tendermintlightclient.CallOpts)
+}
+
+// CROSSCHAINCONTRACTADDR is a free data retrieval call binding the contract method 0x51e80672.
+//
+// Solidity: function CROSS_CHAIN_CONTRACT_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) CROSSCHAINCONTRACTADDR() (common.Address, error) {
+	return _Tendermintlightclient.Contract.CROSSCHAINCONTRACTADDR(&_Tendermintlightclient.CallOpts)
+}
+
+// CROSSSTAKECHANNELID is a free data retrieval call binding the contract method 0x718a8aa8.
+//
+// Solidity: function CROSS_STAKE_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCaller) CROSSSTAKECHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "CROSS_STAKE_CHANNELID")
+	return *ret0, err
+}
+
+// CROSSSTAKECHANNELID is a free data retrieval call binding the contract method 0x718a8aa8.
+//
+// Solidity: function CROSS_STAKE_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientSession) CROSSSTAKECHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.CROSSSTAKECHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// CROSSSTAKECHANNELID is a free data retrieval call binding the contract method 0x718a8aa8.
+//
+// Solidity: function CROSS_STAKE_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) CROSSSTAKECHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.CROSSSTAKECHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// ERRORFAILDECODE is a free data retrieval call binding the contract method 0x0bee7a67.
+//
+// Solidity: function ERROR_FAIL_DECODE() constant returns(uint32)
+func (_Tendermintlightclient *TendermintlightclientCaller) ERRORFAILDECODE(opts *bind.CallOpts) (uint32, error) {
+	var (
+		ret0 = new(uint32)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "ERROR_FAIL_DECODE")
+	return *ret0, err
+}
+
+// ERRORFAILDECODE is a free data retrieval call binding the contract method 0x0bee7a67.
+//
+// Solidity: function ERROR_FAIL_DECODE() constant returns(uint32)
+func (_Tendermintlightclient *TendermintlightclientSession) ERRORFAILDECODE() (uint32, error) {
+	return _Tendermintlightclient.Contract.ERRORFAILDECODE(&_Tendermintlightclient.CallOpts)
+}
+
+// ERRORFAILDECODE is a free data retrieval call binding the contract method 0x0bee7a67.
+//
+// Solidity: function ERROR_FAIL_DECODE() constant returns(uint32)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) ERRORFAILDECODE() (uint32, error) {
+	return _Tendermintlightclient.Contract.ERRORFAILDECODE(&_Tendermintlightclient.CallOpts)
+}
+
+// GOVCHANNELID is a free data retrieval call binding the contract method 0x96713da9.
+//
+// Solidity: function GOV_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCaller) GOVCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "GOV_CHANNELID")
+	return *ret0, err
+}
+
+// GOVCHANNELID is a free data retrieval call binding the contract method 0x96713da9.
+//
+// Solidity: function GOV_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientSession) GOVCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.GOVCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// GOVCHANNELID is a free data retrieval call binding the contract method 0x96713da9.
+//
+// Solidity: function GOV_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) GOVCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.GOVCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
 // GOVHUBADDR is a free data retrieval call binding the contract method 0x9dc09262.
 //
 // Solidity: function GOV_HUB_ADDR() constant returns(address)
@@ -250,6 +406,32 @@ func (_Tendermintlightclient *TendermintlightclientCallerSession) INITCONSENSUSS
 	return _Tendermintlightclient.Contract.INITCONSENSUSSTATEBYTES(&_Tendermintlightclient.CallOpts)
 }
 
+// INITREWARDFORVALIDATORSERCHANGE is a free data retrieval call binding the contract method 0x2657e9b6.
+//
+// Solidity: function INIT_REWARD_FOR_VALIDATOR_SER_CHANGE() constant returns(uint256)
+func (_Tendermintlightclient *TendermintlightclientCaller) INITREWARDFORVALIDATORSERCHANGE(opts *bind.CallOpts) (*big.Int, error) {
+	var (
+		ret0 = new(*big.Int)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "INIT_REWARD_FOR_VALIDATOR_SER_CHANGE")
+	return *ret0, err
+}
+
+// INITREWARDFORVALIDATORSERCHANGE is a free data retrieval call binding the contract method 0x2657e9b6.
+//
+// Solidity: function INIT_REWARD_FOR_VALIDATOR_SER_CHANGE() constant returns(uint256)
+func (_Tendermintlightclient *TendermintlightclientSession) INITREWARDFORVALIDATORSERCHANGE() (*big.Int, error) {
+	return _Tendermintlightclient.Contract.INITREWARDFORVALIDATORSERCHANGE(&_Tendermintlightclient.CallOpts)
+}
+
+// INITREWARDFORVALIDATORSERCHANGE is a free data retrieval call binding the contract method 0x2657e9b6.
+//
+// Solidity: function INIT_REWARD_FOR_VALIDATOR_SER_CHANGE() constant returns(uint256)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) INITREWARDFORVALIDATORSERCHANGE() (*big.Int, error) {
+	return _Tendermintlightclient.Contract.INITREWARDFORVALIDATORSERCHANGE(&_Tendermintlightclient.CallOpts)
+}
+
 // LIGHTCLIENTADDR is a free data retrieval call binding the contract method 0xdc927faf.
 //
 // Solidity: function LIGHT_CLIENT_ADDR() constant returns(address)
@@ -302,30 +484,30 @@ func (_Tendermintlightclient *TendermintlightclientCallerSession) RELAYERHUBCONT
 	return _Tendermintlightclient.Contract.RELAYERHUBCONTRACTADDR(&_Tendermintlightclient.CallOpts)
 }
 
-// RELAYERREWARD is a free data retrieval call binding the contract method 0x75405d0d.
+// SLASHCHANNELID is a free data retrieval call binding the contract method 0x7942fd05.
 //
-// Solidity: function RELAYER_REWARD() constant returns(uint256)
-func (_Tendermintlightclient *TendermintlightclientCaller) RELAYERREWARD(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function SLASH_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCaller) SLASHCHANNELID(opts *bind.CallOpts) (uint8, error) {
 	var (
-		ret0 = new(*big.Int)
+		ret0 = new(uint8)
 	)
 	out := ret0
-	err := _Tendermintlightclient.contract.Call(opts, out, "RELAYER_REWARD")
+	err := _Tendermintlightclient.contract.Call(opts, out, "SLASH_CHANNELID")
 	return *ret0, err
 }
 
-// RELAYERREWARD is a free data retrieval call binding the contract method 0x75405d0d.
+// SLASHCHANNELID is a free data retrieval call binding the contract method 0x7942fd05.
 //
-// Solidity: function RELAYER_REWARD() constant returns(uint256)
-func (_Tendermintlightclient *TendermintlightclientSession) RELAYERREWARD() (*big.Int, error) {
-	return _Tendermintlightclient.Contract.RELAYERREWARD(&_Tendermintlightclient.CallOpts)
+// Solidity: function SLASH_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientSession) SLASHCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.SLASHCHANNELID(&_Tendermintlightclient.CallOpts)
 }
 
-// RELAYERREWARD is a free data retrieval call binding the contract method 0x75405d0d.
+// SLASHCHANNELID is a free data retrieval call binding the contract method 0x7942fd05.
 //
-// Solidity: function RELAYER_REWARD() constant returns(uint256)
-func (_Tendermintlightclient *TendermintlightclientCallerSession) RELAYERREWARD() (*big.Int, error) {
-	return _Tendermintlightclient.Contract.RELAYERREWARD(&_Tendermintlightclient.CallOpts)
+// Solidity: function SLASH_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) SLASHCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.SLASHCHANNELID(&_Tendermintlightclient.CallOpts)
 }
 
 // SLASHCONTRACTADDR is a free data retrieval call binding the contract method 0x43756e5c.
@@ -352,6 +534,58 @@ func (_Tendermintlightclient *TendermintlightclientSession) SLASHCONTRACTADDR() 
 // Solidity: function SLASH_CONTRACT_ADDR() constant returns(address)
 func (_Tendermintlightclient *TendermintlightclientCallerSession) SLASHCONTRACTADDR() (common.Address, error) {
 	return _Tendermintlightclient.Contract.SLASHCONTRACTADDR(&_Tendermintlightclient.CallOpts)
+}
+
+// STAKINGCHANNELID is a free data retrieval call binding the contract method 0x4bf6c882.
+//
+// Solidity: function STAKING_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCaller) STAKINGCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "STAKING_CHANNELID")
+	return *ret0, err
+}
+
+// STAKINGCHANNELID is a free data retrieval call binding the contract method 0x4bf6c882.
+//
+// Solidity: function STAKING_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientSession) STAKINGCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.STAKINGCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// STAKINGCHANNELID is a free data retrieval call binding the contract method 0x4bf6c882.
+//
+// Solidity: function STAKING_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) STAKINGCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.STAKINGCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// STAKINGCONTRACTADDR is a free data retrieval call binding the contract method 0x0e2374a5.
+//
+// Solidity: function STAKING_CONTRACT_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientCaller) STAKINGCONTRACTADDR(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "STAKING_CONTRACT_ADDR")
+	return *ret0, err
+}
+
+// STAKINGCONTRACTADDR is a free data retrieval call binding the contract method 0x0e2374a5.
+//
+// Solidity: function STAKING_CONTRACT_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientSession) STAKINGCONTRACTADDR() (common.Address, error) {
+	return _Tendermintlightclient.Contract.STAKINGCONTRACTADDR(&_Tendermintlightclient.CallOpts)
+}
+
+// STAKINGCONTRACTADDR is a free data retrieval call binding the contract method 0x0e2374a5.
+//
+// Solidity: function STAKING_CONTRACT_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) STAKINGCONTRACTADDR() (common.Address, error) {
+	return _Tendermintlightclient.Contract.STAKINGCONTRACTADDR(&_Tendermintlightclient.CallOpts)
 }
 
 // SYSTEMREWARDADDR is a free data retrieval call binding the contract method 0xc81b1662.
@@ -406,6 +640,84 @@ func (_Tendermintlightclient *TendermintlightclientCallerSession) TOKENHUBADDR()
 	return _Tendermintlightclient.Contract.TOKENHUBADDR(&_Tendermintlightclient.CallOpts)
 }
 
+// TOKENMANAGERADDR is a free data retrieval call binding the contract method 0x75d47a0a.
+//
+// Solidity: function TOKEN_MANAGER_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientCaller) TOKENMANAGERADDR(opts *bind.CallOpts) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "TOKEN_MANAGER_ADDR")
+	return *ret0, err
+}
+
+// TOKENMANAGERADDR is a free data retrieval call binding the contract method 0x75d47a0a.
+//
+// Solidity: function TOKEN_MANAGER_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientSession) TOKENMANAGERADDR() (common.Address, error) {
+	return _Tendermintlightclient.Contract.TOKENMANAGERADDR(&_Tendermintlightclient.CallOpts)
+}
+
+// TOKENMANAGERADDR is a free data retrieval call binding the contract method 0x75d47a0a.
+//
+// Solidity: function TOKEN_MANAGER_ADDR() constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) TOKENMANAGERADDR() (common.Address, error) {
+	return _Tendermintlightclient.Contract.TOKENMANAGERADDR(&_Tendermintlightclient.CallOpts)
+}
+
+// TRANSFERINCHANNELID is a free data retrieval call binding the contract method 0x70fd5bad.
+//
+// Solidity: function TRANSFER_IN_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCaller) TRANSFERINCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "TRANSFER_IN_CHANNELID")
+	return *ret0, err
+}
+
+// TRANSFERINCHANNELID is a free data retrieval call binding the contract method 0x70fd5bad.
+//
+// Solidity: function TRANSFER_IN_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientSession) TRANSFERINCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.TRANSFERINCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// TRANSFERINCHANNELID is a free data retrieval call binding the contract method 0x70fd5bad.
+//
+// Solidity: function TRANSFER_IN_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) TRANSFERINCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.TRANSFERINCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// TRANSFEROUTCHANNELID is a free data retrieval call binding the contract method 0xfc3e5908.
+//
+// Solidity: function TRANSFER_OUT_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCaller) TRANSFEROUTCHANNELID(opts *bind.CallOpts) (uint8, error) {
+	var (
+		ret0 = new(uint8)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "TRANSFER_OUT_CHANNELID")
+	return *ret0, err
+}
+
+// TRANSFEROUTCHANNELID is a free data retrieval call binding the contract method 0xfc3e5908.
+//
+// Solidity: function TRANSFER_OUT_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientSession) TRANSFEROUTCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.TRANSFEROUTCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
+// TRANSFEROUTCHANNELID is a free data retrieval call binding the contract method 0xfc3e5908.
+//
+// Solidity: function TRANSFER_OUT_CHANNELID() constant returns(uint8)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) TRANSFEROUTCHANNELID() (uint8, error) {
+	return _Tendermintlightclient.Contract.TRANSFEROUTCHANNELID(&_Tendermintlightclient.CallOpts)
+}
+
 // VALIDATORCONTRACTADDR is a free data retrieval call binding the contract method 0xf9a2bbc7.
 //
 // Solidity: function VALIDATOR_CONTRACT_ADDR() constant returns(address)
@@ -432,178 +744,82 @@ func (_Tendermintlightclient *TendermintlightclientCallerSession) VALIDATORCONTR
 	return _Tendermintlightclient.Contract.VALIDATORCONTRACTADDR(&_Tendermintlightclient.CallOpts)
 }
 
-// BBCLightClientConsensusState is a free data retrieval call binding the contract method 0xa9bfd0f1.
+// AlreadyInit is a free data retrieval call binding the contract method 0xa78abc16.
 //
-// Solidity: function _BBCLightClientConsensusState(uint64 ) constant returns(uint64 preValidatorSetChangeHeight, bytes32 appHash, bytes32 curValidatorSetHash, bytes nextValidatorSet)
-func (_Tendermintlightclient *TendermintlightclientCaller) BBCLightClientConsensusState(opts *bind.CallOpts, arg0 uint64) (struct {
-	PreValidatorSetChangeHeight uint64
-	AppHash                     [32]byte
-	CurValidatorSetHash         [32]byte
-	NextValidatorSet            []byte
-}, error) {
-	ret := new(struct {
-		PreValidatorSetChangeHeight uint64
-		AppHash                     [32]byte
-		CurValidatorSetHash         [32]byte
-		NextValidatorSet            []byte
-	})
-	out := ret
-	err := _Tendermintlightclient.contract.Call(opts, out, "_BBCLightClientConsensusState", arg0)
-	return *ret, err
-}
-
-// BBCLightClientConsensusState is a free data retrieval call binding the contract method 0xa9bfd0f1.
-//
-// Solidity: function _BBCLightClientConsensusState(uint64 ) constant returns(uint64 preValidatorSetChangeHeight, bytes32 appHash, bytes32 curValidatorSetHash, bytes nextValidatorSet)
-func (_Tendermintlightclient *TendermintlightclientSession) BBCLightClientConsensusState(arg0 uint64) (struct {
-	PreValidatorSetChangeHeight uint64
-	AppHash                     [32]byte
-	CurValidatorSetHash         [32]byte
-	NextValidatorSet            []byte
-}, error) {
-	return _Tendermintlightclient.Contract.BBCLightClientConsensusState(&_Tendermintlightclient.CallOpts, arg0)
-}
-
-// BBCLightClientConsensusState is a free data retrieval call binding the contract method 0xa9bfd0f1.
-//
-// Solidity: function _BBCLightClientConsensusState(uint64 ) constant returns(uint64 preValidatorSetChangeHeight, bytes32 appHash, bytes32 curValidatorSetHash, bytes nextValidatorSet)
-func (_Tendermintlightclient *TendermintlightclientCallerSession) BBCLightClientConsensusState(arg0 uint64) (struct {
-	PreValidatorSetChangeHeight uint64
-	AppHash                     [32]byte
-	CurValidatorSetHash         [32]byte
-	NextValidatorSet            []byte
-}, error) {
-	return _Tendermintlightclient.Contract.BBCLightClientConsensusState(&_Tendermintlightclient.CallOpts, arg0)
-}
-
-// AlreadyInit is a free data retrieval call binding the contract method 0x6547bb06.
-//
-// Solidity: function _alreadyInit() constant returns(bool)
+// Solidity: function alreadyInit() constant returns(bool)
 func (_Tendermintlightclient *TendermintlightclientCaller) AlreadyInit(opts *bind.CallOpts) (bool, error) {
 	var (
 		ret0 = new(bool)
 	)
 	out := ret0
-	err := _Tendermintlightclient.contract.Call(opts, out, "_alreadyInit")
+	err := _Tendermintlightclient.contract.Call(opts, out, "alreadyInit")
 	return *ret0, err
 }
 
-// AlreadyInit is a free data retrieval call binding the contract method 0x6547bb06.
+// AlreadyInit is a free data retrieval call binding the contract method 0xa78abc16.
 //
-// Solidity: function _alreadyInit() constant returns(bool)
+// Solidity: function alreadyInit() constant returns(bool)
 func (_Tendermintlightclient *TendermintlightclientSession) AlreadyInit() (bool, error) {
 	return _Tendermintlightclient.Contract.AlreadyInit(&_Tendermintlightclient.CallOpts)
 }
 
-// AlreadyInit is a free data retrieval call binding the contract method 0x6547bb06.
+// AlreadyInit is a free data retrieval call binding the contract method 0xa78abc16.
 //
-// Solidity: function _alreadyInit() constant returns(bool)
+// Solidity: function alreadyInit() constant returns(bool)
 func (_Tendermintlightclient *TendermintlightclientCallerSession) AlreadyInit() (bool, error) {
 	return _Tendermintlightclient.Contract.AlreadyInit(&_Tendermintlightclient.CallOpts)
 }
 
-// ChainID is a free data retrieval call binding the contract method 0xbeab7131.
+// BscChainID is a free data retrieval call binding the contract method 0x493279b1.
 //
-// Solidity: function _chainID() constant returns(bytes32)
+// Solidity: function bscChainID() constant returns(uint16)
+func (_Tendermintlightclient *TendermintlightclientCaller) BscChainID(opts *bind.CallOpts) (uint16, error) {
+	var (
+		ret0 = new(uint16)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "bscChainID")
+	return *ret0, err
+}
+
+// BscChainID is a free data retrieval call binding the contract method 0x493279b1.
+//
+// Solidity: function bscChainID() constant returns(uint16)
+func (_Tendermintlightclient *TendermintlightclientSession) BscChainID() (uint16, error) {
+	return _Tendermintlightclient.Contract.BscChainID(&_Tendermintlightclient.CallOpts)
+}
+
+// BscChainID is a free data retrieval call binding the contract method 0x493279b1.
+//
+// Solidity: function bscChainID() constant returns(uint16)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) BscChainID() (uint16, error) {
+	return _Tendermintlightclient.Contract.BscChainID(&_Tendermintlightclient.CallOpts)
+}
+
+// ChainID is a free data retrieval call binding the contract method 0xadc879e9.
+//
+// Solidity: function chainID() constant returns(bytes32)
 func (_Tendermintlightclient *TendermintlightclientCaller) ChainID(opts *bind.CallOpts) ([32]byte, error) {
 	var (
 		ret0 = new([32]byte)
 	)
 	out := ret0
-	err := _Tendermintlightclient.contract.Call(opts, out, "_chainID")
+	err := _Tendermintlightclient.contract.Call(opts, out, "chainID")
 	return *ret0, err
 }
 
-// ChainID is a free data retrieval call binding the contract method 0xbeab7131.
+// ChainID is a free data retrieval call binding the contract method 0xadc879e9.
 //
-// Solidity: function _chainID() constant returns(bytes32)
+// Solidity: function chainID() constant returns(bytes32)
 func (_Tendermintlightclient *TendermintlightclientSession) ChainID() ([32]byte, error) {
 	return _Tendermintlightclient.Contract.ChainID(&_Tendermintlightclient.CallOpts)
 }
 
-// ChainID is a free data retrieval call binding the contract method 0xbeab7131.
+// ChainID is a free data retrieval call binding the contract method 0xadc879e9.
 //
-// Solidity: function _chainID() constant returns(bytes32)
+// Solidity: function chainID() constant returns(bytes32)
 func (_Tendermintlightclient *TendermintlightclientCallerSession) ChainID() ([32]byte, error) {
 	return _Tendermintlightclient.Contract.ChainID(&_Tendermintlightclient.CallOpts)
-}
-
-// InitialHeight is a free data retrieval call binding the contract method 0x3ae6005d.
-//
-// Solidity: function _initialHeight() constant returns(uint64)
-func (_Tendermintlightclient *TendermintlightclientCaller) InitialHeight(opts *bind.CallOpts) (uint64, error) {
-	var (
-		ret0 = new(uint64)
-	)
-	out := ret0
-	err := _Tendermintlightclient.contract.Call(opts, out, "_initialHeight")
-	return *ret0, err
-}
-
-// InitialHeight is a free data retrieval call binding the contract method 0x3ae6005d.
-//
-// Solidity: function _initialHeight() constant returns(uint64)
-func (_Tendermintlightclient *TendermintlightclientSession) InitialHeight() (uint64, error) {
-	return _Tendermintlightclient.Contract.InitialHeight(&_Tendermintlightclient.CallOpts)
-}
-
-// InitialHeight is a free data retrieval call binding the contract method 0x3ae6005d.
-//
-// Solidity: function _initialHeight() constant returns(uint64)
-func (_Tendermintlightclient *TendermintlightclientCallerSession) InitialHeight() (uint64, error) {
-	return _Tendermintlightclient.Contract.InitialHeight(&_Tendermintlightclient.CallOpts)
-}
-
-// LatestHeight is a free data retrieval call binding the contract method 0x7945c2f3.
-//
-// Solidity: function _latestHeight() constant returns(uint64)
-func (_Tendermintlightclient *TendermintlightclientCaller) LatestHeight(opts *bind.CallOpts) (uint64, error) {
-	var (
-		ret0 = new(uint64)
-	)
-	out := ret0
-	err := _Tendermintlightclient.contract.Call(opts, out, "_latestHeight")
-	return *ret0, err
-}
-
-// LatestHeight is a free data retrieval call binding the contract method 0x7945c2f3.
-//
-// Solidity: function _latestHeight() constant returns(uint64)
-func (_Tendermintlightclient *TendermintlightclientSession) LatestHeight() (uint64, error) {
-	return _Tendermintlightclient.Contract.LatestHeight(&_Tendermintlightclient.CallOpts)
-}
-
-// LatestHeight is a free data retrieval call binding the contract method 0x7945c2f3.
-//
-// Solidity: function _latestHeight() constant returns(uint64)
-func (_Tendermintlightclient *TendermintlightclientCallerSession) LatestHeight() (uint64, error) {
-	return _Tendermintlightclient.Contract.LatestHeight(&_Tendermintlightclient.CallOpts)
-}
-
-// Submitters is a free data retrieval call binding the contract method 0xbc53477e.
-//
-// Solidity: function _submitters(uint64 ) constant returns(address)
-func (_Tendermintlightclient *TendermintlightclientCaller) Submitters(opts *bind.CallOpts, arg0 uint64) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _Tendermintlightclient.contract.Call(opts, out, "_submitters", arg0)
-	return *ret0, err
-}
-
-// Submitters is a free data retrieval call binding the contract method 0xbc53477e.
-//
-// Solidity: function _submitters(uint64 ) constant returns(address)
-func (_Tendermintlightclient *TendermintlightclientSession) Submitters(arg0 uint64) (common.Address, error) {
-	return _Tendermintlightclient.Contract.Submitters(&_Tendermintlightclient.CallOpts, arg0)
-}
-
-// Submitters is a free data retrieval call binding the contract method 0xbc53477e.
-//
-// Solidity: function _submitters(uint64 ) constant returns(address)
-func (_Tendermintlightclient *TendermintlightclientCallerSession) Submitters(arg0 uint64) (common.Address, error) {
-	return _Tendermintlightclient.Contract.Submitters(&_Tendermintlightclient.CallOpts, arg0)
 }
 
 // GetAppHash is a free data retrieval call binding the contract method 0xcba510a9.
@@ -684,6 +900,32 @@ func (_Tendermintlightclient *TendermintlightclientCallerSession) GetSubmitter(h
 	return _Tendermintlightclient.Contract.GetSubmitter(&_Tendermintlightclient.CallOpts, height)
 }
 
+// InitialHeight is a free data retrieval call binding the contract method 0xe2761af0.
+//
+// Solidity: function initialHeight() constant returns(uint64)
+func (_Tendermintlightclient *TendermintlightclientCaller) InitialHeight(opts *bind.CallOpts) (uint64, error) {
+	var (
+		ret0 = new(uint64)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "initialHeight")
+	return *ret0, err
+}
+
+// InitialHeight is a free data retrieval call binding the contract method 0xe2761af0.
+//
+// Solidity: function initialHeight() constant returns(uint64)
+func (_Tendermintlightclient *TendermintlightclientSession) InitialHeight() (uint64, error) {
+	return _Tendermintlightclient.Contract.InitialHeight(&_Tendermintlightclient.CallOpts)
+}
+
+// InitialHeight is a free data retrieval call binding the contract method 0xe2761af0.
+//
+// Solidity: function initialHeight() constant returns(uint64)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) InitialHeight() (uint64, error) {
+	return _Tendermintlightclient.Contract.InitialHeight(&_Tendermintlightclient.CallOpts)
+}
+
 // IsHeaderSynced is a free data retrieval call binding the contract method 0xdf5fe704.
 //
 // Solidity: function isHeaderSynced(uint64 height) constant returns(bool)
@@ -710,6 +952,76 @@ func (_Tendermintlightclient *TendermintlightclientCallerSession) IsHeaderSynced
 	return _Tendermintlightclient.Contract.IsHeaderSynced(&_Tendermintlightclient.CallOpts, height)
 }
 
+// LatestHeight is a free data retrieval call binding the contract method 0xe405bbc3.
+//
+// Solidity: function latestHeight() constant returns(uint64)
+func (_Tendermintlightclient *TendermintlightclientCaller) LatestHeight(opts *bind.CallOpts) (uint64, error) {
+	var (
+		ret0 = new(uint64)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "latestHeight")
+	return *ret0, err
+}
+
+// LatestHeight is a free data retrieval call binding the contract method 0xe405bbc3.
+//
+// Solidity: function latestHeight() constant returns(uint64)
+func (_Tendermintlightclient *TendermintlightclientSession) LatestHeight() (uint64, error) {
+	return _Tendermintlightclient.Contract.LatestHeight(&_Tendermintlightclient.CallOpts)
+}
+
+// LatestHeight is a free data retrieval call binding the contract method 0xe405bbc3.
+//
+// Solidity: function latestHeight() constant returns(uint64)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) LatestHeight() (uint64, error) {
+	return _Tendermintlightclient.Contract.LatestHeight(&_Tendermintlightclient.CallOpts)
+}
+
+// LightClientConsensusStates is a free data retrieval call binding the contract method 0x5c5ae8db.
+//
+// Solidity: function lightClientConsensusStates(uint64 ) constant returns(uint64 preValidatorSetChangeHeight, bytes32 appHash, bytes32 curValidatorSetHash, bytes nextValidatorSet)
+func (_Tendermintlightclient *TendermintlightclientCaller) LightClientConsensusStates(opts *bind.CallOpts, arg0 uint64) (struct {
+	PreValidatorSetChangeHeight uint64
+	AppHash                     [32]byte
+	CurValidatorSetHash         [32]byte
+	NextValidatorSet            []byte
+}, error) {
+	ret := new(struct {
+		PreValidatorSetChangeHeight uint64
+		AppHash                     [32]byte
+		CurValidatorSetHash         [32]byte
+		NextValidatorSet            []byte
+	})
+	out := ret
+	err := _Tendermintlightclient.contract.Call(opts, out, "lightClientConsensusStates", arg0)
+	return *ret, err
+}
+
+// LightClientConsensusStates is a free data retrieval call binding the contract method 0x5c5ae8db.
+//
+// Solidity: function lightClientConsensusStates(uint64 ) constant returns(uint64 preValidatorSetChangeHeight, bytes32 appHash, bytes32 curValidatorSetHash, bytes nextValidatorSet)
+func (_Tendermintlightclient *TendermintlightclientSession) LightClientConsensusStates(arg0 uint64) (struct {
+	PreValidatorSetChangeHeight uint64
+	AppHash                     [32]byte
+	CurValidatorSetHash         [32]byte
+	NextValidatorSet            []byte
+}, error) {
+	return _Tendermintlightclient.Contract.LightClientConsensusStates(&_Tendermintlightclient.CallOpts, arg0)
+}
+
+// LightClientConsensusStates is a free data retrieval call binding the contract method 0x5c5ae8db.
+//
+// Solidity: function lightClientConsensusStates(uint64 ) constant returns(uint64 preValidatorSetChangeHeight, bytes32 appHash, bytes32 curValidatorSetHash, bytes nextValidatorSet)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) LightClientConsensusStates(arg0 uint64) (struct {
+	PreValidatorSetChangeHeight uint64
+	AppHash                     [32]byte
+	CurValidatorSetHash         [32]byte
+	NextValidatorSet            []byte
+}, error) {
+	return _Tendermintlightclient.Contract.LightClientConsensusStates(&_Tendermintlightclient.CallOpts, arg0)
+}
+
 // RewardForValidatorSetChange is a free data retrieval call binding the contract method 0x33f7798d.
 //
 // Solidity: function rewardForValidatorSetChange() constant returns(uint256)
@@ -734,6 +1046,32 @@ func (_Tendermintlightclient *TendermintlightclientSession) RewardForValidatorSe
 // Solidity: function rewardForValidatorSetChange() constant returns(uint256)
 func (_Tendermintlightclient *TendermintlightclientCallerSession) RewardForValidatorSetChange() (*big.Int, error) {
 	return _Tendermintlightclient.Contract.RewardForValidatorSetChange(&_Tendermintlightclient.CallOpts)
+}
+
+// Submitters is a free data retrieval call binding the contract method 0xda8d08f0.
+//
+// Solidity: function submitters(uint64 ) constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientCaller) Submitters(opts *bind.CallOpts, arg0 uint64) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _Tendermintlightclient.contract.Call(opts, out, "submitters", arg0)
+	return *ret0, err
+}
+
+// Submitters is a free data retrieval call binding the contract method 0xda8d08f0.
+//
+// Solidity: function submitters(uint64 ) constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientSession) Submitters(arg0 uint64) (common.Address, error) {
+	return _Tendermintlightclient.Contract.Submitters(&_Tendermintlightclient.CallOpts, arg0)
+}
+
+// Submitters is a free data retrieval call binding the contract method 0xda8d08f0.
+//
+// Solidity: function submitters(uint64 ) constant returns(address)
+func (_Tendermintlightclient *TendermintlightclientCallerSession) Submitters(arg0 uint64) (common.Address, error) {
+	return _Tendermintlightclient.Contract.Submitters(&_Tendermintlightclient.CallOpts, arg0)
 }
 
 // Init is a paid mutator transaction binding the contract method 0xe1c7392a.
@@ -776,6 +1114,27 @@ func (_Tendermintlightclient *TendermintlightclientSession) SyncTendermintHeader
 // Solidity: function syncTendermintHeader(bytes header, uint64 height) returns(bool)
 func (_Tendermintlightclient *TendermintlightclientTransactorSession) SyncTendermintHeader(header []byte, height uint64) (*types.Transaction, error) {
 	return _Tendermintlightclient.Contract.SyncTendermintHeader(&_Tendermintlightclient.TransactOpts, header, height)
+}
+
+// UpdateParam is a paid mutator transaction binding the contract method 0xac431751.
+//
+// Solidity: function updateParam(string key, bytes value) returns()
+func (_Tendermintlightclient *TendermintlightclientTransactor) UpdateParam(opts *bind.TransactOpts, key string, value []byte) (*types.Transaction, error) {
+	return _Tendermintlightclient.contract.Transact(opts, "updateParam", key, value)
+}
+
+// UpdateParam is a paid mutator transaction binding the contract method 0xac431751.
+//
+// Solidity: function updateParam(string key, bytes value) returns()
+func (_Tendermintlightclient *TendermintlightclientSession) UpdateParam(key string, value []byte) (*types.Transaction, error) {
+	return _Tendermintlightclient.Contract.UpdateParam(&_Tendermintlightclient.TransactOpts, key, value)
+}
+
+// UpdateParam is a paid mutator transaction binding the contract method 0xac431751.
+//
+// Solidity: function updateParam(string key, bytes value) returns()
+func (_Tendermintlightclient *TendermintlightclientTransactorSession) UpdateParam(key string, value []byte) (*types.Transaction, error) {
+	return _Tendermintlightclient.Contract.UpdateParam(&_Tendermintlightclient.TransactOpts, key, value)
 }
 
 // TendermintlightclientInitConsensusStateIterator is returned from FilterInitConsensusState and is used to iterate over the raw logs and unpacked data for InitConsensusState events raised by the Tendermintlightclient contract.
@@ -852,24 +1211,24 @@ type TendermintlightclientInitConsensusState struct {
 	Raw        types.Log // Blockchain specific contextual infos
 }
 
-// FilterInitConsensusState is a free log retrieval operation binding the contract event 0x6d0670f0a020e865a8cacaeeb070b48d5522fd0f687bcbb111a1d6c9b6ae66ab.
+// FilterInitConsensusState is a free log retrieval operation binding the contract event 0x5ac9b37d571677b80957ca05693f371526c602fd08042b416a29fdab7efefa49.
 //
-// Solidity: event InitConsensusState(uint64 initHeight, bytes32 appHash)
+// Solidity: event initConsensusState(uint64 initHeight, bytes32 appHash)
 func (_Tendermintlightclient *TendermintlightclientFilterer) FilterInitConsensusState(opts *bind.FilterOpts) (*TendermintlightclientInitConsensusStateIterator, error) {
 
-	logs, sub, err := _Tendermintlightclient.contract.FilterLogs(opts, "InitConsensusState")
+	logs, sub, err := _Tendermintlightclient.contract.FilterLogs(opts, "initConsensusState")
 	if err != nil {
 		return nil, err
 	}
-	return &TendermintlightclientInitConsensusStateIterator{contract: _Tendermintlightclient.contract, event: "InitConsensusState", logs: logs, sub: sub}, nil
+	return &TendermintlightclientInitConsensusStateIterator{contract: _Tendermintlightclient.contract, event: "initConsensusState", logs: logs, sub: sub}, nil
 }
 
-// WatchInitConsensusState is a free log subscription operation binding the contract event 0x6d0670f0a020e865a8cacaeeb070b48d5522fd0f687bcbb111a1d6c9b6ae66ab.
+// WatchInitConsensusState is a free log subscription operation binding the contract event 0x5ac9b37d571677b80957ca05693f371526c602fd08042b416a29fdab7efefa49.
 //
-// Solidity: event InitConsensusState(uint64 initHeight, bytes32 appHash)
+// Solidity: event initConsensusState(uint64 initHeight, bytes32 appHash)
 func (_Tendermintlightclient *TendermintlightclientFilterer) WatchInitConsensusState(opts *bind.WatchOpts, sink chan<- *TendermintlightclientInitConsensusState) (event.Subscription, error) {
 
-	logs, sub, err := _Tendermintlightclient.contract.WatchLogs(opts, "InitConsensusState")
+	logs, sub, err := _Tendermintlightclient.contract.WatchLogs(opts, "initConsensusState")
 	if err != nil {
 		return nil, err
 	}
@@ -880,7 +1239,7 @@ func (_Tendermintlightclient *TendermintlightclientFilterer) WatchInitConsensusS
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
 				event := new(TendermintlightclientInitConsensusState)
-				if err := _Tendermintlightclient.contract.UnpackLog(event, "InitConsensusState", log); err != nil {
+				if err := _Tendermintlightclient.contract.UnpackLog(event, "initConsensusState", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -901,12 +1260,146 @@ func (_Tendermintlightclient *TendermintlightclientFilterer) WatchInitConsensusS
 	}), nil
 }
 
-// ParseInitConsensusState is a log parse operation binding the contract event 0x6d0670f0a020e865a8cacaeeb070b48d5522fd0f687bcbb111a1d6c9b6ae66ab.
+// ParseInitConsensusState is a log parse operation binding the contract event 0x5ac9b37d571677b80957ca05693f371526c602fd08042b416a29fdab7efefa49.
 //
-// Solidity: event InitConsensusState(uint64 initHeight, bytes32 appHash)
+// Solidity: event initConsensusState(uint64 initHeight, bytes32 appHash)
 func (_Tendermintlightclient *TendermintlightclientFilterer) ParseInitConsensusState(log types.Log) (*TendermintlightclientInitConsensusState, error) {
 	event := new(TendermintlightclientInitConsensusState)
-	if err := _Tendermintlightclient.contract.UnpackLog(event, "InitConsensusState", log); err != nil {
+	if err := _Tendermintlightclient.contract.UnpackLog(event, "initConsensusState", log); err != nil {
+		return nil, err
+	}
+	return event, nil
+}
+
+// TendermintlightclientParamChangeIterator is returned from FilterParamChange and is used to iterate over the raw logs and unpacked data for ParamChange events raised by the Tendermintlightclient contract.
+type TendermintlightclientParamChangeIterator struct {
+	Event *TendermintlightclientParamChange // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TendermintlightclientParamChangeIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TendermintlightclientParamChange)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TendermintlightclientParamChange)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TendermintlightclientParamChangeIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TendermintlightclientParamChangeIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TendermintlightclientParamChange represents a ParamChange event raised by the Tendermintlightclient contract.
+type TendermintlightclientParamChange struct {
+	Key   string
+	Value []byte
+	Raw   types.Log // Blockchain specific contextual infos
+}
+
+// FilterParamChange is a free log retrieval operation binding the contract event 0x6cdb0ac70ab7f2e2d035cca5be60d89906f2dede7648ddbd7402189c1eeed17a.
+//
+// Solidity: event paramChange(string key, bytes value)
+func (_Tendermintlightclient *TendermintlightclientFilterer) FilterParamChange(opts *bind.FilterOpts) (*TendermintlightclientParamChangeIterator, error) {
+
+	logs, sub, err := _Tendermintlightclient.contract.FilterLogs(opts, "paramChange")
+	if err != nil {
+		return nil, err
+	}
+	return &TendermintlightclientParamChangeIterator{contract: _Tendermintlightclient.contract, event: "paramChange", logs: logs, sub: sub}, nil
+}
+
+// WatchParamChange is a free log subscription operation binding the contract event 0x6cdb0ac70ab7f2e2d035cca5be60d89906f2dede7648ddbd7402189c1eeed17a.
+//
+// Solidity: event paramChange(string key, bytes value)
+func (_Tendermintlightclient *TendermintlightclientFilterer) WatchParamChange(opts *bind.WatchOpts, sink chan<- *TendermintlightclientParamChange) (event.Subscription, error) {
+
+	logs, sub, err := _Tendermintlightclient.contract.WatchLogs(opts, "paramChange")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TendermintlightclientParamChange)
+				if err := _Tendermintlightclient.contract.UnpackLog(event, "paramChange", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseParamChange is a log parse operation binding the contract event 0x6cdb0ac70ab7f2e2d035cca5be60d89906f2dede7648ddbd7402189c1eeed17a.
+//
+// Solidity: event paramChange(string key, bytes value)
+func (_Tendermintlightclient *TendermintlightclientFilterer) ParseParamChange(log types.Log) (*TendermintlightclientParamChange, error) {
+	event := new(TendermintlightclientParamChange)
+	if err := _Tendermintlightclient.contract.UnpackLog(event, "paramChange", log); err != nil {
 		return nil, err
 	}
 	return event, nil
@@ -988,24 +1481,24 @@ type TendermintlightclientSyncConsensusState struct {
 	Raw                         types.Log // Blockchain specific contextual infos
 }
 
-// FilterSyncConsensusState is a free log retrieval operation binding the contract event 0x2641c9932368bef6eec1f666e32e7cba680c3e4c6e158a449d1f2601ad47926e.
+// FilterSyncConsensusState is a free log retrieval operation binding the contract event 0x4042c1020a8f410fb1c8859d276ab436aeb2c3074960e48467299cf1c966d3b4.
 //
-// Solidity: event SyncConsensusState(uint64 height, uint64 preValidatorSetChangeHeight, bytes32 appHash, bool validatorChanged)
+// Solidity: event syncConsensusState(uint64 height, uint64 preValidatorSetChangeHeight, bytes32 appHash, bool validatorChanged)
 func (_Tendermintlightclient *TendermintlightclientFilterer) FilterSyncConsensusState(opts *bind.FilterOpts) (*TendermintlightclientSyncConsensusStateIterator, error) {
 
-	logs, sub, err := _Tendermintlightclient.contract.FilterLogs(opts, "SyncConsensusState")
+	logs, sub, err := _Tendermintlightclient.contract.FilterLogs(opts, "syncConsensusState")
 	if err != nil {
 		return nil, err
 	}
-	return &TendermintlightclientSyncConsensusStateIterator{contract: _Tendermintlightclient.contract, event: "SyncConsensusState", logs: logs, sub: sub}, nil
+	return &TendermintlightclientSyncConsensusStateIterator{contract: _Tendermintlightclient.contract, event: "syncConsensusState", logs: logs, sub: sub}, nil
 }
 
-// WatchSyncConsensusState is a free log subscription operation binding the contract event 0x2641c9932368bef6eec1f666e32e7cba680c3e4c6e158a449d1f2601ad47926e.
+// WatchSyncConsensusState is a free log subscription operation binding the contract event 0x4042c1020a8f410fb1c8859d276ab436aeb2c3074960e48467299cf1c966d3b4.
 //
-// Solidity: event SyncConsensusState(uint64 height, uint64 preValidatorSetChangeHeight, bytes32 appHash, bool validatorChanged)
+// Solidity: event syncConsensusState(uint64 height, uint64 preValidatorSetChangeHeight, bytes32 appHash, bool validatorChanged)
 func (_Tendermintlightclient *TendermintlightclientFilterer) WatchSyncConsensusState(opts *bind.WatchOpts, sink chan<- *TendermintlightclientSyncConsensusState) (event.Subscription, error) {
 
-	logs, sub, err := _Tendermintlightclient.contract.WatchLogs(opts, "SyncConsensusState")
+	logs, sub, err := _Tendermintlightclient.contract.WatchLogs(opts, "syncConsensusState")
 	if err != nil {
 		return nil, err
 	}
@@ -1016,7 +1509,7 @@ func (_Tendermintlightclient *TendermintlightclientFilterer) WatchSyncConsensusS
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
 				event := new(TendermintlightclientSyncConsensusState)
-				if err := _Tendermintlightclient.contract.UnpackLog(event, "SyncConsensusState", log); err != nil {
+				if err := _Tendermintlightclient.contract.UnpackLog(event, "syncConsensusState", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1037,12 +1530,12 @@ func (_Tendermintlightclient *TendermintlightclientFilterer) WatchSyncConsensusS
 	}), nil
 }
 
-// ParseSyncConsensusState is a log parse operation binding the contract event 0x2641c9932368bef6eec1f666e32e7cba680c3e4c6e158a449d1f2601ad47926e.
+// ParseSyncConsensusState is a log parse operation binding the contract event 0x4042c1020a8f410fb1c8859d276ab436aeb2c3074960e48467299cf1c966d3b4.
 //
-// Solidity: event SyncConsensusState(uint64 height, uint64 preValidatorSetChangeHeight, bytes32 appHash, bool validatorChanged)
+// Solidity: event syncConsensusState(uint64 height, uint64 preValidatorSetChangeHeight, bytes32 appHash, bool validatorChanged)
 func (_Tendermintlightclient *TendermintlightclientFilterer) ParseSyncConsensusState(log types.Log) (*TendermintlightclientSyncConsensusState, error) {
 	event := new(TendermintlightclientSyncConsensusState)
-	if err := _Tendermintlightclient.contract.UnpackLog(event, "SyncConsensusState", log); err != nil {
+	if err := _Tendermintlightclient.contract.UnpackLog(event, "syncConsensusState", log); err != nil {
 		return nil, err
 	}
 	return event, nil
