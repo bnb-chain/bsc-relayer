@@ -1,10 +1,10 @@
 package relayer
 
 import (
-	"github.com/bnb-chain/bsc-relayer/common"
+	relayercommon "github.com/bnb-chain/bsc-relayer/common"
 	config "github.com/bnb-chain/bsc-relayer/config"
 	"github.com/bnb-chain/bsc-relayer/executor"
-	cmnEth "github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/jinzhu/gorm"
 	cmn "github.com/tendermint/tendermint/libs/common"
 )
@@ -14,10 +14,10 @@ type Relayer struct {
 	cfg         *config.Config
 	bbcExecutor *executor.BBCExecutor
 	bscExecutor *executor.BSCExecutor
-	manager     cmnEth.Address
+	manager     common.Address
 }
 
-func NewRelayer(db *gorm.DB, cfg *config.Config, bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor, manager cmnEth.Address) *Relayer {
+func NewRelayer(db *gorm.DB, cfg *config.Config, bbcExecutor *executor.BBCExecutor, bscExecutor *executor.BSCExecutor, manager common.Address) *Relayer {
 	return &Relayer{
 		db:          db,
 		cfg:         cfg,
@@ -34,7 +34,7 @@ func (r *Relayer) Start(startHeight uint64, curValidatorsHash cmn.HexBytes) {
 	if r.cfg.CrossChainConfig.CompetitionMode {
 		_, err := r.cleanPreviousPackages(startHeight)
 		if err != nil {
-			common.Logger.Errorf("failure in cleanPreviousPackages: %s", err.Error())
+			relayercommon.Logger.Errorf("failure in cleanPreviousPackages: %s", err.Error())
 		}
 		go r.relayerCompetitionDaemon(startHeight, curValidatorsHash)
 	} else {
