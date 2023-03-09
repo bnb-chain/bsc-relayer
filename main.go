@@ -140,7 +140,8 @@ func main() {
 	}
 	curValidatorsHash := block.BlockMeta.Header.ValidatorsHash
 
-	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor, common2.HexToAddress(flagManager))
+	manager := viper.GetString(flagManager)
+	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor, common2.HexToAddress(manager))
 	common.Logger.Info("Starting relayer")
 	relayerInstance.Start(uint64(startHeight), curValidatorsHash)
 
