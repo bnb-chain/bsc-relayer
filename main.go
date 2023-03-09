@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/binance-chain/go-sdk/common/types"
-	common2 "github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/bnb-chain/bsc-relayer/admin"
-	"github.com/bnb-chain/bsc-relayer/common"
+	relayercommon "github.com/bnb-chain/bsc-relayer/common"
 	config "github.com/bnb-chain/bsc-relayer/config"
 	"github.com/bnb-chain/bsc-relayer/executor"
 	"github.com/bnb-chain/bsc-relayer/model"
@@ -100,7 +100,7 @@ func main() {
 		return
 	}
 
-	common.InitLogger(&cfg.LogConfig)
+	relayercommon.InitLogger(&cfg.LogConfig)
 
 	var db *gorm.DB
 	if cfg.DBConfig.DBPath != "" {
@@ -118,31 +118,31 @@ func main() {
 
 	bbcExecutor, err := executor.NewBBCExecutor(cfg, types.ChainNetwork(bbcNetworkType))
 	if err != nil {
-		common.Logger.Error(err.Error())
+		relayercommon.Logger.Error(err.Error())
 		return
 	}
 
 	bscExecutor, err := executor.NewBSCExecutor(db, bbcExecutor, cfg)
 	if err != nil {
-		common.Logger.Error(err.Error())
+		relayercommon.Logger.Error(err.Error())
 		return
 	}
 	abciInfo, err := bbcExecutor.GetClient().ABCIInfo()
 	if err != nil {
-		common.Logger.Error(err.Error())
+		relayercommon.Logger.Error(err.Error())
 		return
 	}
 	startHeight := abciInfo.Response.LastBlockHeight - 1
 	block, err := bbcExecutor.GetClient().Block(&(startHeight))
 	if err != nil {
-		common.Logger.Error(err.Error())
+		relayercommon.Logger.Error(err.Error())
 		return
 	}
 	curValidatorsHash := block.BlockMeta.Header.ValidatorsHash
 
 	manager := viper.GetString(flagManager)
-	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor, common2.HexToAddress(manager))
-	common.Logger.Info("Starting relayer")
+	relayerInstance := relayer.NewRelayer(db, cfg, bbcExecutor, bscExecutor, common.HexToAddress(manager))
+	relayercommon.Logger.Info("Starting relayer")
 	relayerInstance.Start(uint64(startHeight), curValidatorsHash)
 
 	select {}

@@ -438,7 +438,7 @@ func (executor *BSCExecutor) AcceptBeingRelayer(manager common.Address) (bool, e
 	if err != nil {
 		return false, err
 	}
-
+	txOpts.GasLimit = 0
 	_, err = instance.AcceptBeingRelayer(txOpts, manager)
 	if err != nil {
 		return false, err
