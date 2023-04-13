@@ -3,9 +3,9 @@ package relayer
 import (
 	"fmt"
 
-	"github.com/binance-chain/bsc-relayer/common"
-	util "github.com/binance-chain/bsc-relayer/config"
-	"github.com/binance-chain/bsc-relayer/model"
+	"github.com/bnb-chain/bsc-relayer/common"
+	util "github.com/bnb-chain/bsc-relayer/config"
+	"github.com/bnb-chain/bsc-relayer/model"
 )
 
 const (

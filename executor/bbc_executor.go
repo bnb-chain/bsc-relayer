@@ -13,11 +13,11 @@ import (
 
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
-	"github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/go-sdk/client/rpc"
 	ctypes "github.com/binance-chain/go-sdk/common/types"
 	"github.com/binance-chain/go-sdk/keys"
+	"github.com/bnb-chain/bsc-relayer/common"
+	config "github.com/bnb-chain/bsc-relayer/config"
 	cmn "github.com/tendermint/tendermint/libs/common"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	coretypes "github.com/tendermint/tendermint/rpc/core/types"

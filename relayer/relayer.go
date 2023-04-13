@@ -1,9 +1,9 @@
 package relayer
 
 import (
-	"github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
-	"github.com/binance-chain/bsc-relayer/executor"
+	"github.com/bnb-chain/bsc-relayer/common"
+	config "github.com/bnb-chain/bsc-relayer/config"
+	"github.com/bnb-chain/bsc-relayer/executor"
 	"github.com/jinzhu/gorm"
 	cmn "github.com/tendermint/tendermint/libs/common"
 )

@@ -6,8 +6,8 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/binance-chain/bsc-relayer/common"
-	util "github.com/binance-chain/bsc-relayer/config"
+	"github.com/bnb-chain/bsc-relayer/common"
+	util "github.com/bnb-chain/bsc-relayer/config"
 )
 
 const (

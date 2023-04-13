@@ -4,7 +4,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/binance-chain/bsc-relayer/common"
+	"github.com/bnb-chain/bsc-relayer/common"
 )
 
 const (

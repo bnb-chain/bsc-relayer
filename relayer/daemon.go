@@ -3,14 +3,14 @@ package relayer
 import (
 	"time"
 
-	"github.com/binance-chain/bsc-relayer/executor"
+	"github.com/bnb-chain/bsc-relayer/executor"
 	"github.com/shopspring/decimal"
 
 	ethcmm "github.com/ethereum/go-ethereum/common"
 	cmn "github.com/tendermint/tendermint/libs/common"
 
-	"github.com/binance-chain/bsc-relayer/common"
-	"github.com/binance-chain/bsc-relayer/model"
+	"github.com/bnb-chain/bsc-relayer/common"
+	"github.com/bnb-chain/bsc-relayer/model"
 )
 
 const (
@@ -127,7 +127,7 @@ func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
-		} else if height % r.bbcExecutor.Config.BBCConfig.CleanUpBlockInterval == 0 {
+		} else if height%r.bbcExecutor.Config.BBCConfig.CleanUpBlockInterval == 0 {
 			needAccelerate, err = r.cleanPreviousPackages(height)
 			if err != nil {
 				common.Logger.Error(err.Error())
@@ -193,11 +193,11 @@ func (r *Relayer) txTracker() {
 				statistic.SuccessTx++
 			} else {
 				txStatus = model.Failure
-				accumulatedFailedTxFee , _ := decimal.NewFromString(statistic.AccumulatedFailedTxFee)
+				accumulatedFailedTxFee, _ := decimal.NewFromString(statistic.AccumulatedFailedTxFee)
 				statistic.AccumulatedFailedTxFee = accumulatedFailedTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 				statistic.FailedTx++
 			}
-			accumulatedTotalTxFee , _ := decimal.NewFromString(statistic.AccumulatedTotalTxFee)
+			accumulatedTotalTxFee, _ := decimal.NewFromString(statistic.AccumulatedTotalTxFee)
 			statistic.AccumulatedTotalTxFee = accumulatedTotalTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 			err = r.db.Model(model.RelayTransaction{}).Where("id = ?", tx.Id).Updates(
 				map[string]interface{}{

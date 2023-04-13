@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"testing"
 
-	relayercommon "github.com/binance-chain/bsc-relayer/common"
+	relayercommon "github.com/bnb-chain/bsc-relayer/common"
 
-	config "github.com/binance-chain/bsc-relayer/config"
-	"github.com/binance-chain/bsc-relayer/executor/relayerhub"
 	ctypes "github.com/binance-chain/go-sdk/common/types"
+	config "github.com/bnb-chain/bsc-relayer/config"
+	"github.com/bnb-chain/bsc-relayer/executor/relayerhub"
 	"github.com/stretchr/testify/require"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 )

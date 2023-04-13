@@ -2,7 +2,8 @@ package executor
 
 import (
 	"encoding/binary"
-	"github.com/binance-chain/bsc-relayer/common"
+
+	"github.com/bnb-chain/bsc-relayer/common"
 )
 
 func buildCrossChainPackageKey(sourceChainID, destinationChainID common.CrossChainID, channelID common.CrossChainChannelID, sequence uint64) []byte {

@@ -1,7 +1,7 @@
 package executor
 
 import (
-	relayercommon "github.com/binance-chain/bsc-relayer/common"
+	relayercommon "github.com/bnb-chain/bsc-relayer/common"
 	"github.com/ethereum/go-ethereum/common"
 )
 

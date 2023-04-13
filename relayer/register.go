@@ -3,7 +3,7 @@ package relayer
 import (
 	"time"
 
-	"github.com/binance-chain/bsc-relayer/common"
+	"github.com/bnb-chain/bsc-relayer/common"
 )
 
 func (r *Relayer) registerRelayerHub() {
