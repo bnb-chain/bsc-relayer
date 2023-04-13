@@ -326,11 +326,15 @@ func (executor *BBCExecutor) QueryKeyWithProof(key []byte, height int64) (int64,
 		Prove:  true,
 	}
 
-	path := fmt.Sprintf("/store/%s/%s", packageStoreName, "key")
+	path := fmt.Sprintf("/store/%s/%s", packageStoreName, "ics23-key")
 	result, err := executor.GetClient().ABCIQueryWithOptions(path, key, opts)
 	if err != nil {
 		return 0, nil, nil, nil, err
 	}
+	if result.Response.Proof == nil {
+		return 0, nil, nil, nil, fmt.Errorf("nil proof")
+	}
+
 	proofBytes, err := result.Response.Proof.Marshal()
 	if err != nil {
 		return 0, nil, nil, nil, err
