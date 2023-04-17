@@ -13,11 +13,11 @@ import (
 
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
-	"github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
 	"github.com/binance-chain/go-sdk/client/rpc"
 	ctypes "github.com/binance-chain/go-sdk/common/types"
 	"github.com/binance-chain/go-sdk/keys"
+	"github.com/bnb-chain/bsc-relayer/common"
+	config "github.com/bnb-chain/bsc-relayer/config"
 	cmn "github.com/tendermint/tendermint/libs/common"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	coretypes "github.com/tendermint/tendermint/rpc/core/types"
@@ -326,11 +326,15 @@ func (executor *BBCExecutor) QueryKeyWithProof(key []byte, height int64) (int64,
 		Prove:  true,
 	}
 
-	path := fmt.Sprintf("/store/%s/%s", packageStoreName, "key")
+	path := fmt.Sprintf("/store/%s/%s", packageStoreName, "ics23-key")
 	result, err := executor.GetClient().ABCIQueryWithOptions(path, key, opts)
 	if err != nil {
 		return 0, nil, nil, nil, err
 	}
+	if result.Response.Proof == nil {
+		return 0, nil, nil, nil, fmt.Errorf("nil proof")
+	}
+
 	proofBytes, err := result.Response.Proof.Marshal()
 	if err != nil {
 		return 0, nil, nil, nil, err
@@ -357,4 +361,35 @@ func (executor *BBCExecutor) GetNextSequence(channelID common.CrossChainChannelI
 	}
 	return binary.BigEndian.Uint64(response.Response.Value), nil
 
+}
+
+func (executor *BBCExecutor) VerifyValidatorSetChangeAtHeight(height int64) error {
+	block, err := executor.GetClient().Block(&height)
+	if err != nil {
+		return err
+	}
+	if block.BlockMeta.Header.ValidatorsHash.String() == block.BlockMeta.Header.NextValidatorsHash.String() {
+		return fmt.Errorf("validator set not changed at height %d", height)
+	}
+	return nil
+}
+
+func (executor *BBCExecutor) FindValidatorSetChangeHeight(start, end int64, startValidatorHash, endValidatorHash cmn.HexBytes) (height int64, err error) {
+	if start >= end {
+		return 0, fmt.Errorf("invalid start height: %d, end height: %d", start, end)
+	}
+	if startValidatorHash.String() == endValidatorHash.String() {
+		return 0, fmt.Errorf("start validator hash equals end validator hash")
+	}
+	middle := (start + end) / 2
+	if start == middle {
+		return start, executor.VerifyValidatorSetChangeAtHeight(start)
+	}
+	middleBlock, err := executor.GetClient().Block(&middle)
+	common.Logger.Infof("FindValidatorSetChangeHeight: start: %d, end: %d, middle: %d, middleBlock validatorHash: %s", start, end, middle, middleBlock.BlockMeta.Header.ValidatorsHash.String())
+	if middleBlock.BlockMeta.Header.ValidatorsHash.String() == startValidatorHash.String() {
+		return executor.FindValidatorSetChangeHeight(middle, end, startValidatorHash, endValidatorHash)
+	} else {
+		return executor.FindValidatorSetChangeHeight(start, middle, startValidatorHash, middleBlock.BlockMeta.Header.ValidatorsHash)
+	}
 }

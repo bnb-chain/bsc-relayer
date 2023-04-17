@@ -3,14 +3,14 @@ package relayer
 import (
 	"time"
 
-	"github.com/binance-chain/bsc-relayer/executor"
+	"github.com/bnb-chain/bsc-relayer/executor"
 	"github.com/shopspring/decimal"
 
 	ethcmm "github.com/ethereum/go-ethereum/common"
 	cmn "github.com/tendermint/tendermint/libs/common"
 
-	"github.com/binance-chain/bsc-relayer/common"
-	"github.com/binance-chain/bsc-relayer/model"
+	"github.com/bnb-chain/bsc-relayer/common"
+	"github.com/bnb-chain/bsc-relayer/model"
 )
 
 const (
@@ -127,13 +127,62 @@ func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
-		} else if height % r.bbcExecutor.Config.BBCConfig.CleanUpBlockInterval == 0 {
+		} else if height%r.bbcExecutor.Config.BBCConfig.CleanUpBlockInterval == 0 {
 			needAccelerate, err = r.cleanPreviousPackages(height)
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
 		}
 		height++
+	}
+}
+
+func (r *Relayer) WatchBcValidatorSetChange() {
+	var latestHeight int64
+	var latestValidatorHash cmn.HexBytes
+	for {
+		time.Sleep(15 * time.Second)
+		// get light client latestHeight on BSC
+		lightClientLatestHeight, err := r.bscExecutor.GetLightClientLatestHeight()
+		if err != nil {
+			common.Logger.Warningf("Get light client latest height error: %s", err.Error())
+			continue
+		}
+		common.Logger.Infof("Light client latest height: %d", lightClientLatestHeight)
+		if int64(lightClientLatestHeight) > latestHeight {
+			latestHeight = int64(lightClientLatestHeight)
+			block, err := r.bbcExecutor.GetClient().Block(&(latestHeight))
+			if err != nil {
+				common.Logger.Warningf("Get block %d error: %s", latestHeight, err.Error())
+				continue
+			}
+			latestValidatorHash = block.BlockMeta.Header.ValidatorsHash
+			common.Logger.Infof("BSC Light client ValidatorSetHash changed. latest height: %d, validatorSetHash: %s", latestHeight, latestValidatorHash)
+		}
+		block, err := r.bbcExecutor.GetClient().Block(nil)
+		if err != nil {
+			common.Logger.Warningf("Get latest block error: %s", err.Error())
+			continue
+		}
+		latestBlockHeight := block.BlockMeta.Header.Height
+		common.Logger.Infof("Latest bc block height: %d, hash: %s", latestBlockHeight, block.BlockMeta.Header.ValidatorsHash.String())
+		if block.BlockMeta.Header.ValidatorsHash.String() != latestValidatorHash.String() {
+			// find the height of validator set change and sync the header to bsc
+			validatorSetChangeHeight, err := r.bbcExecutor.FindValidatorSetChangeHeight(latestHeight, latestBlockHeight, latestValidatorHash, block.BlockMeta.Header.ValidatorsHash)
+			if err != nil {
+				common.Logger.Warningf("Find validator set change height error: %s", err.Error())
+				continue
+			}
+			txHash, err := r.bscExecutor.SyncTendermintLightClientHeader(uint64(validatorSetChangeHeight))
+			if err != nil {
+				common.Logger.Warningf("Sync validatorSetChangeHeight %d header error: %s", validatorSetChangeHeight, err.Error())
+				continue // try again for this height
+			}
+			common.Logger.Infof("validator set change Syncing header: %d, txHash: %s", validatorSetChangeHeight, txHash.String())
+		} else {
+			latestHeight = latestBlockHeight
+			common.Logger.Infof("BC Light client ValidatorSetHash not changed. latest bc height: %d, validatorSetHash: %s", latestHeight, latestValidatorHash)
+		}
 	}
 }
 
@@ -193,11 +242,11 @@ func (r *Relayer) txTracker() {
 				statistic.SuccessTx++
 			} else {
 				txStatus = model.Failure
-				accumulatedFailedTxFee , _ := decimal.NewFromString(statistic.AccumulatedFailedTxFee)
+				accumulatedFailedTxFee, _ := decimal.NewFromString(statistic.AccumulatedFailedTxFee)
 				statistic.AccumulatedFailedTxFee = accumulatedFailedTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 				statistic.FailedTx++
 			}
-			accumulatedTotalTxFee , _ := decimal.NewFromString(statistic.AccumulatedTotalTxFee)
+			accumulatedTotalTxFee, _ := decimal.NewFromString(statistic.AccumulatedTotalTxFee)
 			statistic.AccumulatedTotalTxFee = accumulatedTotalTxFee.Add(decimal.NewFromInt(int64(txFee))).String()
 			err = r.db.Model(model.RelayTransaction{}).Where("id = ?", tx.Id).Updates(
 				map[string]interface{}{

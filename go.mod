@@ -1,4 +1,4 @@
-module github.com/binance-chain/bsc-relayer
+module github.com/bnb-chain/bsc-relayer
 
 go 1.19
 

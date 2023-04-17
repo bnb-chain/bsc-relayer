@@ -16,13 +16,13 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/jinzhu/gorm"
 
-	relayercommon "github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
-	"github.com/binance-chain/bsc-relayer/executor/crosschain"
-	"github.com/binance-chain/bsc-relayer/executor/relayerhub"
-	"github.com/binance-chain/bsc-relayer/executor/relayerincentivize"
-	"github.com/binance-chain/bsc-relayer/executor/tendermintlightclient"
-	"github.com/binance-chain/bsc-relayer/model"
+	relayercommon "github.com/bnb-chain/bsc-relayer/common"
+	config "github.com/bnb-chain/bsc-relayer/config"
+	"github.com/bnb-chain/bsc-relayer/executor/crosschain"
+	"github.com/bnb-chain/bsc-relayer/executor/relayerhub"
+	"github.com/bnb-chain/bsc-relayer/executor/relayerincentivize"
+	"github.com/bnb-chain/bsc-relayer/executor/tendermintlightclient"
+	"github.com/bnb-chain/bsc-relayer/model"
 )
 
 type BSCClient struct {
@@ -197,6 +197,19 @@ func (executor *BSCExecutor) getCallOpts() (*bind.CallOpts, error) {
 		Context: context.Background(),
 	}
 	return callOpts, nil
+}
+
+func (executor *BSCExecutor) GetLightClientLatestHeight() (uint64, error) {
+	instance, err := tendermintlightclient.NewTendermintlightclient(tendermintLightClientContractAddr, executor.GetClient())
+	if err != nil {
+		return 0, err
+	}
+	callOpts, err := executor.getCallOpts()
+	if err != nil {
+		return 0, err
+	}
+	latestHeight, err := instance.LatestHeight(callOpts)
+	return latestHeight, err
 }
 
 func (executor *BSCExecutor) SyncTendermintLightClientHeader(height uint64) (common.Hash, error) {

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	"github.com/binance-chain/go-sdk/common/types"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -10,12 +11,12 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	"github.com/binance-chain/bsc-relayer/admin"
-	"github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
-	"github.com/binance-chain/bsc-relayer/executor"
-	"github.com/binance-chain/bsc-relayer/model"
-	"github.com/binance-chain/bsc-relayer/relayer"
+	"github.com/bnb-chain/bsc-relayer/admin"
+	"github.com/bnb-chain/bsc-relayer/common"
+	config "github.com/bnb-chain/bsc-relayer/config"
+	"github.com/bnb-chain/bsc-relayer/executor"
+	"github.com/bnb-chain/bsc-relayer/model"
+	"github.com/bnb-chain/bsc-relayer/relayer"
 )
 
 const (

@@ -3,7 +3,7 @@ package common
 import (
 	"os"
 
-	config "github.com/binance-chain/bsc-relayer/config"
+	config "github.com/bnb-chain/bsc-relayer/config"
 	"github.com/op/go-logging"
 	"github.com/tendermint/tendermint/libs/log"
 	"gopkg.in/natefinch/lumberjack.v2"

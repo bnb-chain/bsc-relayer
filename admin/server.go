@@ -10,9 +10,9 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/shopspring/decimal"
 
-	"github.com/binance-chain/bsc-relayer/common"
-	config "github.com/binance-chain/bsc-relayer/config"
-	"github.com/binance-chain/bsc-relayer/model"
+	"github.com/bnb-chain/bsc-relayer/common"
+	config "github.com/bnb-chain/bsc-relayer/config"
+	"github.com/bnb-chain/bsc-relayer/model"
 )
 
 type Admin struct {

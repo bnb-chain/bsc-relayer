@@ -9,14 +9,14 @@ import (
 
 	"github.com/binance-chain/bsc-double-sign-sdk/client"
 	"github.com/binance-chain/bsc-double-sign-sdk/types/bsc"
-	util "github.com/binance-chain/bsc-relayer/config"
+	util "github.com/bnb-chain/bsc-relayer/config"
 	"github.com/ethereum/go-ethereum"
 	ethereumtype "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/tendermint/tendermint/libs/clist"
 
-	"github.com/binance-chain/bsc-relayer/common"
-	"github.com/binance-chain/bsc-relayer/executor"
+	"github.com/bnb-chain/bsc-relayer/common"
+	"github.com/bnb-chain/bsc-relayer/executor"
 )
 
 const (
