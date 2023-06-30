@@ -32,7 +32,7 @@ const (
 func initFlags() {
 	flag.String(flagConfigPath, "", "config file path")
 	flag.String(flagConfigType, "local_private_key", "config type, local_private_key or aws_private_key")
-	flag.Int(flagBBCNetworkType, int(types.TmpTestNetwork), "Binance chain network type")
+	flag.Int(flagBBCNetworkType, int(types.TmpTestNetwork), "BNB Beacon Chain network type")
 	flag.String(flagConfigAwsRegion, "", "aws region")
 	flag.String(flagConfigAwsSecretKey, "", "aws secret key")
 
