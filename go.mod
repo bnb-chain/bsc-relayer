@@ -102,4 +102,4 @@ require (
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
 
-replace github.com/zondax/hid => github.com/binance-chain/hid v0.9.1-0.20190807012304-e1ffd6f0a3cc
+replace github.com/zondax/hid => github.com/bnb-chain/hid v0.9.1-0.20190807012304-e1ffd6f0a3cc

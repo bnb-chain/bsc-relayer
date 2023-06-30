@@ -61,19 +61,19 @@ type BBCConfig struct {
 
 func (cfg *BBCConfig) Validate() {
 	if len(cfg.RpcAddrs) == 0 {
-		panic("rpc endpoint of Binance chain should not be empty")
+		panic("rpc endpoint of BNB Beacon chain should not be empty")
 	}
 	if cfg.MnemonicType == "" {
-		panic(fmt.Sprintf("mnemonic_type Binance Chain should not be empty"))
+		panic(fmt.Sprintf("mnemonic_type BNB Beacon Chain should not be empty"))
 	}
 	if cfg.MnemonicType != KeyTypeMnemonic && cfg.MnemonicType != KeyTypeAWSMnemonic {
-		panic(fmt.Sprintf("MnemonicType of Binance Chain only supports %s and %s", KeyTypeMnemonic, KeyTypeAWSMnemonic))
+		panic(fmt.Sprintf("MnemonicType of BNB Beacon Chain only supports %s and %s", KeyTypeMnemonic, KeyTypeAWSMnemonic))
 	}
 	if cfg.MnemonicType == KeyTypeAWSMnemonic && cfg.AWSRegion == "" {
-		panic(fmt.Sprintf("aws_region of Binance Chain should not be empty"))
+		panic(fmt.Sprintf("aws_region of BNB Beacon Chain should not be empty"))
 	}
 	if cfg.MnemonicType == KeyTypeAWSMnemonic && cfg.AWSSecretName == "" {
-		panic(fmt.Sprintf("aws_secret_name of Binance Chain should not be empty"))
+		panic(fmt.Sprintf("aws_secret_name of BNB Beacon Chain should not be empty"))
 	}
 	if cfg.SleepMillisecondForWaitBlock < 0 {
 		panic("SleepMillisecondForWaitBlock must not be negative")
@@ -97,29 +97,29 @@ type BSCConfig struct {
 
 func (cfg *BSCConfig) Validate() {
 	if len(cfg.Providers) == 0 {
-		panic(fmt.Sprintf("provider address of Binance Smart Chain should not be empty"))
+		panic(fmt.Sprintf("provider address of BNB Smart Chain should not be empty"))
 	}
 
 	if cfg.KeyType == "" {
-		panic(fmt.Sprintf("key_type Binance Smart Chain should not be empty"))
+		panic(fmt.Sprintf("key_type BNB Smart Chain should not be empty"))
 	}
 	if cfg.KeyType != KeyTypeLocalPrivateKey && cfg.KeyType != KeyTypeAWSPrivateKey {
-		panic(fmt.Sprintf("key_type of Binance Smart Chain only supports %s and %s", KeyTypeLocalPrivateKey, KeyTypeAWSPrivateKey))
+		panic(fmt.Sprintf("key_type of BNB Smart Chain only supports %s and %s", KeyTypeLocalPrivateKey, KeyTypeAWSPrivateKey))
 	}
 	if cfg.KeyType == KeyTypeAWSPrivateKey && cfg.AWSRegion == "" {
-		panic(fmt.Sprintf("aws_region of Binance Smart Chain should not be empty"))
+		panic(fmt.Sprintf("aws_region of BNB Smart Chain should not be empty"))
 	}
 	if cfg.KeyType == KeyTypeAWSPrivateKey && cfg.AWSSecretName == "" {
-		panic(fmt.Sprintf("aws_secret_name of Binance Smart Chain should not be empty"))
+		panic(fmt.Sprintf("aws_secret_name of BNB Smart Chain should not be empty"))
 	}
 	if cfg.KeyType != KeyTypeAWSPrivateKey && cfg.PrivateKey == "" {
-		panic(fmt.Sprintf("privateKey of Binance Smart Chain should not be empty"))
+		panic(fmt.Sprintf("privateKey of BNB Smart Chain should not be empty"))
 	}
 	if cfg.GasLimit == 0 {
-		panic(fmt.Sprintf("gas_limit of Binance Smart Chain should be larger than 0"))
+		panic(fmt.Sprintf("gas_limit of BNB Smart Chain should be larger than 0"))
 	}
 	if cfg.UnconfirmedTxThreshold == 0 {
-		panic(fmt.Sprintf("unconfirmed_tx_threshold of Binance Smart Chain should be larger than 0"))
+		panic(fmt.Sprintf("unconfirmed_tx_threshold of BNB Smart Chain should be larger than 0"))
 	}
 }
 

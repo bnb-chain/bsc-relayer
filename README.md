@@ -1,6 +1,6 @@
 # Relayer service from BBC to BSC
 
-This is an canonical implementation of [bsc-relayer](https://github.com/binance-chain/whitepaper/blob/master/WHITEPAPER.md#bsc-relayers) service to relay cross chain packages from Binance Chain to Binance Smart Chain. It can also monitor double sign behavior on BSC and submit evidence to Binance Chain. Community members are encouraged to implement more implementations according to their own requirements.
+This is an canonical implementation of [bsc-relayer](https://github.com/bnb-chain/whitepaper/blob/master/WHITEPAPER.md#bsc-relayers) service to relay cross chain packages from BNB Beacon Chain to BNB Smart Chain. It can also monitor double sign behavior on BSC and submit evidence to BNB Chain Chain. Community members are encouraged to implement more implementations according to their own requirements.
 
 ## Quick Start
 
@@ -55,7 +55,7 @@ This is an canonical implementation of [bsc-relayer](https://github.com/binance-
        ]
    }
    ```
-   Besides, you also need to provide proper Binance Chain `mnemonic`.
+   Besides, you also need to provide proper BNB Beacon Chain `mnemonic`.
    
 5. The supported db platforms include `mysql` and `sqlite3`. This is an example db config:
     ```json
@@ -122,7 +122,7 @@ docker run -e BBC_NETWORK=1 -e CONFIG_TYPE="local" -d -it bsc-relayer
 1. Please fill proper bsc private key to `bsc_config.private_key`, example private key: `your_private_key`
 
     ```
-    panic: privateKey of Binance Smart Chain should not be empty
+    panic: privateKey of BNB Smart Chain should not be empty
     
     goroutine 1 [running]:
     ```

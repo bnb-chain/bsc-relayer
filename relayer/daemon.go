@@ -60,7 +60,7 @@ func (r *Relayer) relayerCompetitionDaemon(startHeight uint64, curValidatorsHash
 				if err != nil {
 					common.Logger.Error(err.Error())
 				}
-				common.Logger.Infof("Syncing header for validatorset update on Binance Chain, height:%d, txHash: %s", tashSet.Height, txHash.String())
+				common.Logger.Infof("Syncing header for validatorset update on BNB Beacon Chain, height:%d, txHash: %s", tashSet.Height, txHash.String())
 			}
 		}
 
@@ -120,7 +120,7 @@ func (r *Relayer) relayerDaemon(curValidatorsHash cmn.HexBytes) {
 			if err != nil {
 				common.Logger.Error(err.Error())
 			}
-			common.Logger.Infof("Syncing header for validatorset update on Binance Chain, height:%d, txHash: %s", height, txHash.String())
+			common.Logger.Infof("Syncing header for validatorset update on BNB Beacon Chain, height:%d, txHash: %s", height, txHash.String())
 		}
 		if needAccelerate {
 			needAccelerate, err = r.cleanPreviousPackages(height)
