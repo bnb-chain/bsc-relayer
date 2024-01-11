@@ -3,7 +3,8 @@
     "source_chain_id": 1,
     "dest_chain_id": 2,
     "monitor_channel_list": [1, 2, 3, 8, 9],
-    "competition_mode": true
+    "competition_mode": true,
+    "breathe_block_delay": 5
   },
   "bbc_config": {
     "rpc_addrs": [

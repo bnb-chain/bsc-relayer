@@ -227,7 +227,7 @@ func (executor *BSCExecutor) SyncTendermintLightClientHeader(height uint64) (com
 		return common.Hash{}, err
 	}
 
-	//TODO optimize
+	// TODO optimize
 tryAgain:
 	header, err := executor.bbcExecutor.QueryTendermintHeader(int64(height))
 	if err != nil {
@@ -276,6 +276,13 @@ tryAgain:
 }
 
 func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.CrossChainChannelID, height, sequence uint64, msgBytes, proofBytes []byte, nonce uint64) (common.Hash, error) {
+	// If the channelID is Staking channel, delayed processing ensures that the order of the transaction
+	if uint8(channelID) == uint8(8) {
+		if executor.cfg.CrossChainConfig.BreatheBlockDelay > 0 {
+			time.Sleep(time.Duration(executor.cfg.CrossChainConfig.BreatheBlockDelay) * time.Second)
+		}
+	}
+
 	txOpts, err := executor.getTransactor(nonce)
 	if err != nil {
 		return common.Hash{}, err
