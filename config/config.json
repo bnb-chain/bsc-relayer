@@ -4,7 +4,7 @@
     "dest_chain_id": 2,
     "monitor_channel_list": [1, 2, 3, 8, 9],
     "competition_mode": true,
-    "breathe_block_delay": 20
+    "breathe_block_delay": 5
   },
   "bbc_config": {
     "rpc_addrs": [
