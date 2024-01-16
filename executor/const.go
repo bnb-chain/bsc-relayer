@@ -19,8 +19,8 @@ const (
 
 	separator                           = "::"
 	CrossChainPackageEventType          = "IBCPackage"
-	CorssChainPackageInfoAttributeKey   = "IBCPackageInfo"
-	CorssChainPackageInfoAttributeValue = "%d" + separator + "%d" + separator + "%d" // destChainID channelID sequence
+	CrossChainPackageInfoAttributeKey   = "IBCPackageInfo"
+	CrossChainPackageInfoAttributeValue = "%d" + separator + "%d" + separator + "%d" // destChainID channelID sequence
 
 	DefaultGasPrice = 20000000000 // 20 GWei
 
@@ -34,6 +34,8 @@ var (
 	prefixForSequenceKey          = []byte{0xf0}
 
 	PureHeaderSyncChannelID relayercommon.CrossChainChannelID = -1
+	StakingChannelID        relayercommon.CrossChainChannelID = 0x08
+	GovChannelID            relayercommon.CrossChainChannelID = 0x09
 
 	tendermintLightClientContractAddr = common.HexToAddress("0x0000000000000000000000000000000000001003")
 	relayerIncentivizeContractAddr    = common.HexToAddress("0x0000000000000000000000000000000000001005")

@@ -6,13 +6,13 @@ import (
 	"strconv"
 	"testing"
 
-	relayercommon "github.com/bnb-chain/bsc-relayer/common"
-
 	ctypes "github.com/binance-chain/go-sdk/common/types"
-	config "github.com/bnb-chain/bsc-relayer/config"
-	"github.com/bnb-chain/bsc-relayer/executor/relayerhub"
 	"github.com/stretchr/testify/require"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
+
+	relayercommon "github.com/bnb-chain/bsc-relayer/common"
+	config "github.com/bnb-chain/bsc-relayer/config"
+	"github.com/bnb-chain/bsc-relayer/executor/relayerhub"
 )
 
 const (
@@ -41,8 +41,6 @@ var (
 	BindChannelID        relayercommon.CrossChainChannelID = 0x01
 	TransferInChannelID  relayercommon.CrossChainChannelID = 0x02
 	TransferOutChannelID relayercommon.CrossChainChannelID = 0x03
-	StakingChannelID     relayercommon.CrossChainChannelID = 0x08
-	GovChannelID         relayercommon.CrossChainChannelID = 0x09
 )
 
 func TestBSCExecutor_SyncTendermintLightClientHeader(t *testing.T) {
@@ -218,9 +216,9 @@ func TestBSCExecutor_QueryPackage(t *testing.T) {
 
 	sequence := uint64(0)
 	channelID := BindChannelID
-	//channelID := TransferInChannelID
-	//channelID := TransferOutChannelID
-	//channelID := StakingChannelID
+	// channelID := TransferInChannelID
+	// channelID := TransferOutChannelID
+	// channelID := StakingChannelID
 	key := buildCrossChainPackageKey(executor.sourceChainID, executor.destChainID, channelID, sequence)
 	_, _, value, proofBytes, err := executor.bbcExecutor.QueryKeyWithProof(key, height)
 	require.NoError(t, err)

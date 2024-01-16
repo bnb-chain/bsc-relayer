@@ -196,7 +196,7 @@ func (executor *BBCExecutor) MonitorCrossChainPackage(height int64, preValidator
 	for _, event := range blockResults.Results.EndBlock.Events {
 		if event.Type == CrossChainPackageEventType {
 			for _, tag := range event.Attributes {
-				if string(tag.Key) != CorssChainPackageInfoAttributeKey {
+				if string(tag.Key) != CrossChainPackageInfoAttributeKey {
 					continue
 				}
 				items := strings.Split(string(tag.Value), separator)

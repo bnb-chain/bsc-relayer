@@ -28,11 +28,12 @@ type Config struct {
 }
 
 type CrossChainConfig struct {
-	SourceChainID      uint16  `json:"source_chain_id"`
-	DestChainID        uint16  `json:"dest_chain_id"`
-	MonitorChannelList []uint8 `json:"monitor_channel_list"`
-	CompetitionMode    bool    `json:"competition_mode"`
-	BreatheBlockDelay  uint64  `json:"breathe_block_delay"`
+	SourceChainID       uint16  `json:"source_chain_id"`
+	DestChainID         uint16  `json:"dest_chain_id"`
+	MonitorChannelList  []uint8 `json:"monitor_channel_list"`
+	CompetitionMode     bool    `json:"competition_mode"`
+	StakingChannelDelay uint64  `json:"staking_channel_delay"`
+	GovChannelDelay     uint64  `json:"gov_channel_delay"`
 }
 
 func (cfg *CrossChainConfig) Validate() {

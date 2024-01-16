@@ -276,10 +276,14 @@ tryAgain:
 }
 
 func (executor *BSCExecutor) CallBuildInSystemContract(channelID relayercommon.CrossChainChannelID, height, sequence uint64, msgBytes, proofBytes []byte, nonce uint64) (common.Hash, error) {
-	// If the channelID is Staking channel, delayed processing ensures that the order of the transaction
-	if uint8(channelID) == uint8(8) {
-		if executor.cfg.CrossChainConfig.BreatheBlockDelay > 0 {
-			time.Sleep(time.Duration(executor.cfg.CrossChainConfig.BreatheBlockDelay) * time.Second)
+	// If the channelID is Staking channel or Gov channel, delayed processing ensures that the order of the transaction
+	if channelID == StakingChannelID {
+		if executor.cfg.CrossChainConfig.StakingChannelDelay > 0 {
+			time.Sleep(time.Duration(executor.cfg.CrossChainConfig.StakingChannelDelay) * time.Second)
+		}
+	} else if channelID == GovChannelID {
+		if executor.cfg.CrossChainConfig.GovChannelDelay > 0 {
+			time.Sleep(time.Duration(executor.cfg.CrossChainConfig.GovChannelDelay) * time.Second)
 		}
 	}
 
